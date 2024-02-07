@@ -20,9 +20,11 @@
 # See branch you are currently working on
 !git branch
 
-# View all branches in the repo
+# View all branches in the GitHub repo
 !git branch -r
 
 # move to a new branch
-!git checkout origin/aw
+!git switch branch_name
+
+```
 
