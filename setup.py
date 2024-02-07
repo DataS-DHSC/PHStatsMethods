@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='ph_statistical_methods',
-    version='0.1.1',
+    version='0.1.2',
     packages=['ph_statistical_methods'],
     url='https://gitlab.phe.gov.uk/Russell.Plunkett/phe-indicator-methods.git',
     license='',
