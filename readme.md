@@ -10,7 +10,7 @@
 # see if there are any changes
 !git status
 !git add --all
-!git commit -m 'MESSAGE'
+!git commit -m "MESSAGE"
 !git push
 
 ```
