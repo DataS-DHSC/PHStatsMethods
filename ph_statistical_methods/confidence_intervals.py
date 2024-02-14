@@ -69,91 +69,91 @@ def wilson(count, denominator, rate=100, alpha=0.05):
     return wilson_lower(count, denominator, rate, alpha), wilson_upper(count, denominator, rate, alpha)
 
 
-def exact_upper(value, alpha=0.05):
+def exact_upper(value, confidence=0.95):
     """
     Calculates upper confidence interval using the exact method[1].
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     :param value: Value to calculate upper confidence interval
-    :param alpha: Alpha - default 0.05 for 95% confidence interval
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Upper confidence interval as a float
     """
     o = 2 * value + 2
-    upper_ci = chi2.ppf(1 - (alpha / 2), o) / 2
+    upper_ci = chi2.ppf(1 - ((1 - confidence) / 2), o) / 2
     return upper_ci
 
 
-def exact_lower(value, alpha=0.05):
+def exact_lower(value, confidence=0.95):
     """
     Calculates lower confidence interval using the exact method[1].
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     :param value: Value to calculate lower confidence interval
-    :param alpha: Alpha - default 0.05 for 95% confidence interval
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as a float
     """
     o = 2 * value
-    lower_ci = chi2.ppf(alpha / 2, o) / 2
+    lower_ci = chi2.ppf((1 - confidence) / 2, o) / 2
     return lower_ci
 
 
-def exact(value, alpha=0.05):
+def exact(value, confidence=0.95):
     """
     Calculates confidence intervals using the exact method[1].
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     :param value: Value to calculate confidence intervals
-    :param alpha: Alpha - default 0.05 for 95% confidence intervals
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower and Upper confidence intervals as a tuple
     """
-    return exact_lower(value, alpha=alpha), exact_upper(value, alpha=alpha)
+    return exact_lower(value, confidence=confidence), exact_upper(value, confidence=confidence)
 
 
 
-def byars_lower(value, alpha=0.05):
+def byars_lower(value, confidence=0.95):
     """
     Calculates lower confidence interval using Byar's method[1].
     [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     :param value: Value to calculate lower confidence interval
-    :param alpha: Alpha - default 0.05 for 95% confidence intervals
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as a float
     """
-    calc_vars = get_calc_variables(alpha)
+    calc_vars = get_calc_variables(1 - confidence)
     if value < 10:
-        return exact_lower(value, alpha)
+        return exact_lower(value, confidence)
     else:
         return value * (1 - (1 / (9 * value)) - calc_vars[1] / (3 * sqrt(value))) ** 3
 
 
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
-def byars_upper(value, alpha=0.05):
+def byars_upper(value, confidence=0.95):
     """
     Calculates upper confidence interval using Byar's method[1].
     [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     :param value: Value to calculate upper confidence interval
-    :param alpha: Alpha - default 0.05 for 95% confidence intervals
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Upper confidence interval as a float
     """
-    calc_vars = get_calc_variables(alpha)
+    calc_vars = get_calc_variables(1 - confidence)
     if value < 10:
-        return exact_upper(value, alpha)
+        return exact_upper(value, confidence)
     else:
         return (value + 1) * (1 - (1 / (9 * value + 1)) + calc_vars[1] / (3 * sqrt(value + 1))) ** 3
 
 
 # calculates the upper and lower CIs using Byar's method without denominator and returns in a tuple
-def byars(value, alpha=0.05, denominator=None, rate=None, exact_method_for_low_numbers=True):
+def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_low_numbers=True):
     """
     Calculates confidence intervals using Byar's method[1].
     [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     :param value: Value to calculate confidence intervals, must be over 9 to calculate Byar's, else exact method is used
-    :param alpha: Alpha - default 0.05 for 95% confidence intervals
+    :param confidence: Confidence - default 0.95 for 95% confidence interval
     :param denominator: (Optional) Denominator to calculate Byar's on a rate
     :param rate: (Optional) Rate
     :param exact_method_for_low_numbers: Boolean instruction as to whether to use exact method for low numbers. Default
@@ -164,8 +164,8 @@ def byars(value, alpha=0.05, denominator=None, rate=None, exact_method_for_low_n
         raise ValueError('To use a denominator, you must also provide a rate')
     if value < 10 and exact_method_for_low_numbers:
         warnings.warn('As the sample is small, the exact method is used to calculate confidence intervals')
-        upper_exact = exact_upper(value, alpha)
-        lower_exact = exact_lower(value, alpha)
+        upper_exact = exact_upper(value, (1 - confidence))
+        lower_exact = exact_lower(value, (1 - confidence))
         if denominator and rate:
             return (lower_exact / denominator) * rate, (upper_exact / denominator) * rate
         else:
@@ -175,7 +175,7 @@ def byars(value, alpha=0.05, denominator=None, rate=None, exact_method_for_low_n
                       'Not-a-number will be returned')
         return np.nan, np.nan
     if denominator and rate:
-        return (byars_lower(value, alpha) / denominator) * rate, (byars_upper(value, alpha) / denominator) * rate
+        return (byars_lower(value, (1 - confidence)) / denominator) * rate, (byars_upper(value, (1 - confidence)) / denominator) * rate
     else:
-        return byars_lower(value, alpha), byars_upper(value, alpha)
+        return byars_lower(value, (1 - confidence)), byars_upper(value, (1 - confidence))
 
