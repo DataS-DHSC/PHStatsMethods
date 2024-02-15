@@ -12,7 +12,7 @@ from scipy.stats import chi2
 from ph_statistical_methods.utils import get_calc_variables
 
 
-def wilson_lower(count, denominator, rate=100, alpha=0.05):
+def wilson_lower(count, denominator, alpha=0.05):
     """
     Calculates the lower CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, rate (default 100), and alpha
      (default 0.05)
@@ -27,12 +27,12 @@ def wilson_lower(count, denominator, rate=100, alpha=0.05):
     :return: Lower confidence interval as float
     """
     norm_cum_dist, z = get_calc_variables(alpha)
-    lower_ci = ((2 * count + norm_cum_dist ** 2 - norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((rate -
-                (count / denominator * rate)) / rate))) / 2 / (denominator + norm_cum_dist ** 2)) * rate
+    lower_ci = ((2 * count + norm_cum_dist ** 2 - norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((100 -
+                (count / denominator * 100)) / 100))) / 2 / (denominator + norm_cum_dist ** 2))
     return lower_ci
 
 
-def wilson_upper(count, denominator, rate=100, alpha=0.05):
+def wilson_upper(count, denominator, confidence=0.95):
     """
     Calculates the upper CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, rate (default 100), and alpha
      (default 0.05)
@@ -46,9 +46,9 @@ def wilson_upper(count, denominator, rate=100, alpha=0.05):
     :param alpha: Alpha - default 0.05 for 95% confidence interval
     :return: Upper confidence interval as float
     """
-    norm_cum_dist, z = get_calc_variables(alpha)
-    upper_ci = (2 * count + norm_cum_dist ** 2 + norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((rate - (count /
-                denominator * rate)) / rate))) / 2 / (denominator + norm_cum_dist ** 2) * rate
+    norm_cum_dist, z = get_calc_variables(confidence)
+    upper_ci = (2 * count + norm_cum_dist ** 2 + norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((100 - (count /
+                denominator * 100)) / 100))) / 2 / (denominator + norm_cum_dist ** 2) 
     return upper_ci
 
 
