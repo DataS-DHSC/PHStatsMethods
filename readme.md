@@ -21,6 +21,7 @@
 !git branch
 
 # View all branches in the GitHub repo
+!git pull
 !git branch -r
 
 # move to a new branch and pull changes so local branch is up-to-date
