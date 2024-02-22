@@ -8,6 +8,7 @@
 ### Push changes to Git
 ```
 # see if there are any changes
+!git pull
 !git status
 !git add --all
 !git commit -m "MESSAGE"
