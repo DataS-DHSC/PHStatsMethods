@@ -13,8 +13,8 @@ from ph_statistical_methods.confidence_intervals import wilson, wilson_lower, wi
 df = pd.read_excel('ph_statistical_methods/unit_tests/test_data/testdata_Proportion.xlsx')
 
 df = pd.DataFrame({'area': ['Area1', 'Area2', 'Area3','Area4']*3,
-                  'numerator': [None, 82, 9, 48, 6500, 8200, 10000, 10000, 8, 7, 750, 900],
-                  'denominator': [100, 10000, 10000, 10000] * 3})
+                  'num': [None, 82, 9, 48, 6500, 8200, 10000, 10000, 8, 7, 750, 900],
+                  'den': [100, 10000, 10000, 10000] * 3})
 
 
 def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
@@ -53,8 +53,10 @@ def ph_proportion(df, numerator_col, denominator_col, metadata = True,
     
         for c in confidence:
             c_text = '0_' + str(c)[2:]
-            df[f'lower_{c_text}_CI'] = df.apply(lambda x: wilson_lower(x[numerator_col], x[denominator_col], multiplier, 1-c))
-            df[f'upper_{c_text}_CI'] = df.apply(lambda x: wilson_upper(x[numerator_col], x[denominator_col], multiplier, 1-c))
+            df[f'lower_{c_text}_CI'] = df.apply(lambda x: wilson_lower(x[numerator_col], x[denominator_col], multiplier, 1-c),
+                                                axis=1)
+            df[f'upper_{c_text}_CI'] = df.apply(lambda x: wilson_upper(x[numerator_col], x[denominator_col], multiplier, 1-c),
+                                                axis=1)
         
     return df
     
@@ -114,7 +116,7 @@ def apply_proportion_to_dataframe(df, numerator_col, denominator_col, metadata=T
 
 
     if metadata:
-        df['proportion'], df['lower_ci'], df['upper_ci'], df['metadata'] = zip(*df.apply(lambda row: ph_proportion(
+        df['proportion'], df['lower_ci'], df['upper_ci'], df['metadata'] = zip(*df.apply(lambda row: phe_proportion(
             row[numerator_col],
             row[denominator_col],
             metadata=metadata,
@@ -124,7 +126,7 @@ def apply_proportion_to_dataframe(df, numerator_col, denominator_col, metadata=T
 
         df = pd.concat([df.drop(['metadata'], axis=1), df['metadata'].apply(pd.Series)], axis=1)
         return df
-    df['proportion'], df['lower_ci'], df['upper_ci'] = zip(*df.apply(lambda row: ph_proportion(
+    df['proportion'], df['lower_ci'], df['upper_ci'] = zip(*df.apply(lambda row: phe_proportion(
         row[numerator_col],
         row[denominator_col],
         metadata=metadata,
