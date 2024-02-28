@@ -16,7 +16,7 @@
 
 ```
 
-### Working with branches
+### Working with branches 
 ```
 # See branch you are currently working on
 !git branch
