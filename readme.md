@@ -31,3 +31,13 @@
 
 ```
 
+### Keep synced with Dev
+```
+# Move into Dev and pull most recent changes
+!git switch Dev
+!git pull
+
+# Move back to your branch and merge in Dev
+!git switch [your_branch]
+!git merge Dev
+```
