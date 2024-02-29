@@ -61,7 +61,7 @@ def poisson_funnel(obs, p, side):
                       10000000000) > p) :
         v = v - dv
       
-    else:
+      else:
         v = v + dv
      
 
@@ -76,8 +76,8 @@ def poisson_funnel(obs, p, side):
       else:
         v = v + dv
 
-   p_funnel = (1 + obs) * v / (1 - v)
-   return p
+    p_funnel = (1 + obs) * v / (1 - v)
+    return p_funnel
 
 
 
