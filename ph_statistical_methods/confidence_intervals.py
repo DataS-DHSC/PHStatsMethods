@@ -12,61 +12,58 @@ from scipy.stats import chi2
 from ph_statistical_methods.utils import get_calc_variables
 
 
-def wilson_lower(count, denominator, rate=100, alpha=0.05):
+def wilson_lower(count, denominator, confidence=0.95):
     """
-    Calculates the lower CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, rate (default 100), and alpha
-     (default 0.05)
+    Calculates the lower CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
+     (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
     209 to 212. \cr
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
     :param count: Numerator
     :param denominator: Denominator
-    :param rate: Rate (default 100 for ratios)
-    :param alpha: Alpha - default 0.05 for 95% confidence interval
+    :param confidence: confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as float
     """
-    norm_cum_dist, z = get_calc_variables(alpha)
-    lower_ci = ((2 * count + norm_cum_dist ** 2 - norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((rate -
-                (count / denominator * rate)) / rate))) / 2 / (denominator + norm_cum_dist ** 2)) * rate
+    norm_cum_dist, z = get_calc_variables(confidence)
+    lower_ci = ((2 * count + norm_cum_dist ** 2 - norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * (1 -
+                (count / denominator )))) / 2 / (denominator + norm_cum_dist ** 2))
     return lower_ci
 
 
-def wilson_upper(count, denominator, rate=100, alpha=0.05):
+def wilson_upper(count, denominator, confidence=0.95):
     """
-    Calculates the upper CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, rate (default 100), and alpha
-     (default 0.05)
+    Calculates the upper CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
+     (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
     209 to 212. \cr
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
     :param count: Numerator
     :param denominator: Denominator
-    :param rate: Rate (default 100 for ratios)
-    :param alpha: Alpha - default 0.05 for 95% confidence interval
+    :param confidence: confidence - default 0.95 for 95% confidence interval
     :return: Upper confidence interval as float
     """
-    norm_cum_dist, z = get_calc_variables(alpha)
-    upper_ci = (2 * count + norm_cum_dist ** 2 + norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * ((rate - (count /
-                denominator * rate)) / rate))) / 2 / (denominator + norm_cum_dist ** 2) * rate
+    norm_cum_dist, z = get_calc_variables(confidence)
+    upper_ci = (2 * count + norm_cum_dist ** 2 + norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * (1 - (count /
+                denominator )))) / 2 / (denominator + norm_cum_dist ** 2) 
     return upper_ci
 
 
-def wilson(count, denominator, rate=100, alpha=0.05):
+def wilson(count, denominator, confidence=0.95):
     """
-    Calculates the CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, rate (default 100), and alpha
-     (default 0.05)
+    Calculates the CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
+     (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
     209 to 212. \cr
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
     :param count: Numerator
     :param denominator: Denominator
-    :param rate: Rate (default 100 for ratios)
-    :param alpha: Alpha - default 0.05 for 95% confidence interval
+    :param confidence: confidence - default 0.95 for 95% confidence interval
     :return: Lower and Upper confidence intervals as a tuple
     """
-    return wilson_lower(count, denominator, rate, alpha), wilson_upper(count, denominator, rate, alpha)
+    return wilson_lower(count, denominator, confidence), wilson_upper(count, denominator, confidence)
 
 
 def exact_upper(value, confidence=0.95):
