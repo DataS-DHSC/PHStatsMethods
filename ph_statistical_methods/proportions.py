@@ -33,7 +33,7 @@ def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None
         
         # get confidence interval for all given confidence intervals
         for c in confidence:
-            prop_dict[ci_col(c)] = wilson(numerator, denominator, rate = multiplier, alpha = 1-c)
+            prop_dict[ci_col(c)] = wilson(numerator, denominator, c)
         
         # set return object to dictionary
         proportion = prop_dict
@@ -42,8 +42,7 @@ def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None
 
 
         
-def ph_proportion(df, num_col, denom_col, metadata = True, 
-                  confidence = 0.95, multiplier = 1):
+def ph_proportion(df, num_col, denom_col, metadata = True, confidence = 0.95, multiplier = 1):
     
     df['Value'] = df.apply(lambda y: ph_proportion_calc(y[num_col], y[denom_col], multiplier),
                            axis=1)
@@ -53,9 +52,9 @@ def ph_proportion(df, num_col, denom_col, metadata = True,
             confidence = [confidence]
     
         for c in confidence:
-            df[f'lower_{ci_col(c)}'] = df.apply(lambda y: wilson_lower(y[num_col], y[denom_col], multiplier, 1-c),
+            df[f'lower_{ci_col(c)}'] = df.apply(lambda y: wilson_lower(y[num_col], y[denom_col], c),
                                                 axis=1)
-            df[f'upper_{ci_col(c)}'] = df.apply(lambda y: wilson_upper(y[num_col], y[denom_col], multiplier, 1-c),
+            df[f'upper_{ci_col(c)}'] = df.apply(lambda y: wilson_upper(y[num_col], y[denom_col], c),
                                                 axis=1)
             
     if metadata:
