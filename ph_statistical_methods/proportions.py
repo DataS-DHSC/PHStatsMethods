@@ -7,7 +7,7 @@ Created on Thu Feb 22 16:52:40 2024
 
 import pandas as pd
 
-from ph_statistical_methods.confidence_intervals import wilson, wilson_lower, wilson_upper
+from ph_statistical_methods.confidence_intervals import wilson_lower, wilson_upper
 from ph_statistical_methods.validation import metadata_cols, ci_col, validate_data
 
 #df = pd.read_excel('ph_statistical_methods/unit_tests/test_data/testdata_Proportion.xlsx')
@@ -25,6 +25,9 @@ def ph_proportion(df, num_col, denom_col, metadata = True, confidence = 0.95, mu
     
     if (df[num_col] > df[denom_col]).any():
         raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
+        
+    if not isinstance(multiplier, int):
+        raise TypeError("'Multiplier' must be an integer")
     
     ### Calculate statistic
     df['Value'] = (df['num_col'] / df['denom_col']) * multiplier
