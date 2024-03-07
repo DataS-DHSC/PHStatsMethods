@@ -14,33 +14,12 @@ def get_calc_variables(a):
     z = ndtri(1 - a / 2)
     return norm_cum_dist, z
 
-def poisson_cis(z, x_a, x_b):
-    
-    q =1
-    tot = 0
-    s = 0
-    k= 0
-    
-    while k<= z or q > tot * 1e-10:
-        tot += q
-        if x_a <= k <= x_b:
-            s+= q
-        if tot > 1e30:
-            s /= 1e30
-            tot /= 1e30
-            q /= 1e30
-        
-        k += 1
-        q*= z / k
-    
-    return s / tot
-
 
 def poisson_funnel(obs, p, side):
     """
     Calculates the poisson distrbution, takes in observations, poisson standard deviation, and side.
     :param obs: Observations as integer
-    :param p: Poisson stamdard deviation, given as float, 2 sigma is 0.025, 3 sigma is 0.001
+    :param p: Poisson standard deviation, given as float, 2 sigma is 0.025, 3 sigma is 0.001
     :param side: Side given as str, value can be "high" or "low"
     :return p_funnel: Poisson funnel given as float
 
@@ -57,8 +36,8 @@ def poisson_funnel(obs, p, side):
       dv = dv / 2
 
       if (poisson_cis((1 + obs) * v / (1 - v),
-                      obs,
-                      10000000000) > p) :
+                     obs,
+                     10000000000) > p) :
         v = v - dv
       
       else:
@@ -69,6 +48,7 @@ def poisson_funnel(obs, p, side):
 
      while dv > 1e-7: 
       dv = dv / 2
+     
       if (poisson_cis((1 + obs) * v / (1 - v),
                       0,
                       obs) < p):
