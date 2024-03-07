@@ -6,7 +6,7 @@ Created on Thu Feb 29 11:38:17 2024
 """
 
 import pandas as pd
-from pandas.api.types import is_numeric_dtype, is_string_dtype
+from pandas.api.types import is_numeric_dtype
 from decimal import Decimal
 
 
@@ -85,27 +85,22 @@ def check_arguments(df, columns, metadata = None):
     
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
-        raise TypeError("'Metadata' argument must be either True or False")
+        raise TypeError("'Metadata' must be either True or False")
 
 
 
-def validate_data(df, numeric_cols, confidence, metadata, grouping_cols = []):
+def validate_data(df, numeric_cols, group_cols, confidence, metadata):
     
     # adding this as not obvious to pass column as a list for developers using this function
-    if not isinstance(grouping_cols, list):
-        raise TypeError('Pass grouping_cols as a list')
+    if not isinstance(group_cols, list):
+        raise TypeError('Pass group_cols as a list')
     
     if not isinstance(numeric_cols, list):
         raise TypeError('Pass numeric_cols as a list')
     
-    check_arguments(df, numeric_cols+grouping_cols, metadata)
+    check_arguments(df, numeric_cols + group_cols, metadata)
     
     confidence = check_cis(confidence)
-    
-    if len(grouping_cols) > 0:
-        # think there can only be one possible grouping column, so get first index value
-        if not is_string_dtype(df[grouping_cols[0]]):
-            raise TypeError(f'{grouping_cols[0]} column must be a string data type')
             
     # check numeric columns
     for col in numeric_cols:
