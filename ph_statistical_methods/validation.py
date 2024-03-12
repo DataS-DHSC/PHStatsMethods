@@ -39,15 +39,22 @@ def ci_col(confidence_interval, ci_type = None):
     
     return col_name
     
+    
+def convert_args_to_list(group_cols, confidence):
+
+    if not isinstance(group_cols, list):
+        group_cols = [group_cols]
+
+    if not isinstance(confidence, list):
+        confidence = [confidence]
+
+    return group_cols, confidence
 
 
 ###### VALIDATION CHECKS ######################################################
 
 
 def check_cis(confidence):
-    
-    if not isinstance(confidence, list):
-        confidence = [confidence]
         
     for c in confidence:
         if not isinstance(c, float):
@@ -63,9 +70,7 @@ def check_cis(confidence):
     
     if len(same_ci) > 0:
         raise ValueError('There are duplicate confidence intervals (when rounded to 4dp): '\
-                         + ', '.join([str(n) for n in same_ci]))
-    
-    return confidence
+                         + ', '.join([str(n) for n in same_ci])) 
 
 
 
@@ -89,14 +94,13 @@ def check_arguments(df, columns, metadata = None):
 
 
 
-def validate_data(df, numeric_cols, group_cols, confidence, metadata):
+def validate_data(df, num_col, denom_col, group_cols, confidence, metadata):
     
     # adding this as not obvious to pass column as a list for developers using this function
     if not isinstance(group_cols, list):
         raise TypeError('Pass group_cols as a list')
     
-    if not isinstance(numeric_cols, list):
-        raise TypeError('Pass numeric_cols as a list')
+    numeric_cols = [num_col, denom_col]
     
     check_arguments(df, numeric_cols + group_cols, metadata)
     
@@ -110,6 +114,11 @@ def validate_data(df, numeric_cols, group_cols, confidence, metadata):
         # No negative values
         if (df[col] < 0).any():
             raise ValueError('No negative numbers can be used to calculate these statistics')
-            
-    return confidence
+
+    # Denominator must greater than 0
+    if (df[denom_col] <= 0).any():
+        raise ValueError('Denominators must be greater than zero')
+
+    if (df[num_col] > df[denom_col]).any():
+        raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
  

@@ -8,7 +8,7 @@ Created on Thu Feb 22 16:52:40 2024
 import pandas as pd
 
 from confidence_intervals import wilson_lower, wilson_upper
-from validation import metadata_cols, ci_col, validate_data
+from validation import metadata_cols, ci_col, convert_args_to_list, validate_data
 
 #df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
 
@@ -40,10 +40,8 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         
     """
     # Check data and arguments
-    confidence = validate_data(df, [num_col, denom_col], group_cols, confidence, metadata)
-    
-    if (df[num_col] > df[denom_col]).any():
-        raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
+    group_cols, confidence = convert_args_to_list(group_cols, confidence)
+    validate_data(df, num_col, denom_col, group_cols, confidence, metadata)
         
     if not isinstance(multiplier, int):
         raise TypeError("'Multiplier' must be an integer")
