@@ -123,7 +123,6 @@ def byars_lower(value, confidence=0.95):
     else:
         return value * (1 - (1 / (9 * value)) - calc_vars[1] / (3 * sqrt(value))) ** 3
 
-
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
 def byars_upper(value, confidence=0.95):
     """

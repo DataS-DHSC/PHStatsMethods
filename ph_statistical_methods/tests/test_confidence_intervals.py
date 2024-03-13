@@ -14,3 +14,7 @@ def test_byars_lower(value, confidence, result):
     assert byars_lower(value, confidence) == result
 
 
+@pytest.mark.skip(reason='This is already tested in the parameterized test above')
+def test_byars_lower_3std():
+    assert byars_lower(200, 0.998) == 199.63144417357614
+

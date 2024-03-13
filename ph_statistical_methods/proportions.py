@@ -17,8 +17,13 @@ from validation import metadata_cols, ci_col, validate_data
 #                   'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
 #                   'den': [100, 10000, 10000, 10000] * 3})
 
-
+df = pd.DataFrame({'area': [1, 2]*6,
+                    'area2': ['Area7', 'Area2','Area1']*4,
+                   'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                   'den': [100, 10000, 10000, 10000] * 3})
         
+
+
 def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 1):
     """Calculates proportions with confidence limits using Wilson Score method.
 
@@ -68,7 +73,6 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         
     return df
     
-
 
 
 
