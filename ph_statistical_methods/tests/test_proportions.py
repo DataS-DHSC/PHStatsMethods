@@ -14,57 +14,27 @@ from proportions import ph_proportion
 
 @pytest.fixture
 def setup_data():
-    yield pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop')
+    yield pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop').iloc[:,:-1]
 
 @pytest.fixture
 def setup_data_g():
     yield pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop_g')
 
+
 def test_default(setup_data):
-    df1 = ph_proportion(setup_data.iloc[:8, :3], 'Numerator', 'Denominator').drop(['Confidence'], axis=1)
-    #assert isinstance(df1, pd.DataFrame)
-    assert_frame_equal(df1, setup_data.iloc[:8, [0,1,2,3,4,5,8,9]])
+    df = ph_proportion(setup_data.iloc[:8, :3], 'Numerator', 'Denominator').drop(['Confidence'], axis=1)
+    assert_frame_equal(df, setup_data.iloc[:8, [0,1,2,3,4,5,8,10]])
+    
+def test_default_2ci(setup_data):
+    df = ph_proportion(setup_data.iloc[:8, :3], 'Numerator', 'Denominator', confidence = [0.95, 0.998])
+    assert_frame_equal(df, setup_data.iloc[:8, :])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#   expect_equal(data.frame(select(phe_proportion(slice(test_Prop,1:8)[1:3], Numerator, Denominator),1:6,8:9)),
-#                data.frame(select(slice(test_Prop,1:8),1:6,9:10)),
-#                ignore_attr = TRUE, info="test default")
-
-#   expect_equal(data.frame(select(phe_proportion(slice(test_Prop,1:8)[1:3], Numerator, Denominator,
-#                                                 confidence = c(0.95,0.998)),1:8,10:11)),
-#                data.frame(select(slice(test_Prop,1:8),1:10)),
-#                ignore_attr = TRUE, info="test full output 2 CIs")
-
+def test_percentage(setup_data):
+    
+df = pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop').iloc[:,:-1]
+df1 = ph_proportion(df.iloc[8:16, :3], 'Numerator', 'Denominator', multiplier = 100).drop(['Confidence'], axis=1)
+df2 = df.iloc[8:16, [0,1,2,3,4,5,8,10]]
+assert_frame_equal(df1, df2)
 #   expect_equal(data.frame(select(phe_proportion(slice(test_Prop,9:16)[1:3], Numerator, Denominator,
 #                               multiplier = 100, type="full"),1:6,8:9)),
 #                data.frame(select(slice(test_Prop,9:16),1:6,9:10)),
