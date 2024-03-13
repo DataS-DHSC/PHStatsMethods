@@ -31,5 +31,14 @@ def phe_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplie
     
     if type != "value" | "upper" | "lower" | "standard" | "full":
         print("type must be either value, upper, lower, standard or full")
+        
+    df["value"] = df[num_col] / df[denom_col] * multiplier
     
-    
+    if confidence is not None:
+        for c in confidence:
+            if num_col <10:
+                df[ci_col[c, 'lower']] = scpy.chi2(1-confidence)/2, 2*num_col/2/denom_col * multiplier
+            else:
+                df[ci_col[c, 'lower']] = byars_lower((num_col, confidence)/denom_col * multiplier )
+            if
+            
