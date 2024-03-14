@@ -39,16 +39,6 @@ def ci_col(confidence_interval, ci_type = None):
     
     return col_name
     
-    
-def convert_args_to_list(confidence, group_cols = None):
-
-    if confidence is not None and not isinstance(confidence, list):
-        confidence = [confidence]
-
-    if group_cols is not None and not isinstance(group_cols, list):
-        group_cols = [group_cols]
-
-    return confidence, group_cols
 
 
 ###### VALIDATION CHECKS ######################################################
@@ -71,6 +61,23 @@ def check_cis(confidence):
     if len(same_ci) > 0:
         raise ValueError('There are duplicate confidence intervals (when rounded to 4dp): '\
                          + ', '.join([str(n) for n in same_ci])) 
+            
+    return confidence
+
+
+
+def format_args(confidence, group_cols = None):
+
+    if confidence is not None: 
+        if not isinstance(confidence, list):
+            confidence = [confidence]
+            
+        confidence = check_cis(confidence)
+
+    if group_cols is not None and not isinstance(group_cols, list):
+        group_cols = [group_cols]
+
+    return confidence, group_cols
 
 
 
@@ -101,12 +108,8 @@ def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = Non
         raise TypeError('Pass group_cols as a list')
     
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
-    numeric_cols = numeric_cols if group_cols is None else numeric_cols + group_cols
 
-    check_arguments(df, numeric_cols, metadata)
-    
-    if confidence is not None:
-        confidence = check_cis(confidence)
+    check_arguments(df, (numeric_cols if group_cols is None else numeric_cols + group_cols), metadata)
             
     # check numeric columns
     for col in numeric_cols:
@@ -123,5 +126,5 @@ def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = Non
             raise ValueError('Denominators must be greater than zero')
 
         if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
+            raise ValueError('Numerators must be less than or equal to the denominator')
  

@@ -8,7 +8,7 @@ Created on Thu Feb 22 16:52:40 2024
 import pandas as pd
 
 from confidence_intervals import wilson_lower, wilson_upper
-from validation import metadata_cols, ci_col, convert_args_to_list, validate_data
+from validation import metadata_cols, ci_col, format_args, validate_data
 
 #df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
 
@@ -40,7 +40,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         
     """
     # Check data and arguments
-    confidence, group_cols = convert_args_to_list(confidence, group_cols)
+    confidence, group_cols = format_args(confidence, group_cols)
     validate_data(df, num_col, group_cols, confidence, metadata, denom_col)
         
     if not isinstance(multiplier, int):
