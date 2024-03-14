@@ -18,8 +18,8 @@ class TestProportions:
     ## more info: https://pynative.com/python-class-variables/
     
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
-    data = pd.read_excel('.tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop').iloc[:,:-1]
-    data_group = pd.read_excel('.tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop_g').iloc[:,:-1]
+    data = pd.read_excel('.test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop').iloc[:,:-1]
+    data_group = pd.read_excel('.test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop_g').iloc[:,:-1]
     
     # Columns for 95% CI, so dropping 99.8% and Confidence column containing '95%, 99.8%'
     cols_95 = [0,1,2,3,4,5,8,10]
