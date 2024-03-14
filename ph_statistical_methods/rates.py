@@ -11,7 +11,7 @@ import math as mt
 from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data
 
-def phe_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplier = 100000):
+def ph_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplier = 100000):
     """
     Calculates rates uwith confidence limits using byars or exact method.
 
@@ -27,18 +27,34 @@ def phe_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplie
 
     """
     
+    #check and validate data
     confidence = validate_data(df, num_col, denom_col, confidence)
     
     if type != "value" | "upper" | "lower" | "standard" | "full":
         print("type must be either value, upper, lower, standard or full")
         
+    #calculate value column
     df["value"] = df[num_col] / df[denom_col] * multiplier
     
+   #calculate confidence intervals
     if confidence is not None:
         for c in confidence:
             if num_col <10:
                 df[ci_col[c, 'lower']] = scpy.chi2(1-confidence)/2, 2*num_col/2/denom_col * multiplier
+                df[ci_col[c, 'upper']] = scpy.chi2(confidence+(1-confidence)/2,2*num_col/2/denom_col * multiplier
             else:
-                df[ci_col[c, 'lower']] = byars_lower((num_col, confidence)/denom_col * multiplier )
-            if
+                df[ci_col[c, 'lower']] = byars_lower((num_col, confidence)/denom_col * multiplier)
+                df[ci-col[c, 'upper']] = byars_upper((num_col, confidence)/denom-col * multiplier)
             
+           df[confidence] = 
+           df[statistic] =
+           if num_col <10:
+               df[method] = 'exact'
+           else:
+               df[method] = 'byars'
+            
+        if type == "lower":
+            df = df.drop(['value', '', 'confidence', 'statistic', 'method'])
+            print(df)
+        elif type == "upper":
+            df = df.drop(['value', '', 'confidence', 'statitic', 'method'])
