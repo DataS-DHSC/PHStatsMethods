@@ -8,7 +8,7 @@ Created on Thu Feb 22 16:52:40 2024
 import pandas as pd
 
 from confidence_intervals import wilson_lower, wilson_upper
-from validation import metadata_cols, ci_col, validate_data
+from validation import metadata_cols, ci_col, validate_data, convert_args_to_list
 
 #df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
 
@@ -24,7 +24,7 @@ df = pd.DataFrame({'area': [1, 2]*6,
         
 
 
-def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 1):
+def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 1):
     """Calculates proportions with confidence limits using Wilson Score method.
 
     Args:
@@ -34,7 +34,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         denom_col (str): Name of column containing number of cases in sample 
                 (the denominator of the population).
         group_cols (list): A list of column name(s) to group the data by. 
-                Defaults to an empty list, to not group data.
+                Defaults to None.
         metadata (bool): Whether to include information on the statistic and confidence interval methods.
         confidence: Confidence interval(s) to use, either as a float, list of float values or None.
                 Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
@@ -45,7 +45,8 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         
     """
     # Check data and arguments
-    confidence = validate_data(df, [num_col, denom_col], group_cols, confidence, metadata)
+    confidence, group_cols = convert_args_to_list(confidence, group_cols)
+    #validate_data(df, [num_col, denom_col], group_cols, confidence, metadata)
     
     if (df[num_col] > df[denom_col]).any():
         raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
@@ -54,8 +55,8 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         raise TypeError("'Multiplier' must be an integer")
     
     # this ignores the NA whereas R version keeps it as NA?
-    if len(group_cols) > 0:
-        df = df.groupby(group_cols)[[num_col, denom_col]].sum().reset_index()
+    if group_cols is not None:
+        df = df.groupby(group_cols)[[num_col, denom_col]].sum(min_count=1).reset_index()
         
     ### Calculate statistic
     df['Value'] = (df[num_col] / df[denom_col]) * multiplier
@@ -63,17 +64,15 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
     if confidence is not None:
         for c in confidence:
             df[ci_col(c, 'lower')] = df.apply(lambda y: wilson_lower(y[num_col], y[denom_col], c),
-                                                axis=1)
+                                                axis=1) * multiplier
             df[ci_col(c, 'upper')] = df.apply(lambda y: wilson_upper(y[num_col], y[denom_col], c),
-                                                axis=1)
+                                                axis=1) * multiplier
             
     if metadata:
         statistic = 'Percentage' if multiplier == 100 else f'Proportion of {multiplier}'
         df = metadata_cols(df, statistic, confidence, 'Wilson')
         
     return df
-    
-
 
 
 # def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
