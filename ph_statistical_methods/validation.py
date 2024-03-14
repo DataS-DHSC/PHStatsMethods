@@ -40,7 +40,7 @@ def ci_col(confidence_interval, ci_type = None):
     return col_name
     
     
-def convert_args_to_list(confidence, group_cols):
+def convert_args_to_list(confidence, group_cols = None):
 
     if not isinstance(confidence, list):
         confidence = [confidence]
