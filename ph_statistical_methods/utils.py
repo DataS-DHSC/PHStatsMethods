@@ -86,13 +86,21 @@ def poisson_funnel(obs, p, side):
 
 
 def funnel_ratio_significance(obs, expected, p, side):
-    """
-    Calculate funnel ratio significance for given observations, expected value, probability, and side.
-    :param obs: Observations, integer.
-    :param expected: Expected value, float.
-    :param p: Probability, float.
-    :param side: Side, 'high' or 'low'.
-    :return: Test statistic, float.
+    """Calculate funnel ratio significance for given observations, expected value, probability, and side.
+
+    Args:
+        obs (int): Observations, an integer representing the number of observed events.
+        
+        expected (float): Expected value, a float representing the expected number of events under the null hypothesis.
+        
+        p (float): Probability, a float representing the probability threshold for significance.
+        
+        side (str): Side, a string that should be either 'high' or 'low', indicating the tail of the distribution to consider.
+
+    Returns:
+        float: Test statistic, a float representing the calculated test statistic for the funnel ratio significance.
+
+    The function handles special cases for small sample sizes (less than 10) and a special condition when the observation is zero and considering the lower side. For larger sample sizes (10 or more), it uses adjusted formulas to compute the test statistic.
     """
     # Special case handling when observation is 0 and considering the lower side
     if obs == 0 and side == "low":
