@@ -23,6 +23,11 @@ class TestProportions:
     
     # Columns for 95% CI, so dropping 99.8% and Confidence column containing '95%, 99.8%'
     cols_95 = [0,1,2,3,4,5,8,10]
+        
+    @pytest.mark.parametrize('multiplier', [(-10), (1.5)])
+    def test_multiplier_error(self, multiplier):
+        with pytest.raises(ValueError, match="'Multiplier' must be a positive integer"):
+            ph_proportion(self.data, 'Numerator', 'Denominator', multiplier = multiplier)
 
     def test_default(self):
         df = ph_proportion(self.data.iloc[:8, :3], 'Numerator', 'Denominator').drop(['Confidence'], axis=1)
