@@ -40,15 +40,18 @@ def ci_col(confidence_interval, ci_type = None):
     return col_name
     
     
-def convert_args_to_list(group_cols, confidence):
-
-    if not isinstance(group_cols, list):
-        group_cols = [group_cols]
+def convert_args_to_list(confidence, group_cols):
 
     if not isinstance(confidence, list):
         confidence = [confidence]
 
-    return group_cols, confidence
+    if group_cols is None:
+        group_cols = []
+
+    if not isinstance(group_cols, list):
+        group_cols = [group_cols]
+
+    return confidence, group_cols
 
 
 ###### VALIDATION CHECKS ######################################################
@@ -116,7 +119,7 @@ def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = Non
             raise ValueError('No negative numbers can be used to calculate these statistics')
 
     # Denominator must greater than 0
-    if denom_col != None:
+    if denom_col is not None:
         if (df[denom_col] <= 0).any():
             raise ValueError('Denominators must be greater than zero')
 

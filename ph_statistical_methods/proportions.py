@@ -40,8 +40,8 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         
     """
     # Check data and arguments
-    group_cols, confidence = convert_args_to_list(group_cols, confidence)
-    validate_data(df, num_col, denom_col, group_cols, confidence, metadata)
+    confidence, group_cols = convert_args_to_list(confidence, group_cols)
+    validate_data(df, num_col, group_cols, confidence, metadata, denom_col)
         
     if not isinstance(multiplier, int):
         raise TypeError("'Multiplier' must be an integer")
