@@ -45,10 +45,7 @@ def convert_args_to_list(confidence, group_cols = None):
     if confidence is not None and not isinstance(confidence, list):
         confidence = [confidence]
 
-    if group_cols is None:
-        group_cols = []
-
-    if not isinstance(group_cols, list):
+    if group_cols is not None and not isinstance(group_cols, list):
         group_cols = [group_cols]
 
     return confidence, group_cols
@@ -104,8 +101,9 @@ def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = Non
         raise TypeError('Pass group_cols as a list')
     
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
-    
-    check_arguments(df, numeric_cols + group_cols, metadata)
+    numeric_cols = numeric_cols if group_cols is None else numeric_cols + group_cols
+
+    check_arguments(df, numeric_cols, metadata)
     
     if confidence is not None:
         confidence = check_cis(confidence)

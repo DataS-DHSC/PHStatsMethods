@@ -47,7 +47,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         raise TypeError("'Multiplier' must be an integer")
     
     # Sum Numerator and Denominator columns, ensure NAs are included. 
-    if len(group_cols) > 0:
+    if group_cols is not None:
         df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     ### Calculate statistic
