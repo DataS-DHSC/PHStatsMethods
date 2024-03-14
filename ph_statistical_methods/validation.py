@@ -42,7 +42,7 @@ def ci_col(confidence_interval, ci_type = None):
     
 def convert_args_to_list(confidence, group_cols = None):
 
-    if not isinstance(confidence, list):
+    if confidence is not None and not isinstance(confidence, list):
         confidence = [confidence]
 
     if group_cols is None:
@@ -107,7 +107,8 @@ def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = Non
     
     check_arguments(df, numeric_cols + group_cols, metadata)
     
-    confidence = check_cis(confidence)
+    if confidence is not None:
+        confidence = check_cis(confidence)
             
     # check numeric columns
     for col in numeric_cols:

@@ -19,7 +19,7 @@ from validation import metadata_cols, ci_col, convert_args_to_list, validate_dat
 
 
         
-def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 1):
+def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 1):
     """Calculates proportions with confidence limits using Wilson Score method.
 
     Args:
@@ -29,7 +29,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
         denom_col (str): Name of column containing number of cases in sample 
                 (the denominator of the population).
         group_cols (list): A list of column name(s) to group the data by. 
-                Defaults to an empty list, to not group data.
+                Defaults to None.
         metadata (bool): Whether to include information on the statistic and confidence interval methods.
         confidence: Confidence interval(s) to use, either as a float, list of float values or None.
                 Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
