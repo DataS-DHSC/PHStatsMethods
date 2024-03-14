@@ -15,7 +15,7 @@ def metadata_cols(df, statistic, confidence = None, method = None):
     df['Statistic'] = statistic
     
     if confidence is not None:
-        df['Confidence'] = ', '.join([str(n) for n in confidence])
+        df['Confidence'] = ', '.join([f'{int(c * 100)}%' if len(str(c)) < 5 else f'{c * 100}%' for c in confidence])
         df['Method'] = method
         
     return df
@@ -38,6 +38,17 @@ def ci_col(confidence_interval, ci_type = None):
         col_name = f'{ci_type}_{col_name}'
     
     return col_name
+
+
+def convert_args_to_list(confidence, group_cols):
+
+    if confidence is not None and not isinstance(confidence, list):
+        confidence = [confidence]
+        
+    if group_cols is not None and not isinstance(group_cols, list):
+        group_cols = [group_cols]
+
+    return confidence, group_cols
     
 
 
@@ -92,8 +103,8 @@ def check_arguments(df, columns, metadata = None):
 def validate_data(df, numeric_cols, group_cols, confidence, metadata):
     
     # adding this as not obvious to pass column as a list for developers using this function
-    if not isinstance(group_cols, list):
-        raise TypeError('Pass group_cols as a list')
+    #if not isinstance(group_cols, list):
+    #    raise TypeError('Pass group_cols as a list')
     
     if not isinstance(numeric_cols, list):
         raise TypeError('Pass numeric_cols as a list')
