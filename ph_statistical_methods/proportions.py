@@ -46,9 +46,9 @@ def ph_proportion(df, num_col, denom_col, group_cols = [], metadata = True, conf
     if not isinstance(multiplier, int):
         raise TypeError("'Multiplier' must be an integer")
     
-    # this ignores the NA whereas R version keeps it as NA?
+    # Sum Numerator and Denominator columns, ensure NAs are included. 
     if len(group_cols) > 0:
-        df = df.groupby(group_cols)[[num_col, denom_col]].sum().reset_index()
+        df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     ### Calculate statistic
     df['Value'] = (df[num_col] / df[denom_col]) * multiplier
