@@ -9,7 +9,7 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from ..proportions import ph_proportion
+#from ..proportions import ph_proportion
 
 
 # class TestProportions:
@@ -50,3 +50,5 @@ from ..proportions import ph_proportion
 #         df = ph_proportion(self.data, 'Numerator', 'Denominator', group_cols = 'Area')
 #         assert_frame_equal(df, self.data_group)
     
+
+
