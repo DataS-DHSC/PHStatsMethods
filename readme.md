@@ -33,7 +33,6 @@
 
 ### Running tests
 (may need to install pytest first - !pip install pytest)
-
 ```
 # run all tests
 !pytest
