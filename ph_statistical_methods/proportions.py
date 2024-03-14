@@ -12,10 +12,10 @@ from validation import metadata_cols, ci_col, format_args, validate_data
 
 #df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
 
-# df = pd.DataFrame({'area': [1, 2]*6,
-#                    'area2': ['Area7', 'Area2','Area1']*4,
-#                   'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
-#                   'den': [100, 10000, 10000, 10000] * 3})
+df = pd.DataFrame({'area': [1, 2]*6,
+                    'area2': ['Area7', 'Area2','Area1']*4,
+                  'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                  'den': [100, 10000, 10000, 10000] * 3})
 
 
         
