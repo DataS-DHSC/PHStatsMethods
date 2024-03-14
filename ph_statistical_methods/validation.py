@@ -94,13 +94,13 @@ def check_arguments(df, columns, metadata = None):
 
 
 
-def validate_data(df, num_col, denom_col, group_cols, confidence, metadata):
+def validate_data(df, num_col, group_cols, confidence, metadata, denom_col = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
     if not isinstance(group_cols, list):
         raise TypeError('Pass group_cols as a list')
     
-    numeric_cols = [num_col, denom_col]
+    numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
     
     check_arguments(df, numeric_cols + group_cols, metadata)
     
@@ -116,9 +116,10 @@ def validate_data(df, num_col, denom_col, group_cols, confidence, metadata):
             raise ValueError('No negative numbers can be used to calculate these statistics')
 
     # Denominator must greater than 0
-    if (df[denom_col] <= 0).any():
-        raise ValueError('Denominators must be greater than zero')
+    if denom_col != None:
+        if (df[denom_col] <= 0).any():
+            raise ValueError('Denominators must be greater than zero')
 
-    if (df[num_col] > df[denom_col]).any():
-        raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
+        if (df[num_col] > df[denom_col]).any():
+            raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')
  
