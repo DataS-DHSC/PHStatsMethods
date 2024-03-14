@@ -7,8 +7,8 @@ Created on Thu Feb 22 16:52:40 2024
 
 import pandas as pd
 
-from .confidence_intervals import wilson_lower, wilson_upper
-from .validation import metadata_cols, ci_col, format_args, validate_data
+from confidence_intervals import wilson_lower, wilson_upper
+from validation import metadata_cols, ci_col, format_args, validate_data
 
 #df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
 
