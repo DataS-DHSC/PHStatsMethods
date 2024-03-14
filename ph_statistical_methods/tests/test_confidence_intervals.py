@@ -6,7 +6,7 @@ Created on Wed Feb  7 11:19:46 2024
 """
 
 import pytest
-from confidence_intervals import byars_lower
+from ..confidence_intervals import byars_lower
 
 @pytest.mark.parametrize('value, confidence, result', [(100, 0.95, 99.04267017398342),
                                                        (200, 0.998, 199.63144417357614)])
