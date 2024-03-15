@@ -31,3 +31,21 @@
 
 ```
 
+### Running tests
+(may need to install pytest first - !pip install pytest)
+```
+# run all tests
+!pytest
+
+# run all tests in file
+!pytest tests/file.py
+
+# run test function (outside of class)
+!pytest tests/file.py::TestFunction
+
+# run test class
+!pytest tests/file.py::TestClass
+
+# run test method (a method is a function in a class)
+!pytest tests/file.py::TestClass::TestMethod
+```

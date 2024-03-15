@@ -123,7 +123,6 @@ def byars_lower(value, confidence=0.95):
     else:
         return value * (1 - (1 / (9 * value)) - calc_vars[1] / (3 * sqrt(value))) ** 3
 
-
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
 def byars_upper(value, confidence=0.95):
     """
@@ -168,8 +167,7 @@ def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_
         else:
             return lower_exact, upper_exact
     elif value < 10:
-        warnings.warn('As the sample is small and exact method not used, Byar\'s cannot be accurately calculated. '
-                      'Not-a-number will be returned')
+        warnings.warn("As the sample is small and exact method not used, Byar's cannot be accurately calculated. Not-a-number will be returned")
         return np.nan, np.nan
     if denominator and rate:
         return (byars_lower(value, (1 - confidence)) / denominator) * rate, (byars_upper(value, (1 - confidence)) / denominator) * rate
