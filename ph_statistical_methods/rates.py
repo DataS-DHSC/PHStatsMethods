@@ -6,12 +6,14 @@ Created on Thu Feb 29 16:49:06 2024
 """
 
 import pandas as pd
+import numpy as np
 import scipy.stats as scpy
 import math as mt
 from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data
+from utils import exact_lowercl, exact_uppercl
 
-def ph_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplier = 100000):
+def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 100000):
     """
     Calculates rates uwith confidence limits using byars or exact method.
 
@@ -28,10 +30,10 @@ def ph_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplier
     """
     
     #check and validate data
-    confidence = validate_data(df, num_col, denom_col, confidence)
+    confidence = validate_data(df,[num_col, denom_col], group_cols, confidence, metadata)
     
-    if type != "value" | "upper" | "lower" | "standard" | "full":
-        print("type must be either value, upper, lower, standard or full")
+    if group_cols is not None:
+        df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     #calculate value column
     df["value"] = df[num_col] / df[denom_col] * multiplier
@@ -40,21 +42,16 @@ def ph_rate(df, num_col, denom_col, type = "full", confidence = 0.95, multiplier
     if confidence is not None:
         for c in confidence:
             if num_col <10:
-                df[ci_col[c, 'lower']] = scpy.chi2(1-confidence)/2, 2*num_col/2/denom_col * multiplier
-                df[ci_col[c, 'upper']] = scpy.chi2(confidence+(1-confidence)/2,2*num_col/2/denom_col * multiplier
+                df[ci_col[c, 'lower']] = df.apply(lambda y: exact_lowercl(y[num_col], y[denom_col], c))
+                df[ci_col[c, 'upper']] = df.apply(lambda y: exact_uppercl(y[num_col], y[denom_col], c))
             else:
-                df[ci_col[c, 'lower']] = byars_lower((num_col, confidence)/denom_col * multiplier)
-                df[ci-col[c, 'upper']] = byars_upper((num_col, confidence)/denom-col * multiplier)
-            
-           df[confidence] = 
-           df[statistic] =
-           if num_col <10:
-               df[method] = 'exact'
-           else:
-               df[method] = 'byars'
-            
-        if type == "lower":
-            df = df.drop(['value', '', 'confidence', 'statistic', 'method'])
-            print(df)
-        elif type == "upper":
-            df = df.drop(['value', '', 'confidence', 'statitic', 'method'])
+                df[ci_col[c, 'lower']] = df.apply(lambda y: byars_lower((y[num_col], c)/y[denom_col]*multiplier))
+                df[ci_col[c, 'upper']] = df.apply(lambda y: byars_upper((y[num_col], c)/y[denom_col]*multiplier))
+           #generate staistic column
+            if metadata:
+               statistic = 'rate per 100000' if multiplier == 100000 else f'rate per {(multiplier)}'
+               method = np.where(df[num_col] < 10, 'Exact', 'Byars')
+               df = metadata_cols(df, statistic, confidence, method)
+    
+    return df 
+

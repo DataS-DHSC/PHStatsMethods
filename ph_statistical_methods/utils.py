@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from scipy.special import ndtri
+from confidence_intervals import poisson_cis
+from scipy.stats import chi2
 
 
 def get_calc_variables(a):
@@ -14,27 +16,6 @@ def get_calc_variables(a):
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
-
-def poisson_cis(z, x_a, x_b):
-    
-    q =1
-    tot = 0
-    s = 0
-    k= 0
-    
-    while k<= z or q > tot * 1e-10:
-        tot += q
-        if x_a <= k <= x_b:
-            s+= q
-        if tot > 1e30:
-            s /= 1e30
-            tot /= 1e30
-            q /= 1e30
-        
-        k += 1
-        q*= z / k
-    
-    return s / tot
 
 
 def poisson_funnel(obs, p, side):
@@ -79,6 +60,33 @@ def poisson_funnel(obs, p, side):
 
     p_funnel = (1 + obs) * v / (1 - v)
     return p_funnel
+
+
+def exact_lowercl(numerator, denominator, confidence = 0.95, multiplier = 100000):
+    """
+    Calculates exact lower confidence interval, takes in numerator, denominator, confidence, and multiplier.
+    :param numerator:  numerator value, input as integer
+    :param denominator: denomintaor value, input as integer
+    :param confidence: confidence level used for calculation, set as default 0.95 for 95% confidence level.
+    :param multiplier: multiplier level used for calulcation, default as 100000.
+
+    """
+   #calculates lower confidence interval
+    lowercl = chi2(1-confidence)/2, 2*numerator/2/denominator * multiplier
+    return lowercl
+
+def exact_uppercl(numerator, denominator, confidence = 0.95, multiplier = 100000):
+    """
+    Calculates exact upper confidence interval, takes in numerator, denominator, confidence, and multiplier.
+    :param numerator:  numerator value, input as integer
+    :param denominator: denomintaor value, input as integer
+    :param confidence: confidence level used for calculation, set as default 0.95 for 95% confidence level.
+    :param multiplier: multiplier level used for calulcation, default as 100000.
+
+    """
+   #calculates upper confidence interval
+    uppercl = chi2(confidence+(1-confidence)/2,2*num_col/2/denom_col * multiplier
+    return uppercl
 
 
 
