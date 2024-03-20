@@ -85,7 +85,7 @@ def exact_uppercl(numerator, denominator, confidence = 0.95, multiplier = 100000
 
     """
    #calculates upper confidence interval
-    uppercl = chi2(confidence+(1-confidence)/2,2*num_col/2/denom_col * multiplier
+    uppercl = chi2(confidence+(1-confidence)/2,2*numerator/2/denominator * multiplier)
     return uppercl
 
 
