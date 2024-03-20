@@ -43,7 +43,7 @@ def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence
             df[ci_col(c, 'lower')] = df.apply(lambda y: byars_lower(y[num_col], c)) / df[denom_col] * multiplier
             df[ci_col(c, 'upper')] = df.apply(lambda y: byars_upper(y[num_col], c)) / df[denom_col] * multiplier
           
-    #generate staistic and method columns
+    # Generate statistic and method columns
     if metadata:
         method = np.where(df[num_col] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'Rate per {multiplier}', confidence, method)
