@@ -50,5 +50,3 @@ class TestProportions:
         df = ph_proportion(self.data, 'Numerator', 'Denominator', group_cols = 'Area')
         assert_frame_equal(df, self.data_group)
     
-
-
