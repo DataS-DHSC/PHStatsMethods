@@ -11,7 +11,7 @@ from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data, format_args
 
 
-def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 100000):
+def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 100000):
     """
     Calculates rates uwith confidence limits using byars or exact method.
 
@@ -40,8 +40,8 @@ def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence
    #calculate confidence intervals
     if confidence is not None:
         for c in confidence:
-            df[ci_col(c, 'lower')] = df.apply(lambda y: byars_lower(y[num_col], c)) / df[denom_col] * multiplier
-            df[ci_col(c, 'upper')] = df.apply(lambda y: byars_upper(y[num_col], c)) / df[denom_col] * multiplier
+            df[ci_col(c, 'lower')] = df.apply(lambda y: byars_lower(y[num_col], c), axis=1) / df[denom_col] * multiplier
+            df[ci_col(c, 'upper')] = df.apply(lambda y: byars_upper(y[num_col], c), axis=1) / df[denom_col] * multiplier
           
     # Generate statistic and method columns
     if metadata:
@@ -49,4 +49,3 @@ def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence
         df = metadata_cols(df, f'Rate per {multiplier}', confidence, method)
     
     return df 
-
