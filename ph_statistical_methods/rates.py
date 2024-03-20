@@ -47,7 +47,8 @@ def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence
             else:
                 df[ci_col[c, 'lower']] = df.apply(lambda y: byars_lower((y[num_col], c)/y[denom_col]*multiplier))
                 df[ci_col[c, 'upper']] = df.apply(lambda y: byars_upper((y[num_col], c)/y[denom_col]*multiplier))
-           #generate staistic column
+          
+            #generate staistic and method columns
             if metadata:
                statistic = 'rate per 100000' if multiplier == 100000 else f'rate per {(multiplier)}'
                method = np.where(df[num_col] < 10, 'Exact', 'Byars')
