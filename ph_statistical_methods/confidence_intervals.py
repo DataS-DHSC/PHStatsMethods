@@ -8,7 +8,7 @@ Created on Wed Feb  7 11:19:00 2024
 import numpy as np
 import warnings
 from math import sqrt
-from scipy.stats import chi2
+from scipy.stats import chi2, norm
 from utils import get_calc_variables
 
 
@@ -117,11 +117,15 @@ def byars_lower(value, confidence=0.95):
     :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as a float
     """
-    calc_vars = get_calc_variables(1 - confidence)
+    if value <= 0:
+        raise ValueError("'Value' must be a positive number")
+    
+    z = norm.ppf(confidence + (1-confidence)/2)
+    
     if value < 10:
         return exact_lower(value, confidence)
     else:
-        return value * (1 - (1 / (9 * value)) - calc_vars[1] / (3 * sqrt(value))) ** 3
+        return value * (1 - 1 / (9 * value) - z / (3 * sqrt(value))) ** 3
 
 
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
@@ -135,11 +139,15 @@ def byars_upper(value, confidence=0.95):
     :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Upper confidence interval as a float
     """
-    calc_vars = get_calc_variables(1 - confidence)
+    if value <= 0:
+        raise ValueError("'Value' must be a positive number")
+        
+    z = norm.ppf(confidence + (1-confidence)/2)
+    
     if value < 10:
         return exact_upper(value, confidence)
     else:
-        return (value + 1) * (1 - (1 / (9 * value + 1)) + calc_vars[1] / (3 * sqrt(value + 1))) ** 3
+        return (value + 1) * (1 - 1 / (9 * (value + 1)) + z / (3 * sqrt(value + 1))) ** 3
 
 
 # calculates the upper and lower CIs using Byar's method without denominator and returns in a tuple
@@ -168,8 +176,7 @@ def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_
         else:
             return lower_exact, upper_exact
     elif value < 10:
-        warnings.warn('As the sample is small and exact method not used, Byar\'s cannot be accurately calculated. '
-                      'Not-a-number will be returned')
+        warnings.warn("As the sample is small and exact method not used, Byar's cannot be accurately calculated. Not-a-number will be returned")
         return np.nan, np.nan
     if denominator and rate:
         return (byars_lower(value, (1 - confidence)) / denominator) * rate, (byars_upper(value, (1 - confidence)) / denominator) * rate

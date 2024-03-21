@@ -15,8 +15,9 @@ def metadata_cols(df, statistic, confidence = None, method = None):
     df['Statistic'] = statistic
     
     if confidence is not None:
-        df['Confidence'] = ', '.join([str(n) for n in confidence])
-        df['Method'] = method
+        df['Confidence'] = ', '.join([f'{int(c * 100)}%' if len(str(c)) < 5 else f'{c * 100}%' for c in confidence])
+        if method is not None:
+            df['Method'] = method
         
     return df
     
@@ -38,16 +39,13 @@ def ci_col(confidence_interval, ci_type = None):
         col_name = f'{ci_type}_{col_name}'
     
     return col_name
-    
+
 
 
 ###### VALIDATION CHECKS ######################################################
 
 
 def check_cis(confidence):
-    
-    if not isinstance(confidence, list):
-        confidence = [confidence]
         
     for c in confidence:
         if not isinstance(c, float):
@@ -63,9 +61,24 @@ def check_cis(confidence):
     
     if len(same_ci) > 0:
         raise ValueError('There are duplicate confidence intervals (when rounded to 4dp): '\
-                         + ', '.join([str(n) for n in same_ci]))
-    
+                         + ', '.join([str(n) for n in same_ci])) 
+            
     return confidence
+
+
+
+def format_args(confidence, group_cols = None):
+
+    if confidence is not None: 
+        if not isinstance(confidence, list):
+            confidence = [confidence]
+            
+        confidence = check_cis(confidence)
+
+    if group_cols is not None and not isinstance(group_cols, list):
+        group_cols = [group_cols]
+
+    return confidence, group_cols
 
 
 
@@ -89,18 +102,15 @@ def check_arguments(df, columns, metadata = None):
 
 
 
-def validate_data(df, numeric_cols, group_cols, confidence, metadata):
+def validate_data(df, num_col, group_cols, metadata, denom_col = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
-    if not isinstance(group_cols, list):
+    if group_cols is not None and not isinstance(group_cols, list):
         raise TypeError('Pass group_cols as a list')
     
-    if not isinstance(numeric_cols, list):
-        raise TypeError('Pass numeric_cols as a list')
-    
-    check_arguments(df, numeric_cols + group_cols, metadata)
-    
-    confidence = check_cis(confidence)
+    numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
+
+    check_arguments(df, (numeric_cols if group_cols is None else numeric_cols + group_cols), metadata)
             
     # check numeric columns
     for col in numeric_cols:
@@ -110,6 +120,12 @@ def validate_data(df, numeric_cols, group_cols, confidence, metadata):
         # No negative values
         if (df[col] < 0).any():
             raise ValueError('No negative numbers can be used to calculate these statistics')
-            
-    return confidence
+
+    # Denominator must greater than 0
+    if denom_col is not None:
+        if (df[denom_col] <= 0).any():
+            raise ValueError('Denominators must be greater than zero')
+
+        if (df[num_col] > df[denom_col]).any():
+            raise ValueError('Numerators must be less than or equal to the denominator')
  
