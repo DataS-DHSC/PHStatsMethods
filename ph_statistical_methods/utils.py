@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from scipy.special import ndtri
+from confidence_intervals import poisson_cis
 
 
 def get_calc_variables(a):
@@ -10,9 +11,10 @@ def get_calc_variables(a):
     :param a: alpha
     :return: cumulative normal distribution, z score
     """
-    norm_cum_dist = ndtri((100 + (100 - (100 * a))) / 200)
-    z = ndtri(1 - a / 2)
+    norm_cum_dist = ndtri((100 + (100 - (100 * (1-a)))) / 200)
+    z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
+
 
 
 def poisson_funnel(obs, p, side):
@@ -61,5 +63,3 @@ def poisson_funnel(obs, p, side):
 
 
 
-
-    
