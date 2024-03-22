@@ -7,13 +7,11 @@ Created on Thu Feb 29 16:49:06 2024
 
 import pandas as pd
 import numpy as np
-import scipy.stats as scpy
-import math as mt
 from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data
-from utils import exact_lowercl, exact_uppercl
+from validation import metadata_cols, ci_col, validate_data, format_args
 
-def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence = 0.95, multiplier = 100000):
+
+def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 100000):
     """
     Calculates rates uwith confidence limits using byars or exact method.
 
@@ -29,30 +27,25 @@ def ph_rate(df, num_col, denom_col, group_cols = [], metadata = True, confidence
 
     """
     
-    #check and validate data
-    confidence = validate_data(df,[num_col, denom_col], group_cols, confidence, metadata)
+    # Check data and arguments
+    confidence, group_cols = format_args(confidence, group_cols)
+    validate_data(df, num_col, group_cols, metadata, denom_col)
     
     if group_cols is not None:
         df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     #calculate value column
-    df["value"] = df[num_col] / df[denom_col] * multiplier
+    df['Value'] = df[num_col] / df[denom_col] * multiplier
     
    #calculate confidence intervals
     if confidence is not None:
         for c in confidence:
-            if num_col <10:
-                df[ci_col[c, 'lower']] = df.apply(lambda y: exact_lowercl(y[num_col], y[denom_col], c))
-                df[ci_col[c, 'upper']] = df.apply(lambda y: exact_uppercl(y[num_col], y[denom_col], c))
-            else:
-                df[ci_col[c, 'lower']] = df.apply(lambda y: byars_lower((y[num_col], c)/y[denom_col]*multiplier))
-                df[ci_col[c, 'upper']] = df.apply(lambda y: byars_upper((y[num_col], c)/y[denom_col]*multiplier))
+            df[ci_col(c, 'lower')] = df.apply(lambda y: byars_lower(y[num_col], c), axis=1) / df[denom_col] * multiplier
+            df[ci_col(c, 'upper')] = df.apply(lambda y: byars_upper(y[num_col], c), axis=1) / df[denom_col] * multiplier
           
-            #generate staistic and method columns
-            if metadata:
-               statistic = 'rate per 100000' if multiplier == 100000 else f'rate per {(multiplier)}'
-               method = np.where(df[num_col] < 10, 'Exact', 'Byars')
-               df = metadata_cols(df, statistic, confidence, method)
+    # Generate statistic and method columns
+    if metadata:
+        method = np.where(df[num_col] < 10, 'Exact', 'Byars')
+        df = metadata_cols(df, f'Rate per {multiplier}', confidence, method)
     
     return df 
-
