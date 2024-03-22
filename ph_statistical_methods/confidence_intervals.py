@@ -9,7 +9,7 @@ import numpy as np
 import warnings
 from math import sqrt
 from scipy.stats import chi2
-from ph_statistical_methods.utils import get_calc_variables
+from utils import get_calc_variables
 
 
 def wilson_lower(count, denominator, confidence=0.95):
