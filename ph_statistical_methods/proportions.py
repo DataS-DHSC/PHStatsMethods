@@ -65,14 +65,15 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         
     return df
 
+df2 = ph_proportion(df, 'num', 'den')
 
-# def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
+#def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
     
 #     proportion = (numerator / denominator) * multiplier
     
 #     if confidence is not None:
 #         prop_dict = {}
-#         prop_dict['Proportion'] = proportion
+#         prop_dict['Proportion'] = proportio
         
 #         # handle parameter if passed as float
 #         # TODO: make this part of the formatting checks! 

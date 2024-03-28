@@ -101,7 +101,7 @@ def check_arguments(df, columns, metadata = None):
         raise TypeError("'Metadata' must be either True or False")
 
 
-
+## make sure nulls are np nan?
 def validate_data(df, num_col, group_cols, metadata, denom_col = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
@@ -128,4 +128,10 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
 
         if (df[num_col] > df[denom_col]).any():
             raise ValueError('Numerators must be less than or equal to the denominator')
+            
+            
+            
+            
+            
+# check if group columns are the same?
  
