@@ -30,19 +30,20 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     # various checks....
     confidence, group_cols = format_args(confidence, group_cols)
     
-    # this includes observed totals
-    df = df.merge(ref_df, how = 'left', on = group_cols)
+    # add reference data
+    if ref_df is not None:
+        df = df.merge(ref_df, how = 'left', on = group_cols)
     
-    # check same number of rows for each group
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
     df2 = df.groupby(group_cols)['exp_p'].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
     
-    if num_df is not Nonw:
+    if num_df is not None:
         obs = num_df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
     else:
         obs = df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
-        
+    
+    # TODO: might not be merging on all group cols?
     df2 = df2.merge(obs, how = 'left', on = group_cols)
     
     for c in confidence:
