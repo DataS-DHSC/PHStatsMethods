@@ -35,8 +35,10 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     df['Value'] = df['value_sum'] / df['value_count']
     
     for c in confidence:
-        df[ci_col(c, 'lower')] = df['Value'] - abs(stats.t.ppf((1-c)/2, df['value_count'] - 1)) * df['stdev'] / df['value_count']**.5
-        df[ci_col(c, 'upper')] = df['Value'] + abs(stats.t.ppf((1-c)/2, df['value_count'] - 1)) * df['stdev'] / df['value_count']**.5
+        t_dist = abs(stats.t.ppf((1-c)/2, df['value_count'] - 1)) * df['stdev'] / df['value_count']**.5
+        
+        df[ci_col(c, 'lower')] = df['Value'] - t_dist 
+        df[ci_col(c, 'upper')] = df['Value'] + t_dist
 
     if metadata:
         df = metadata_cols(df, "Mean", confidence, "Student's t-distribution")
