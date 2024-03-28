@@ -132,6 +132,24 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
             
             
             
+#def validate_data_ref ():
+ #   validate_data(r)
+  #  validate_data(df)
+    
+ #   chec group cols
             
-# check if group columns are the same?
  
+    
+ 
+# check if group columns are the same?
+
+# ungroup df before joining?
+
+# check same number of rows per group?
+
+# groups and rows should be the same
+
+
+# check group has same name
+ 
+#if group cols then can't have ref_df

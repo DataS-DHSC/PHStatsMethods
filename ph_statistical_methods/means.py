@@ -27,7 +27,7 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     # get grouped statistics
     # TODO: multiple lambda not working?
     df = df.groupby(group_cols)[num_col].agg([lambda x: x.sum(skipna=False), 
-                                              lambda x: x.count().astype(float), 
+                                              lambda x: x.count(), 
                                               lambda x: x.std(skipna=False)]).reset_index()
     
     df = df.rename(columns={df.columns[-3]: 'value_sum', df.columns[-2]: 'value_count', df.columns[-1]: 'stdev'})
