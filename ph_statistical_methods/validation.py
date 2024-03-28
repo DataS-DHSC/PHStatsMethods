@@ -129,7 +129,16 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
         if (df[num_col] > df[denom_col]).any():
             raise ValueError('Numerators must be less than or equal to the denominator')
             
-            
+def reference_pop_checks(df,group_cols=[], ref=None):
+    
+    counts_df = df.groupby(group_cols).size().reset_index(name='count_rows')
+
+    group_row_count = counts_df['count_rows'].iloc[0]
+
+    ref_row_count = len(ref)
+
+    if group_row_count != ref_row_count:
+        raise ValueError(f"Count_ref length ({ref_row_count}) does not match the number of rows in the data groups ({group_row_count})")            
             
             
             

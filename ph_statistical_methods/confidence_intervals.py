@@ -117,7 +117,7 @@ def byars_lower(value, confidence=0.95):
     :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as a float
     """
-    if value <= 0:
+    if value < 0:
         raise ValueError("'Value' must be a positive number")
     
     z = norm.ppf(confidence + (1-confidence)/2)
