@@ -88,16 +88,7 @@ def calculate_ISRatio(df, observations, population, count_ref, pop_ref, group_co
                                     
         
     if confidence is not None: 
-        
-        if len(confidence)== 2:
-            for c in confidence:
-                
-                df[ci_col(c, 'lower')]= df.apply(lambda y: byars_lower(y["observed"],c)/y["expected"]*refvalue,axis=1)
-                df[ci_col(c, 'upper')]= df.apply(lambda y: byars_upper(y["observed"],c)/y["expected"]*refvalue,axis=1)
-                df[ci_col(c, 'lower')]= df.apply(lambda y: byars_lower(y["observed"],c)/y["expected"]*refvalue,axis=1)
-                df[ci_col(c, 'upper')]= df.apply(lambda y: byars_upper(y["observed"],c)/y["expected"]*refvalue,axis=1)
-        
-        else:
+
             for c in confidence:
                 
                 df[ci_col(c, 'lower')]= df.apply(lambda y: byars_lower(y["observed"],c)/y["expected"]*refvalue,axis=1)
@@ -107,6 +98,5 @@ def calculate_ISRatio(df, observations, population, count_ref, pop_ref, group_co
         method = np.where(df["observed"] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'indirectly standardised ratio x {refvalue}', confidence, method)
 
-        
-       
+
     return df
