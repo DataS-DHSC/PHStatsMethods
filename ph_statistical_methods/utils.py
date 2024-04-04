@@ -15,6 +15,30 @@ def get_calc_variables(a):
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
+<<<<<<< HEAD
+=======
+
+def poisson_cis(z, x_a, x_b):
+    
+    q =1
+    tot = 0
+    s = 0
+    k= 0
+    
+    while k<= z or q > tot * 1e-10:
+        tot += q
+        if x_a <= k <= x_b:
+            s+= q
+        if tot > 1e30:
+            s /= 1e30
+            tot /= 1e30
+            q /= 1e30
+        
+        k += 1
+        q*= z / k
+    
+    return s / tot
+>>>>>>> Dev
 
 
 def poisson_funnel(obs, p, side):
