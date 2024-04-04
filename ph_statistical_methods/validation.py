@@ -98,7 +98,7 @@ def check_arguments(df, columns, metadata = None):
     
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
-        raise TypeError("'Metadata' must be either True or False")
+        raise TypeError("'metadata' must be either True or False")
 
 
 ## make sure nulls are np nan?
@@ -106,7 +106,7 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
     if group_cols is not None and not isinstance(group_cols, list):
-        raise TypeError('Pass group_cols as a list')
+        raise TypeError("Pass 'group_cols' as a list")
     
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
 
