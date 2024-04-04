@@ -23,3 +23,4 @@ def test_wilson_upper95():
 #checking for correct reuslt for wilson upper at 99.85 confidence
 def test_wilson_upper99_8():
     assert wilson_upper(76, 238, 0.998) == 0.418131030603369
+    
