@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+<<<<<<< HEAD
 Created on Wed Mar 13 13:58:18 2024
 
 @author: Karandeep.Kaur
@@ -9,8 +10,7 @@ import pandas as pd
 import numpy as np
 
 from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args, check_group_rows
-
+from validation import metadata_cols, ci_col, validate_data, format_args
 
 
 df = pd.DataFrame({'area': ['area1', 'area2', 'area3', 'area4'] * 2,
@@ -26,6 +26,7 @@ num_df = pd.DataFrame({'sex': ['Male', 'Female'],
                        'obs': [1000,  5000]})
 
 group_cols = ['sex']
+
 
         
 # def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None,
@@ -85,18 +86,22 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     
     
     
-    
+    ## could you avoid doing this then grouping by??
     
     # various checks....
     confidence, group_cols = format_args(confidence, group_cols)
     # need to check denom col elsewhere - switching - TODO allow both as null
-    validate_data(df, denom_col, group_cols, metadata)
-    check_group_rows(df, group_cols)
+    validate_data(df, denom_col, group_cols, metadata, equal_group_rows=True)
     # should this be called merge_ref?
-    join_ref(df, 'obs', kwargs)
-    df = join_ref(df, kwargs)
+    join_ref(df, kwargs, 'obs', group_cols, ref_num_col)
+    df = join_ref(df, kwargs, 'ref', group_cols, ref_num_col, ref_denom_col)
     
     
+    # check obs_df is same length as grouped data
+    
+    
+
+
 
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
@@ -113,6 +118,7 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     for c in confidence:
         df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
         df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
+
         
     
     
@@ -189,6 +195,5 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         df = metadata_cols(df, f'indirectly standardised ratio x {refvalue}', confidence, method)
 
     return df
-
 
 

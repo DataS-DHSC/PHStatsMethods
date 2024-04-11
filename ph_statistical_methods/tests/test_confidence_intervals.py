@@ -19,9 +19,15 @@ def test_byars_lower_3std():
     assert byars_lower(200, 0.998) == 199.63144417357614
 
 
-@pytest.mark.parametrize('numerator, denominator. confidence, result', [(20, 360, 0.95, 0.0362482),
-                                                                        (550, 2400, 0.95, 0.2127923)])
-def test_wilson_lower(numerator, denominator, confidence, result):
-    assert wilson_lower(numerator, denominator, confidence) == result
+@pytest.mark.parametrize('num, denom, confidence, result' , [(20, 360, 0.95, 0.036248204600072345),
+                                                             (550, 2400, 0.998, 0.20375892211705743)])
+def test_wilson_lower(num, denom, confidence, result):
+    assert wilson_lower(num, denom, confidence) == result
+
+
+@pytest.mark.parametrize('num1, denom1, conf, res', [(30, 400, 0.95, 0.10504770626130437),
+                                                     (76, 238, 0.998, 0.418131030603369)])
+def test_wilson_upper(num1, denom1, conf, res):
+    assert wilson_upper(num1, denom1, conf) == res
 
 

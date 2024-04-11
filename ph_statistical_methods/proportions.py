@@ -64,27 +64,3 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         df = metadata_cols(df, statistic, confidence, 'Wilson')
         
     return df
-
-df2 = ph_proportion(df, 'num', 'den')
-
-#def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
-    
-#     proportion = (numerator / denominator) * multiplier
-    
-#     if confidence is not None:
-#         prop_dict = {}
-#         prop_dict['Proportion'] = proportio
-        
-#         # handle parameter if passed as float
-#         # TODO: make this part of the formatting checks! 
-#         if isinstance(confidence, float):
-#             confidence = [confidence]
-        
-#         # get confidence interval for all given confidence intervals
-#         for c in confidence:
-#             prop_dict[ci_col(c)] = wilson(numerator, denominator, c)
-        
-#         # set return object to dictionary
-#         proportion = prop_dict
-        
-#     return proportion

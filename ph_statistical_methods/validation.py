@@ -101,7 +101,7 @@ def check_arguments(df, columns, metadata = None):
         raise TypeError("'Metadata' must be either True or False")
         
         
-def check_group_rows(df, group_cols):
+def check_equal_group_rows(df, group_cols):
     
     if group_cols is not None:
         df_g = df.groupby(group_cols).size().reset_index(name='count_rows')
@@ -113,11 +113,16 @@ def check_group_rows(df, group_cols):
 
 
 ## make sure nulls are np nan?
-def validate_data(df, num_col, group_cols, metadata, denom_col = None):
+def validate_data(df, num_col, group_cols = None, metadata = None, 
+                  denom_col = None, equal_group_rows = True):
     
     # adding this as not obvious to pass column as a list for developers using this function
-    if group_cols is not None and not isinstance(group_cols, list):
-        raise TypeError('Pass group_cols as a list')
+    if group_cols is not None:
+        if not isinstance(group_cols, list):
+            raise TypeError('Pass group_cols as a list')
+        
+        if equal_group_rows:
+            check_equal_group_rows(df, group_cols)
     
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
 
@@ -141,12 +146,49 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
             raise ValueError('Numerators must be less than or equal to the denominator')   
 
 
+def check_kwargs(kwargs, substring = None):
+    
+    
+    exp_cols = ['ref_join_cols', 'obs_join_cols']
+    exp_df = ['ref_df', 'obs_df']
+    
+    if substring is not None:
+        exp_cols = [k for k in exp_cols if substring in k]
+        exp_df = [k for k in exp_df if substring in k]
+    
+    for k in kwargs.keys():
+        if k not in exp_cols + exp_df:
+            raise TypeError(f'{k} is not a keyword argument')
+    
+    
+
+### only merge after grouped????
+## no, if 'ref' is in it somehow
+# what if one column is in data only?
+if bool(kwargs):
+    #####check_kwargs(kwargs, substring = ref_type)
+    ref_df = kwargs.get(ref_type + '_df')
+    validate_data(ref_df, ref_num_col, denom_col = ref_denom_col)
+    # check join columns in data
+    
+    # check same length as grouped data
+    if group_cols is not None:
+        if len(ref_df) != df.groupby(group_cols).ngroups:
+            raise TypeError(ref_type + '_df must be same length as number of groups')
+    
+    # merge data
+    if f'{ref_type}_join_left' in kwargs.keys():
+        df2 = df.merge(ref_df, how = 'left',
+                       left_on = kwargs.get(ref_type+'_join_left'), 
+                       right_on = kwargs.get(ref_type+'_join_left'))
+    else:
+        df2 = df.merge(ref_df, how = 'left')
+else:
+    validate_data(df, num_col = ref_num_col, denom_col = ref_denom_col)
+    return df
+
 
 
 
                 
-            
-            
-            
-# check if group columns are the same?
-
+     
