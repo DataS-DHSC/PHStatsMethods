@@ -11,12 +11,29 @@ import numpy as np
 from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data, format_args, reference_pop_checks
 
-                   
-                           
+
+
+df = pd.DataFrame({'area': ['area1', 'area2', 'area3', 'area4'] * 2,
+                   'sex': ['Male']*4 + ['Female']*4,
+                  'num': [800, 900, 500, 300, 400, 300, 450, 550],
+                  'denom': [1000, 1200, 1000, 500, 800, 400, 900, 800]})
+
+ref_df = pd.DataFrame({'sex':['Male', 'Female'],
+                    'num_ref':[10000, 10050],
+                    'denom_ref':[200000, 200100]})
+
+num_df = pd.DataFrame({'sex': ['Male', 'Female'],
+                       'obs': [1000,  5000]})
+
+group_cols = ['sex']
+
         
-def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = [],
-                       confidence=0.95, ref_df=None,refvalue=1, 
-                       metadata=True, observed_totals=None):
+# def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None,
+#                        confidence=0.95, ref_df=None,refvalue=1, 
+#                        metadata=True, observed_totals=None):
+    
+def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
+                      metadata = True, confidence = 0.95, refvalue = 1, **kwargs):
     
     """Calculates standard mortality ratios (or indirectly standardised ratios) with
     confidence limits using Byar's (1) or exact (2) CI method.
@@ -36,12 +53,18 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         
         ref_denom_col (str): the reference population for each standardisation category (eg age band)
         
-        group_cols (list): A list of column name(s) to group the data by. Defaults to None.
+        group_cols: A string or list of column name(s) to group the data by. Defaults to None.
         
         confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
         Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
         
         refvalue (int): the standardised reference ratio, default = 1
+        
+    **kwargs:
+        ref_df
+        ref_join_cols
+        obs_df
+        obs_join_cols
         
         
         ref_df (Dataframe): If ref_num_col and ref_denom_col are not found within df a ref_df dataframe may be used
@@ -55,6 +78,49 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
                  
     
     """
+    
+    
+    print(bool(kwargs))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        # various checks....
+    confidence, group_cols = format_args(confidence, group_cols)
+    
+    # add reference data
+    if ref_df is not None:
+        df = df.merge(ref_df, how = 'left', on = group_cols)
+    
+    df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
+    
+    df2 = df.groupby(group_cols)['exp_p'].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
+    
+    if num_df is not None:
+        obs = num_df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
+    else:
+        obs = df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
+    
+    # TODO: might not be merging on all group cols?
+    df2 = df2.merge(obs, how = 'left', on = group_cols)
+    
+    for c in confidence:
+        df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
+        df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
+        
+    
+    
+    
+    
+    
+    
+    ##############################################
     
     
     confidence, group_cols = format_args(confidence, group_cols)
