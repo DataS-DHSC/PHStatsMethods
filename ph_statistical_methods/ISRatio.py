@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args, reference_pop_checks
+from validation import metadata_cols, ci_col, validate_data, format_args, check_group_rows
 
 
 
@@ -63,8 +63,12 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     **kwargs:
         ref_df
         ref_join_cols
+        ref_join_left
+        ref_join_right
         obs_df
         obs_join_cols
+        obs_join_left
+        obs_join_right
         
         
         ref_df (Dataframe): If ref_num_col and ref_denom_col are not found within df a ref_df dataframe may be used
@@ -80,24 +84,20 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     """
     
     
-    print(bool(kwargs))
     
     
     
-    
-    
-    
-    
-    
-    
-    
-        # various checks....
+    # various checks....
     confidence, group_cols = format_args(confidence, group_cols)
+    # need to check denom col elsewhere - switching - TODO allow both as null
+    validate_data(df, denom_col, group_cols, metadata)
+    check_group_rows(df, group_cols)
+    # should this be called merge_ref?
+    join_ref(df, 'obs', kwargs)
+    df = join_ref(df, kwargs)
     
-    # add reference data
-    if ref_df is not None:
-        df = df.merge(ref_df, how = 'left', on = group_cols)
     
+
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
     df2 = df.groupby(group_cols)['exp_p'].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
@@ -179,17 +179,14 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     df["Value"]=df["observed"]/df["expected"]*refvalue
                                     
         
-    if confidence is not None: 
-
-            for c in confidence:
-                
-                df[ci_col(c, 'lower')] = df.apply(lambda y: byars_lower(y["observed"],c)/y["expected"]* refvalue, axis=1)
-                df[ci_col(c, 'upper')] = df.apply(lambda y: byars_upper(y["observed"],c)/y["expected"]* refvalue, axis=1)
+    if confidence is not None:
+        for c in confidence:
+            df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x["observed"], c) / x["expected"] * refvalue, axis=1)
+            df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x["observed"], c) / x["expected"] * refvalue, axis=1)
         
     if metadata:
         method = np.where(df["observed"] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'indirectly standardised ratio x {refvalue}', confidence, method)
-
 
     return df
 

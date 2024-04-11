@@ -99,6 +99,17 @@ def check_arguments(df, columns, metadata = None):
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
         raise TypeError("'Metadata' must be either True or False")
+        
+        
+def check_group_rows(df, group_cols):
+    
+    if group_cols is not None:
+        df_g = df.groupby(group_cols).size().reset_index(name='count_rows')
+        
+        n = len(df_g['count_rows'].unique())
+        
+        if n > 1:
+            raise ValueError('Data must contain the same number of rows per group')
 
 
 ## make sure nulls are np nan?
@@ -127,27 +138,10 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
             raise ValueError('Denominators must be greater than zero')
 
         if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')
-            
+            raise ValueError('Numerators must be less than or equal to the denominator')   
 
-def reference_pop_checks(df,group_cols=[],ref_num_col=None,
-                         ref_denom_col=None, ref_df=None):
-    
-    counts_df = df.groupby(group_cols).size().reset_index(name='count_rows')
 
-    group_row_count = counts_df['count_rows'].iloc[0]
 
-    ref_row_count = len(ref_df)
-
-    if group_row_count != ref_row_count:
-        raise ValueError(f"ref_num_col length ({ref_row_count}) does not match the number of rows in the data groups ({group_row_count})")
-    
-    ref_check= ref_df.drop([ref_num_col,ref_denom_col], axis=1)
-    
-
-    no_match =  [col for col in ref_check.columns if col not in df.columns]
-    if no_match:
-        raise ValueError(f"the following columns in df_ref are not in df {', '.join(no_match)}. Please ensure column names match") 
 
 
                 
