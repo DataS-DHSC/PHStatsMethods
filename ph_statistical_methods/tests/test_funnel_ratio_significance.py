@@ -20,7 +20,7 @@ from utils import funnel_ratio_significance
 def test_funnel_ratio_significance(obs, expected, p, side, result):
     assert round(funnel_ratio_significance(obs, expected, p, side), 2) == result
 
-@pytest.mark.skip(reason="Special cases are tested in the parameterized test above")
+@pytest.mark.skip(reason="Special cases are tested in the parameterised test above")
 def test_funnel_ratio_significance_special_case():
     assert funnel_ratio_significance(0, 10.0, 0.05, 'low') == 0
 
