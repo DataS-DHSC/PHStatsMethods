@@ -97,6 +97,13 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     df = join_ref(df, kwargs, 'ref', group_cols, ref_num_col, ref_denom_col)
     
     
+    
+    def kwargs_print(**kwargs):
+        print(type(kwargs))
+        
+    kwargs_print(first = 1, second=2, tree = 'leaf')
+    
+    
     # check obs_df is same length as grouped data
     
     
@@ -195,5 +202,6 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         df = metadata_cols(df, f'indirectly standardised ratio x {refvalue}', confidence, method)
 
     return df
+
 
 
