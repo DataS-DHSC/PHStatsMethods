@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args
+from validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
 
 df = pd.DataFrame({'area': ['area1', 'area2', 'area3', 'area4'] ,#* 2,
@@ -30,26 +30,8 @@ num_df = pd.DataFrame({'sex': ['Male', 'Female'],
 group_cols = ['sex']
 
 
-df <- data.frame(area = c('area1', 'area2', 'area3', 'area4'),
-                 sex = c('Male', 'Female', 'Male', 'Female'),
-                 num = c(800, 900, 500, 300),
-                 denom = c(1000, 1200, 1000, 500))
-
-
-ref_df <- data.frame(sex = c('Male', 'Female'),
-                     num_ref = c(10000, 10050),
-                     denom_ref = c(20000, 20010))
-
-df %>% group_by(sex) %>%
-calculate_ISRatio(num, denom, ref_df$num_ref, ref_df$denom_ref)
-
-
-        
-# def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None,
-#                        confidence=0.95, ref_df=None,refvalue=1, 
-#                        metadata=True, observed_totals=None):
     
-def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
+def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
                       metadata = True, confidence = 0.95, refvalue = 1, **kwargs):
     
     """Calculates standard mortality ratios (or indirectly standardised ratios) with
@@ -83,154 +65,42 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         ref_join_left
         ref_join_right
         obs_df
-        obs_join_cols
         obs_join_left
         obs_join_right
-        
-        
-        ref_df (Dataframe): If ref_num_col and ref_denom_col are not found within df a ref_df dataframe may be used
-        ref_num_col and ref_denom_col will refer to the respective columns within ref_df. ref_df must also contain columns
-        with the same naming conventions as found within df. e.g. if the reference data contains columns "sex" and "ageband"
-        then these column names must be found in df.
-        
-        observed_totals (Dataframe): data.frame containing total observed events for each group, if not provided with 
-        age-breakdowns in data. Must only contain the count field (num_col) plus grouping columns required to join to data using the
-        same grouping column names; default = NULL
-                 
-    
+
     """
-    
-    
-    
-    ## could you avoid doing this then grouping by??
-    
-    # various checks....
+
+    # validate data - TODO: check group by row lengths?
     confidence, group_cols = format_args(confidence, group_cols)
-    # need to check denom col elsewhere - switching - TODO allow both as null
-    validate_data(df, denom_col, group_cols, metadata, equal_group_rows=True)
-    # should this be called merge_ref?
-    join_ref(df, kwargs, 'obs', group_cols, ref_num_col)
-    df = join_ref(df, kwargs, 'ref', group_cols, ref_num_col, ref_denom_col)
-    
-    
-    
-    
-    
-    df = df.merge(ref_df, how = 'left', on = 'sex')
-    
-    df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
-    
-    df2 = df.groupby(group_cols)[['exp_x','num']].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    # check obs_df is same length as grouped data
-    
-    
-
-
-
-    df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
-    
-    df2 = df.groupby(group_cols)['exp_p'].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
-    
-    if num_df is not None:
-        obs = num_df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
-    else:
-        obs = df.groupby(group_cols)[num_col].sum().reset_index().rename(columns={num_col:'Observed'})
-    
-    # TODO: might not be merging on all group cols?
-    df2 = df2.merge(obs, how = 'left', on = group_cols)
-    
-    for c in confidence:
-        df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
-        df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x['Observed'], (1-c)), axis=1) / df['Expected'] * refvalue
-
-        
-    
-    
-    
-    
-    
-    
-    ##############################################
-    
-    
-    confidence, group_cols = format_args(confidence, group_cols)
+    validate_data(df, denom_col, group_cols, metadata)
+    ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
+    obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)
     
     if ref_df is not None:
+        df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)
     
-        reference_pop_checks(df,group_cols=group_cols,ref_num_col=ref_num_col,
-                                 ref_denom_col=ref_denom_col, ref_df=ref_df)       
-                  
-        join_cols = list(set(df.columns).intersection(ref_df.columns))
+    df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
+    
+    ## TODO: must be a groupby?
+    if obs_df is not None:
+        df = df.groupby(group_cols)[['exp_x']].apply(lambda x: x.sum(skipna=False)).reset_index()
+        df = df.merge(obs_df, how = 'left', left_on = obs_join_left, right_on = obs_join_right)
+    else:
+        df = df.groupby(group_cols)[['exp_x', num_col]].sum().reset_index()
+        
+    df = df.rename(columns={num_col: 'Observed', 'exp_x': 'Expected'}).reindex(columns=(group_cols + ['Observed', 'Expected']))
+    
+    df['Value'] = df['Observed'] / df['Expected'] * refvalue
+    
+    for c in confidence:
+        df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x['Observed'], c), axis=1) / df['Expected'] * refvalue
+        df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x['Observed'], c), axis=1) / df['Expected'] * refvalue
 
-    
-        df = df.merge(ref_df, how = 'left', on = join_cols)
-    
-    
-    if observed_totals is None:
-        
-        validate_data(df, num_col, group_cols, metadata, denom_col)
-        
-    
-        df = df.rename(columns= {num_col: "observed"})
-        
-
-        
-        df['expected'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
-              
-    
-        df = df.groupby(group_cols)[["observed","expected"]].sum().reset_index()
-    
-    if observed_totals is not None:
-    #else:
-        validate_data(observed_totals, num_col, None, metadata)
-            
-
-            
-        df['expected'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
-        
-        df = df.groupby(group_cols)["expected"].sum().reset_index()
-                
-        obs_join_cols = list(set(df.columns).intersection(observed_totals.columns))
-        
-        
-        df = df.merge(observed_totals, how = 'left', on = obs_join_cols)
-        
-        df = df.rename(columns= {num_col: "observed"})
-        
-        col_list = list(df.columns)
-        
-        x, y = col_list.index("expected"), col_list.index("observed")
-        
-        col_list[y], col_list[x] = col_list[x], col_list[y]
-        
-        df = df[col_list]
-        
-  
-    df["Value"]=df["observed"]/df["expected"]*refvalue
-                                    
-        
-    if confidence is not None:
-        for c in confidence:
-            df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x["observed"], c) / x["expected"] * refvalue, axis=1)
-            df[ci_col(c, 'upper')] = df.apply(lambda x: byars_upper(x["observed"], c) / x["expected"] * refvalue, axis=1)
-        
     if metadata:
-        method = np.where(df["observed"] < 10, 'Exact', 'Byars')
+        method = np.where(df['Observed'] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'indirectly standardised ratio x {refvalue}', confidence, method)
-
+    
     return df
-
-
-
+    
+    
+    
