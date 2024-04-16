@@ -120,7 +120,7 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
     
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
-    df2 = df.groupby(group_cols)[['exp_x','num']].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
+    df2 = df.groupby(group_cols)['exp_x'].apply(lambda x: x.sum(skipna=False)).reset_index().rename(columns={'exp_x':'Expected'})
     
     
     
