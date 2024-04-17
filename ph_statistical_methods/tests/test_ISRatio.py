@@ -18,9 +18,6 @@ class TestISRatio:
     data_results = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testresults_ISR')\
         .drop(['ref_rate'], axis=1).astype({'Observed':'float64'})  
     data_obs = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testdata_multiarea_lookup')
-    #data_obs = pd.read_excel('tests/test_data/testdata_ISR_obs.xlsx', sheet_name = 'df')
-    #obs = pd.read_excel('tests/test_data/testdata_ISR_obs.xlsx', sheet_name = 'obs')
-    #obs_results = pd.read_excel('tests/test_data/testdata_ISR_obs.xlsx', sheet_name = 'obs_results')
     cols_95 = [0,1,2,3,4,5,8,9]
     
     def test_ownref_2cis(self):
