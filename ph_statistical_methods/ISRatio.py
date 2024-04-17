@@ -13,24 +13,6 @@ from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
 
-df = pd.DataFrame({'area': ['area1', 'area2', 'area3', 'area4'] ,#* 2,
-                   'sex': ['Male','Female','Male','Female'],
-                  'num': [800, 900, 500, 300],# 400, 300, 450, 550],
-                  'denom': [1000, 1200, 1000, 500]})# 800, 400, 900, 800]})
-
-
-
-ref_df = pd.DataFrame({'sex':['Male', 'Female'],
-                    'num_ref':[10000, 10050],
-                    'denom_ref':[20000, 20010]})
-
-num_df = pd.DataFrame({'sex': ['Male', 'Female'],
-                       'x': [1000,  5000]})
-
-group_cols = ['sex']
-
-
-    
 def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
                       metadata = True, confidence = 0.95, refvalue = 1, **kwargs):
     
@@ -56,7 +38,7 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         
         confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
         Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
-        
+
         refvalue (int): the standardised reference ratio, default = 1
         
     **kwargs:
@@ -72,9 +54,9 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
 
     # validate data - TODO: check group by row lengths?
     confidence, group_cols = format_args(confidence, group_cols)
-    validate_data(df, denom_col, group_cols, metadata)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
     obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)
+    validate_data(df, denom_col, group_cols, metadata, ref_df = ref_df)
     
     if ref_df is not None:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)

@@ -94,7 +94,7 @@ def check_arguments(df, columns, metadata = None):
             raise TypeError('Column names must be a quoted string')
         
         if col not in df.columns:
-            raise ValueError(f'{col} is not a column header')
+            raise ValueError(f"'{col}' is not a column header")
     
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
@@ -102,13 +102,22 @@ def check_arguments(df, columns, metadata = None):
         
 
 ## make sure nulls are np nan?
-def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None):
+def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
     if group_cols is not None:
         if not isinstance(group_cols, list):
             raise TypeError('Pass group_cols as a list')
-    
+            
+        if ref_df is not None:
+            n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
+            
+            if n_group_rows.counts.nunique() > 1:
+                raise ValueError('There must be the same number of rows per group')
+                
+            if n_group_rows.counts.unique() != len(ref_df):
+                raise ValueError('ref_df length must equal same number of rows in each group within data')
+                
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
 
     check_arguments(df, (numeric_cols if group_cols is None else numeric_cols + group_cols), metadata)
@@ -116,7 +125,7 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     # check numeric columns
     for col in numeric_cols:
         if not is_numeric_dtype(df[col]):
-            raise TypeError(f'{col} column must be a numeric data type')
+            raise TypeError(f"'{col}' column must be a numeric data type")
         
         # No negative values
         if (df[col] < 0).any():
