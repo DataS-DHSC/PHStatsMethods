@@ -30,4 +30,7 @@ def test_NAs(data, results):
     df = ph_mean(data, 'values', 'area').drop(['Confidence'], axis=1)
     df2 = results.iloc[:2, :].drop(['lower_99_8_ci', 'upper_99_8_ci'], axis = 1)
     assert_frame_equal(df, df2)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4b483d9a2ada1c4633eb23317500080b4074a7bb
