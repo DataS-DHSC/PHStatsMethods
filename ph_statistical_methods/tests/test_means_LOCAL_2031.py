@@ -22,12 +22,11 @@ def test_default_group(data, results):
     assert_frame_equal(df, df2)
     
 def test_2ci(data, results):
-    df = ph_mean(data.iloc[:-2], 'values', 'area', confidence = [0.95, 0.998]).drop('Confidence', axis=1)
+    df = ph_mean(data.iloc[:-1], 'values', 'area', confidence = [0.95, 0.998]).drop(['Confidence'], axis=1)
     df2 = results.iloc[:2, :]
     assert_frame_equal(df, df2)
     
-def test_NAs(data, results):
-    df = ph_mean(data, 'values', 'area').drop(['Confidence'], axis=1)
-    df2 = results.iloc[:2, :].drop(['lower_99_8_ci', 'upper_99_8_ci'], axis = 1)
+def test_NAs(data, results_NA):
+    df = df = ph_mean(data, 'values', 'area').drop(['Confidence'], axis=1)
+    df2 = results_NA.iloc[:2, :].drop(['lower_99_8_ci', 'upper_99_8_ci'], axis = 1)
     assert_frame_equal(df, df2)
-
