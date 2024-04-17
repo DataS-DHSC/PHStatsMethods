@@ -10,6 +10,7 @@ import warnings
 from math import sqrt
 from scipy.stats import chi2, norm
 from utils import get_calc_variables
+from scipy import stats
 
 
 def wilson_lower(count, denominator, confidence=0.95):
@@ -217,3 +218,39 @@ def poisson_cis(z, x_a, x_b):
         q *= z / k
         
     return s / tot
+
+def student_t_dist_lower(value, value_count, st_dev, confidence):
+    """
+    Calculates lower confidence interval using Student's t-distribution
+
+    :param value: The value to calculate confidence intervals over.
+    :param confidence: Takes a confidence interval (e.g. 0.95, 0.998)
+    :param value_count: Takes the number of observations used.
+    :param st_dev: Takes the standard deviation.
+    :return: Lower confidence interval as a float
+    """
+    return value - (abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5)
+
+def student_t_dist_upper(value, value_count, st_dev, confidence):
+    """
+    Calculates upper confidence interval using Student's t-distribution
+
+    :param value: The value to calculate confidence intervals over.
+    :param confidence: Takes a confidence interval (e.g. 0.95, 0.998)
+    :param value_count: Takes the number of observations used.
+    :param st_dev: Takes the standard deviation.
+    :return: Upper confidence interval as a float
+    """
+    return value + (abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5)
+
+def student_t_dist(value, value_count, st_dev, confidence):
+    """
+    Calculates confidence intervals using Student's t-distribution
+
+    :param value: The value to calculate confidence intervals over.
+    :param confidence: Takes a confidence interval (e.g. 0.95, 0.998)
+    :param value_count: Takes the number of observations used.
+    :param st_dev: Takes the standard deviation.
+    :return: Upper confidence interval as a float
+    """
+    return student_t_dist_lower(value, value_count, st_dev, confidence), student_t_dist_upper(value, value_count, st_dev, confidence)

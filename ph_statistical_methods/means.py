@@ -7,7 +7,7 @@ Created on Thu Mar 28 11:12:17 2024
 
 import numpy as np
 import pandas as pd
-from scipy import stats
+from confidence_intervals import student_t_dist
 
 from validation import metadata_cols, ci_col, validate_data, format_args
 
@@ -25,7 +25,6 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
         raise TypeError('group_cols cannot be None for a mean statistic')
         
     # get grouped statistics
-    # TODO: multiple lambda not working?
     df = df.groupby(group_cols)[num_col].agg([lambda x: x.sum(skipna=False), 
                                               lambda x: x.count(), 
                                               lambda x: x.std(skipna=False)]).reset_index()
@@ -35,13 +34,11 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     df['Value'] = df['value_sum'] / df['value_count']
     
     for c in confidence:
-        t_dist = abs(stats.t.ppf((1-c)/2, df['value_count'] - 1)) * df['stdev'] / df['value_count']**.5
-        
-        df[ci_col(c, 'lower')] = df['Value'] - t_dist 
-        df[ci_col(c, 'upper')] = df['Value'] + t_dist
+        lower, upper = student_t_dist(df['Value'], df['value_count'], df['stdev'], c)
+        df[ci_col(c, 'lower')] = lower 
+        df[ci_col(c, 'upper')] = upper
 
     if metadata:
         df = metadata_cols(df, "Mean", confidence, "Student's t-distribution")
     
     return df
-
