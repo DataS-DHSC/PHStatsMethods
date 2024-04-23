@@ -107,7 +107,7 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     # adding this as not obvious to pass column as a list for developers using this function
     if group_cols is not None:
         if not isinstance(group_cols, list):
-            raise TypeError('Pass group_cols as a list')
+            raise TypeError("Pass 'group_cols' as a list")
             
         if ref_df is not None:
             n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
