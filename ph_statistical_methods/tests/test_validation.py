@@ -99,6 +99,11 @@ class Test_validate_data:
                        'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
                        'den': [10000] * 12})
     
+    df_r = pd.DataFrame({'area': [1, 1, 1, 2, 2, 2],
+                         'age': [0, 5, 10, 0, 5, 10],
+                         'num': [1, 82, 100, 100, 100, 100],
+                         'den': [10000] * 6})
+    
     ref = pd.DataFrame({'age': [0, 5],
                          'ref_val': [82, 9]})
 
@@ -111,12 +116,9 @@ class Test_validate_data:
             validate_data(self.df, "num", ["area"], True, denom_col = "den", ref_df = self.ref)
 
     def test_validate_data_equal_ref(self):
-        df = pd.DataFrame({'area': [1, 1, 1, 2, 2, 2],
-                           'age': [0, 5, 10, 0, 5, 10],
-                           'num': [1, 82, 100, 100, 100, 100],
-                           'den': [10000] * 6})
+
         with pytest.raises(ValueError, match = "ref_df length must equal same number of rows in each group within data"):
-            validate_data(df, "num", ["area"], True, denom_col = "den", ref_df = self.ref)
+            validate_data(self.df_r, "num", ["area"], True, denom_col = "den", ref_df = self.ref)
 
 
     def test_validate_data_dtype(self):
