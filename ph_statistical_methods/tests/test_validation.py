@@ -19,7 +19,7 @@ class Test_metadata_cols:
     def test_cols(self):
         metadata_cols(self.df, "Percentage", confidence = None, method = "Wilsons")
         assert self.df.loc[0, "Statistic"] == "Percentage"
-        assert "Method" not in self.df.columns # A method shoud not be provided in there are no CIs
+        assert "Method" not in self.df.columns # A method shoud not be provided if there are no CIs
 
     def test_single_confidence(self):
         metadata_cols(self.df, "Percentage", confidence = [0.95], method = "Wilsons")
@@ -98,21 +98,21 @@ def test_validate_data_group_cols():
         validate_data(df, "num", "area", True, denom_col = "den")
 
 def test_validate_data_dtype():
-    df = pd.DataFrame({'area': [1, 2], 'num': ["1", "82"], 'den': [10000, 10000,]})
+    df = pd.DataFrame({'area': [1, 2], 'num': ["1", "82"], 'den': [10000, 10000]})
     with pytest.raises(TypeError, match = "num column must be a numeric data type"):
         validate_data(df, "num", ["area"], True, denom_col = "den")
 
 def test_validate_data_neg():
-    df = pd.DataFrame({'area': [1, 2], 'num': [-1, 82], 'den': [10000, 10000,]})
+    df = pd.DataFrame({'area': [1, 2], 'num': [-1, 82], 'den': [10000, 10000]})
     with pytest.raises(ValueError, match = "No negative numbers can be used to calculate these statistics"):
         validate_data(df, "num", ["area"], True, denom_col = "den")
 
 def test_validate_data_den0():
-    df = pd.DataFrame({'area': [1, 2], 'num': [0, 82], 'den': [0, 10000,]})
+    df = pd.DataFrame({'area': [1, 2], 'num': [0, 82], 'den': [0, 10000]})
     with pytest.raises(ValueError, match = "Denominators must be greater than zero"):
         validate_data(df, "num", ["area"], True, denom_col = "den")
 
 def test_validate_data_den0():
-    df = pd.DataFrame({'area': [1, 2], 'num': [5, 82], 'den': [1, 10000,]})
+    df = pd.DataFrame({'area': [1, 2], 'num': [5, 82], 'den': [1, 10000]})
     with pytest.raises(ValueError, match = "Numerators must be less than or equal to the denominator"):
         validate_data(df, "num", ["area"], True, denom_col = "den")
