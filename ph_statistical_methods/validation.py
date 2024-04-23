@@ -115,7 +115,7 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
             if n_group_rows.counts.nunique() > 1:
                 raise ValueError('There must be the same number of rows per group')
                 
-            if len(n_group_rows) != len(ref_df):
+            if n_group_rows.counts.unique() != len(ref_df):
                 raise ValueError('ref_df length must equal same number of rows in each group within data')
                 
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
