@@ -11,10 +11,8 @@ from validation import metadata_cols, ci_col, check_cis, format_args, check_argu
 
 class Test_metadata_cols:
 
-    df = pd.DataFrame({'area': [1, 2]*6,
-                    'area2': ['Area7', 'Area2','Area1']*4,
-                    'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
-                    'den': [10000, 10000, 10000, 10000] * 3})
+    df = pd.DataFrame({'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                       'den': [10000] * 12})
 
     def test_cols(self):
         metadata_cols(self.df, "Percentage", confidence = None, method = "Wilsons")
@@ -77,10 +75,8 @@ class Test_check_args:
         with pytest.raises(ValueError, match = "'df' argument must be a Pandas DataFrame"):
             check_arguments(data, "num", None)
 
-    df = pd.DataFrame({'area': [1, 2]*6,
-                'area2': ['Area7', 'Area2','Area1']*4,
-                'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
-                'den': [10000, 10000, 10000, 10000] * 3})
+    df = pd.DataFrame({'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                       'den': [10000] * 12})
 
     def test_check_arguments_quotes(self):
         with pytest.raises(TypeError, match = "Column names must be a quoted string"):
