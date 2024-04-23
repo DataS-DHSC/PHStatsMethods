@@ -94,7 +94,7 @@ def check_arguments(df, columns, metadata = None):
             raise TypeError('Column names must be a quoted string')
         
         if col not in df.columns:
-            raise ValueError(f'{col} is not a column header')
+            raise ValueError(f"'{col}' is not a column header")
     
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
@@ -102,12 +102,22 @@ def check_arguments(df, columns, metadata = None):
 
 
 ## make sure nulls are np nan?
-def validate_data(df, num_col, group_cols, metadata, denom_col = None):
+def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
     
     # adding this as not obvious to pass column as a list for developers using this function
-    if group_cols is not None and not isinstance(group_cols, list):
-        raise TypeError("Pass 'group_cols' as a list")
-    
+    if group_cols is not None:
+        if not isinstance(group_cols, list):
+            raise TypeError('Pass group_cols as a list')
+            
+        if ref_df is not None:
+            n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
+            
+            if n_group_rows.counts.nunique() > 1:
+                raise ValueError('There must be the same number of rows per group')
+                
+            if n_group_rows.counts.unique() != len(ref_df):
+                raise ValueError('ref_df length must equal same number of rows in each group within data')
+                
     numeric_cols = [num_col] if denom_col is None else [num_col, denom_col]
 
     check_arguments(df, (numeric_cols if group_cols is None else numeric_cols + group_cols), metadata)
@@ -115,7 +125,7 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
     # check numeric columns
     for col in numeric_cols:
         if not is_numeric_dtype(df[col]):
-            raise TypeError(f'{col} column must be a numeric data type')
+            raise TypeError(f"'{col}' column must be a numeric data type")
         
         # No negative values
         if (df[col] < 0).any():
@@ -127,29 +137,41 @@ def validate_data(df, num_col, group_cols, metadata, denom_col = None):
             raise ValueError('Denominators must be greater than zero')
 
         if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')
-            
-            
-            
-            
-#def validate_data_ref ():
- #   validate_data(r)
-  #  validate_data(df)
+            raise ValueError('Numerators must be less than or equal to the denominator')   
+
+
+
+def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None):
     
- #   chec group cols
-            
- 
+    if (ref_type + '_df') in kwargs.keys():
+        ref_df = kwargs.get(ref_type + '_df')
+        
+        if (ref_type + '_join_left') not in kwargs.keys() or (ref_type + '_join_right') not in kwargs.keys():
+            raise ValueError(f"'{ref_type}_df' given as a keyword argument but not '{ref_type}_join_left' and/or '{ref_type}_join_right'")
+        
+        else:
+            join_left = kwargs.get(ref_type + '_join_left')
+            join_right = kwargs.get(ref_type + '_join_right')
+        
+        join_left = [join_left] if isinstance(join_left, str) else join_left
+        join_right = [join_right] if isinstance(join_right, str) else join_right
+        
+        validate_data(ref_df, num_col = ref_num_col, group_cols = join_right, denom_col = ref_denom_col)
+        check_arguments(df, join_left)
+        
+        return (ref_df, join_left, join_right)
     
- 
-# check if group columns are the same?
+    else:
+        validate_data(df, num_col = ref_num_col, denom_col = ref_denom_col)
+       
+        return(None, None, None)
+    
+    
+## join with ages?
 
-# ungroup df before joining?
-
-# check same number of rows per group?
-
-# groups and rows should be the same
 
 
-# check group has same name
- 
-#if group cols then can't have ref_df
+
+
+                
+     
