@@ -7,8 +7,8 @@ Created on Thu Feb 29 16:49:06 2024
 
 import pandas as pd
 import numpy as np
-from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args
+from .confidence_intervals import byars_lower, byars_upper
+from .validation import metadata_cols, ci_col, validate_data, format_args
 
 
 def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 100000):

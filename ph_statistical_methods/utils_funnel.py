@@ -5,7 +5,7 @@ Created on Wed Mar 20 17:34:08 2024
 @author: Annabel.Westermann
 """
 
-from confidence_intervals import poisson_cis
+from .confidence_intervals import poisson_cis
 
 def poisson_funnel(obs, p, side):
     """

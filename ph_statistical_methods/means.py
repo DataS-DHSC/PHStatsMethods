@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from validation import metadata_cols, ci_col, validate_data, format_args
+from .validation import metadata_cols, ci_col, validate_data, format_args
 
 df = pd.DataFrame({'area': ['Area1', 'Area1','Area1','Area2','Area2','Area2'],
                   'num': [20,np.nan,40,200,300,400]})
