@@ -100,7 +100,7 @@ class check_args:
 # validate_data
 def test_validate_data_dtype():
     df = pd.DataFrame({'area': [1, 2], 'num': ["1", "82"], 'den': [10000, 10000]})
-    with pytest.raises(TypeError, match = "num column must be a numeric data type"):
+    with pytest.raises(TypeError, match = "'num' column must be a numeric data type"):
         validate_data(df, "num", ["area"], True, denom_col = "den")
 
 def test_validate_data_neg():
