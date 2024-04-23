@@ -68,35 +68,36 @@ def test_format_args():
 
 
 # check_arguments()
-df = pd.DataFrame({'area': [1, 2]*6,
-                'area2': ['Area7', 'Area2','Area1']*4,
-                'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
-                'den': [10000, 10000, 10000, 10000] * 3})
-
 def test_check_arguments_df():
     data = [('area1', 30, 40), ('area1', 25, 50)]
     with pytest.raises(ValueError, match = "'df' argument must be a Pandas DataFrame"):
         check_arguments(data, "num", None)
 
-def test_check_arguments_quotes():
-    with pytest.raises(TypeError, match = "Column names must be a quoted string"):
-        check_arguments(df, ["num", 50], metadata = None)
+class check_args: 
 
-def test_check_arguments_header():
-    with pytest.raises(ValueError, match = "denom_col is not a column header"):
-        check_arguments(df, ["num", "denom_col"], metadata = None)
+    df = pd.DataFrame({'area': [1, 2]*6,
+                'area2': ['Area7', 'Area2','Area1']*4,
+                'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                'den': [10000, 10000, 10000, 10000] * 3})
 
-def test_check_arguments_metadata():
-    with pytest.raises(TypeError, match = "'metadata' must be either True or False"):
-        check_arguments(df, ["num"], metadata = "Invalid")
+    def test_check_arguments_quotes(self):
+        with pytest.raises(TypeError, match = "Column names must be a quoted string"):
+            check_arguments(self.df, ["num", 50], metadata = None)
 
+    def test_check_arguments_header(self):
+        with pytest.raises(ValueError, match = "denom_col is not a column header"):
+            check_arguments(self.df, ["num", "denom_col"], metadata = None)
 
+    def test_check_arguments_metadata(self):
+        with pytest.raises(TypeError, match = "'metadata' must be either True or False"):
+            check_arguments(self.df, ["num"], metadata = "Invalid")
 
 # validate_data
-def test_validate_data_group_cols():
-    with pytest.raises(TypeError, match = "Pass 'group_cols' as a list"):
-        validate_data(df, "num", "area", True, denom_col = "den")
+    def test_validate_data_group_cols(self):
+        with pytest.raises(TypeError, match = "Pass 'group_cols' as a list"):
+            validate_data(self.df, "num", "area", True, denom_col = "den")
 
+# validate_data
 def test_validate_data_dtype():
     df = pd.DataFrame({'area': [1, 2], 'num': ["1", "82"], 'den': [10000, 10000]})
     with pytest.raises(TypeError, match = "num column must be a numeric data type"):
