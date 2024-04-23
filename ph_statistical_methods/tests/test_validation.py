@@ -90,15 +90,32 @@ class Test_check_args:
         with pytest.raises(TypeError, match = "'metadata' must be either True or False"):
             check_arguments(self.df, ["num"], metadata = "Invalid")
 
-# validate_data uses same df
-    def test_validate_data_group_cols(self):
-        with pytest.raises(TypeError, match = "Pass 'group_cols' as a list"):
-            validate_data(self.df, "num", "area", True, denom_col = "den")
-
 
 
 # validate_data
 class Test_validate_data:
+
+    df = pd.DataFrame({'area': [1, 1, 2] * 4,
+                       'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
+                       'den': [10000] * 12})
+    
+    ref = pd.DataFrame({'area': [1, 2],
+                         'ref_val': [82, 9]})
+
+    def test_validate_data_group_cols(self):
+        with pytest.raises(TypeError, match = "Pass 'group_cols' as a list"):
+            validate_data(self.df, "num", "area", True, denom_col = "den")
+
+    def test_validate_data_equal_groups(self):
+        with pytest.raises(ValueError, match = "There must be the same number of rows per group"):
+            validate_data(self.df, "num", ["area"], True, denom_col = "den", ref_df = self.ref)
+
+    def test_validate_data_equal_ref(self):
+        df = pd.DataFrame({'area': [1, 1, 2, 2, 3, 3], 'num': [1, 82, 100, 100, 100, 100], 'den': [10000] * 6})
+        with pytest.raises(ValueError, match = "ref_df length must equal same number of rows in each group within data"):
+            validate_data(df, "num", ["area"], True, denom_col = "den", ref_df = self.ref)
+
+
     def test_validate_data_dtype(self):
         df = pd.DataFrame({'area': [1, 2], 'num': ["1", "82"], 'den': [10000, 10000]})
         with pytest.raises(TypeError, match = "'num' column must be a numeric data type"):
