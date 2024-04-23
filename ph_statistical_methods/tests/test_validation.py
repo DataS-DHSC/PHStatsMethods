@@ -54,10 +54,10 @@ def test_ci_check_range():
 
 def test_ci_check_round_er():
     with pytest.raises(ValueError, match = 'There are duplicate confidence intervals (when rounded to 4dp)*'): # regex doesn't like :
-        check_cis([0.95999, 0.96])
+        check_cis([0.96741, 0.96742])
 
 def test_ci_check_rounding():
-    check_cis([0.95999, 0.99899]) == [0.96, 0.999]
+    check_cis([0.95999, 0.99899, 0.96741]) == [0.96, 0.999, 0.9674]
 
 
 
