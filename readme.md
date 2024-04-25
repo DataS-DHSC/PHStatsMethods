@@ -49,3 +49,8 @@
 # run test method (a method is a function in a class)
 !pytest tests/file.py::TestClass::TestMethod
 ```
+
+### Running a module (with relative paths)
+```
+# in terminal - class notation NOT file (.py)
+python -m ph_statistical_methods.rates
