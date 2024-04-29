@@ -6,6 +6,7 @@ Created on Thu Feb 29 11:38:17 2024
 """
 
 import pandas as pd
+import re
 from pandas.api.types import is_numeric_dtype
 from decimal import Decimal
 
@@ -167,8 +168,49 @@ def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None)
         return(None, None, None)
     
     
-## join with ages?
 
+def join_age_groups(df, age_df, group_cols = None):
+    
+    # Check number of rows
+    if group_cols is not None:
+        n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
+    
+        if n_group_rows.counts.nunique() > 1:
+            raise ValueError('There must be the same number of rows per group')
+            
+        if n_group_rows.counts.unique() != len(age_df):
+            raise ValueError('ref_df length must equal same number of rows in each group within data')
+            
+    else:
+        if len(df) != len(age_df):
+            raise ValueError('Dataframe, if ungrouped, must have same number of rows as reference data')
+
+    # get the age columns
+    age1 = [col for col in df.columns if 'age' in col.lower()]
+    age2 = [col for col in age_df.columns if 'age' in col.lower()]
+    
+    if len(age1) != 1 or len(age2) != 1:
+        raise ValueError("There are either 0 or 2+ columns headers containing the word 'age'")
+        
+    # Get first number of age and sort ascending
+    df['n1'] = df.apply(lambda x: str(re.findall(r'(\d+)', x[age1[0]])[0]), axis=1)
+    age_df['n1'] = age_df.apply(lambda x: str(re.findall(r'(\d+)', x[age2[0]])[0]), axis=1)
+    
+    age_df = age_df.sort_values(by='n1').drop(age2, axis=1)
+    age_df['n1'] = age_df['n1'].rank()
+    
+    # order df values and assign over window
+    df = df.sort_values(by='n1')
+    if group_cols is not None:
+        df['n1'] = df.groupby(group_cols)['n1'].rank()
+    else:
+        df['n1'] = df['n1'].rank()
+    
+    # join by columns
+    df = df.merge(age_df, how='left', on='n1').drop('n1', axis=1)
+    
+    return df
+    
 
 
 
