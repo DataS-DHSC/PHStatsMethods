@@ -38,13 +38,17 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         DataFrame of calculated proportion statistics with confidence intervals.
         
     """
+
+    # Ensure original df remains unchanged 
+    df = df.copy()
+
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
     validate_data(df, num_col, group_cols, metadata, denom_col)
         
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
-    
+
     # Sum Numerator and Denominator columns, ensure NAs are included. 
     if group_cols is not None:
         df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()

@@ -32,6 +32,8 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
         of quantile assignment) fields appended.
         
     """
+    # Ensure original df remains unchanged 
+    df = df.copy()
 
     # Check data and arguments
     null, group_cols = format_args(None, group_cols)
