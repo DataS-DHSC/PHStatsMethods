@@ -8,7 +8,7 @@ Created on Fri Apr 26 16:52:40 2024
 import pandas as pd
 import numpy as np
 
-from .validation import format_args, check_arguments
+from validation import format_args, check_arguments
 
 def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, type = "full"):
     """Assigns data to quantiles based on numeric data rankings.
@@ -49,7 +49,7 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     if not isinstance(invert, bool):
         raise TypeError("Pass 'invert' as either a boolean or a string")
     
-    check_arguments(df, values if group_cols is None else values + group_cols)
+    check_arguments(df, [values] if group_cols is None else [values] + group_cols)
     
     # Additional columns in output
     df["nquantiles"] = nquantiles
@@ -73,7 +73,7 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     else:
         df['qinverted'] = "lowest quantile represents lowest values"
 
-    if type is "standard":
+    if type == "standard":
         df = df.drop(['num_rows', 'rank', 'nquantiles', 'qinverted'], axis=1)
 
-    return(df)
+    return df
