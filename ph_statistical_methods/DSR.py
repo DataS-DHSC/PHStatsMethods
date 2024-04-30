@@ -17,7 +17,3 @@ def euro_standard_pop():
                          'populations': pops})
     
     return data
-
-
-df = pd.DataFrame({'age_group': age_groups*4,
-                     'area': ['a']*19+ ['b']*19+ ['c']*19+ ['d']*19})

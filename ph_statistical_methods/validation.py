@@ -169,7 +169,7 @@ def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None)
     
     
 
-def join_age_groups(df, age_df, group_cols = None):
+def join_age_groups(df, col, age_df, age_col, group_cols = None):
     
     # Check number of rows
     if group_cols is not None:
@@ -185,18 +185,11 @@ def join_age_groups(df, age_df, group_cols = None):
         if len(df) != len(age_df):
             raise ValueError('Dataframe, if ungrouped, must have same number of rows as reference data')
 
-    # get the age columns
-    age1 = [col for col in df.columns if 'age' in col.lower()]
-    age2 = [col for col in age_df.columns if 'age' in col.lower()]
-    
-    if len(age1) != 1 or len(age2) != 1:
-        raise ValueError("There are either 0 or 2+ columns headers containing the word 'age'")
-        
     # Get first number of age and sort ascending
-    df['n1'] = df.apply(lambda x: str(re.findall(r'(\d+)', x[age1[0]])[0]), axis=1)
-    age_df['n1'] = age_df.apply(lambda x: str(re.findall(r'(\d+)', x[age2[0]])[0]), axis=1)
+    df['n1'] = df.apply(lambda x: str(re.findall(r'(\d+)', x[col])[0]), axis=1)
+    age_df['n1'] = age_df.apply(lambda x: str(re.findall(r'(\d+)', x[age_col])[0]), axis=1)
     
-    age_df = age_df.sort_values(by='n1').drop(age2, axis=1)
+    age_df = age_df.sort_values(by='n1').drop(age_col, axis=1)
     age_df['n1'] = age_df['n1'].rank()
     
     # order df values and assign over window

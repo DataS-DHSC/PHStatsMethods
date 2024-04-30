@@ -43,7 +43,6 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         
     **kwargs:
         ref_df
-        ref_join_cols
         ref_join_left
         ref_join_right
         obs_df
