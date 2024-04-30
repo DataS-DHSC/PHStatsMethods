@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from validation import join_age_groups
+from utils import join_age_groups
 
 def euro_standard_pop():
     
