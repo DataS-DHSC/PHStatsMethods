@@ -183,37 +183,3 @@ def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_
     else:
         return byars_lower(value, (1 - confidence)), byars_upper(value, (1 - confidence))
 
-def poisson_cis(z, x_a, x_b):
-    """
-    Calculates the cumulative dribution function of a Poisson distribution.
-    
-    :param z: The average rate of occurence of events within a fixed interval of time or space.
-    :param x_a: The lower bound of the interval to be used in the calculation.
-    :param x_b: The upper bound of the interval to be used in the calculation.
-    :return: The cumulative probability of a number of events falling between the intervals given the average rate.
-    """
-    
-    q = 1
-    tot = 0
-    s = 0
-    k = 0
-    
-    #if any(val < 0 for val in [z, x_a, x_b] or
-    #x_b < x_a or
-    #x_a % 1 > 0 or
-    #x_b % 1 > 0):
-        #return None
-        
-    while k <= z or q > tot * 1e-10:
-        tot += q
-        if x_a <= k <= x_b:
-            s += q
-        if tot > 1e30:
-            s /= 1e30
-            tot /= 1e30
-            q /= 1e30
-            
-        k += 1
-        q *= z / k
-        
-    return s / tot
