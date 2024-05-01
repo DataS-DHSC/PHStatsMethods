@@ -8,7 +8,7 @@ Created on Wed Feb  7 11:19:00 2024
 import numpy as np
 import warnings
 from math import sqrt
-from scipy.stats import chi2
+from scipy.stats import chi2, norm
 from utils import get_calc_variables
 
 
@@ -117,11 +117,16 @@ def byars_lower(value, confidence=0.95):
     :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Lower confidence interval as a float
     """
-    calc_vars = get_calc_variables(1 - confidence)
+    if value < 0:
+        raise ValueError("'Value' must be a positive number")
+    
+    z = norm.ppf(confidence + (1-confidence)/2)
+    
     if value < 10:
         return exact_lower(value, confidence)
     else:
-        return value * (1 - (1 / (9 * value)) - calc_vars[1] / (3 * sqrt(value))) ** 3
+        return value * (1 - 1 / (9 * value) - z / (3 * sqrt(value))) ** 3
+
 
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
 def byars_upper(value, confidence=0.95):
@@ -134,11 +139,15 @@ def byars_upper(value, confidence=0.95):
     :param confidence: Confidence - default 0.95 for 95% confidence interval
     :return: Upper confidence interval as a float
     """
-    calc_vars = get_calc_variables(1 - confidence)
+    if value <= 0:
+        raise ValueError("'Value' must be a positive number")
+        
+    z = norm.ppf(confidence + (1-confidence)/2)
+    
     if value < 10:
         return exact_upper(value, confidence)
     else:
-        return (value + 1) * (1 - (1 / (9 * value + 1)) + calc_vars[1] / (3 * sqrt(value + 1))) ** 3
+        return (value + 1) * (1 - 1 / (9 * (value + 1)) + z / (3 * sqrt(value + 1))) ** 3
 
 
 # calculates the upper and lower CIs using Byar's method without denominator and returns in a tuple

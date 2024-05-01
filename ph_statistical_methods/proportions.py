@@ -27,7 +27,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
                 (the numerator of the population).
         denom_col (str): Name of column containing number of cases in sample 
                 (the denominator of the population).
-        group_cols (list): A list of column name(s) to group the data by. 
+        group_cols: A string or list of column name(s) to group the data by. 
                 Defaults to None.
         metadata (bool): Whether to include information on the statistic and confidence interval methods.
         confidence: Confidence interval(s) to use, either as a float, list of float values or None.
@@ -64,26 +64,3 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         df = metadata_cols(df, statistic, confidence, 'Wilson')
         
     return df
-
-
-# def ph_proportion_calc(numerator, denominator, multiplier = 1, confidence = None):
-    
-#     proportion = (numerator / denominator) * multiplier
-    
-#     if confidence is not None:
-#         prop_dict = {}
-#         prop_dict['Proportion'] = proportion
-        
-#         # handle parameter if passed as float
-#         # TODO: make this part of the formatting checks! 
-#         if isinstance(confidence, float):
-#             confidence = [confidence]
-        
-#         # get confidence interval for all given confidence intervals
-#         for c in confidence:
-#             prop_dict[ci_col(c)] = wilson(numerator, denominator, c)
-        
-#         # set return object to dictionary
-#         proportion = prop_dict
-        
-#     return proportion
