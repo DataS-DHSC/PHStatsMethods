@@ -4,7 +4,6 @@ from scipy.special import ndtri
 from confidence_intervals import poisson_cis
 from scipy.stats import chi2
 
-
 def get_calc_variables(a):
     """
     Creates the cumulative normal distribution and z score for a given alpha
