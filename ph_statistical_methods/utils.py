@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from scipy.special import ndtri
+from confidence_intervals import poisson_cis
 from scipy.stats import chi2
-
 
 def get_calc_variables(a):
     """
@@ -14,9 +14,4 @@ def get_calc_variables(a):
     norm_cum_dist = ndtri((100 + (100 - (100 * (1-a)))) / 200)
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
-
-
-
-
-
 
