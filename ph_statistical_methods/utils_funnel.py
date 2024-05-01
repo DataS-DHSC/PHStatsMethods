@@ -48,6 +48,7 @@ def poisson_funnel(obs, p, side):
         v = v + dv
 
     p_funnel = (1 + obs) * v / (1 - v)
+    
     return p_funnel
 
 
