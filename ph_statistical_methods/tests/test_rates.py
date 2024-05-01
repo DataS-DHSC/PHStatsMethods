@@ -27,7 +27,7 @@ class TestRates:
         with pytest.raises(ValueError, match="'Multiplier' must be a positive integer"):
             ph_rate(self.data, 'Numerator', 'Denominator', multiplier = multiplier)
             
-     def test_2ci(self):
+    def test_2ci(self):
          df = ph_rate(self.data.iloc[:8, :3], 'Numerator', 'Denominator', confidence = [0.95, 0.998])
          assert_frame_equal(df, self.data.iloc[:8, :])
          
