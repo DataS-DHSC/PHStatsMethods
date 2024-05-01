@@ -25,12 +25,14 @@ class TestQuantiles:
             ph_quantile(df, 'Value').loc[:, ['AreaCode', 'quantile']],
             df.rename(columns={'QuantileInGrp':'quantile'}).loc[:, ['AreaCode', 'quantile']])
         
+    @pytest.mark.filterwarnings('ignore::UserWarning') # NA's in quantiles 
     def test_grps(self):
         df = self.data[(self.data['GroupSet'] == 'IndSexReg') & (self.data['IndSexRef'] == '40501Female')]
         assert_frame_equal(
             ph_quantile(df, 'Value', ['ParentCode']).loc[:, ['AreaCode', 'quantile']],
             df.rename(columns={'QuantileInGrp':'quantile'}).loc[:, ['AreaCode', 'quantile']])
     
+    @pytest.mark.filterwarnings('ignore::UserWarning')
     def test_invert(self):
         df = self.data[(self.data['GroupSet'] == 'IndSexReg') & (self.data['IndSexRef'] == '90366Female')]
         assert_frame_equal(
@@ -42,7 +44,8 @@ class TestQuantiles:
         assert_frame_equal(
             ph_quantile(df, 'Value', nquantiles=7).loc[:, ['AreaCode', 'quantile']],
             df.rename(columns={'QuantileInGrp':'quantile'}).loc[:, ['AreaCode', 'quantile']])
-        
+    
+    @pytest.mark.filterwarnings('ignore::UserWarning')
     def test_invert_nquantiles(self):
         df = self.data[(self.data['GroupSet'] == 'IndSex') & (self.data['IndSexRef'] == '90366Female')]
         assert_frame_equal(

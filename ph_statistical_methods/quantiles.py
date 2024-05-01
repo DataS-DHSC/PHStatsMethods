@@ -7,6 +7,7 @@ Created on Fri Apr 26 16:52:40 2024
 
 import pandas as pd
 import numpy as np
+import warnings
 
 from validation import format_args, check_arguments
 
@@ -78,6 +79,12 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     else:
         df['qinverted'] = "lowest quantile represents lowest values"
 
+    # Generate warnings 
+    if df['quantile'].isna().any():
+        warnings.warn("One or more groups had too few small areas with values to allow quantiles to be assigned",
+                      UserWarning)
+
+    # Drop columns if required
     if type == "standard":
         df = df.drop(['num_rows', 'rank', 'nquantiles', 'qinverted'], axis=1)
 
