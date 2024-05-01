@@ -70,6 +70,9 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
                               np.nan,
                               np.floor((nquantiles + 1) - np.ceil(((df['num_rows'] + 1) - df['rank']) / (df['num_rows'] / nquantiles))))
 
+    # The above maths means that rank 1 may occasionally become quantile 0, instead of quantile 1
+    df.loc[df['quantile'] == 0, 'quantile'] = 1
+
     if invert is True:
         df['qinverted'] = "lowest quantile represents highest values"
     else:
