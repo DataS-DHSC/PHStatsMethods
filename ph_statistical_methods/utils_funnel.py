@@ -6,13 +6,15 @@ Created on Wed Mar 20 17:34:08 2024
 """
 
 def poisson_cis(z, x_a, x_b):
-    """
-    Calculates the cumulative dribution function of a Poisson distribution.
+    """Calculates the cumulative dribution function of a Poisson distribution.
     
-    :param z: The average rate of occurence of events within a fixed interval of time or space.
-    :param x_a: The lower bound of the interval to be used in the calculation.
-    :param x_b: The upper bound of the interval to be used in the calculation.
-    :return: The cumulative probability of a number of events falling between the intervals given the average rate.
+    Args:
+        z: The average rate of occurence of events within a fixed interval of time or space.
+        x_a: The lower bound of the interval to be used in the calculation.
+        x_b: The upper bound of the interval to be used in the calculation.
+    Returns:
+        The cumulative probability of a number of events falling between the intervals given the average rate.
+    
     """
     
     q = 1
@@ -39,6 +41,7 @@ def poisson_cis(z, x_a, x_b):
         q *= z / k
         
     return s / tot
+
 
 def poisson_funnel(obs, p, side):
     """
