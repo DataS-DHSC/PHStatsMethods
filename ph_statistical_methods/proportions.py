@@ -46,7 +46,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         raise ValueError("'Multiplier' must be a positive integer")
       
     if (df[num_col] > df[denom_col]).any():
-        raise ValueError('Numerators must be less than or equal to the denominator')   
+        raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')   
     
     # Sum Numerator and Denominator columns, ensure NAs are included. 
     if group_cols is not None:

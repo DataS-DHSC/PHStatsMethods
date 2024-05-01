@@ -18,28 +18,29 @@ class Test_rates:
     cols_95 = [0,1,2,3,4,5,8,9]
     
     def test_default(self):
-        df = ph_rate(data.iloc[8:16, :3], 'Numerator', 'Denominator').drop(['Confidence'], axis=1)
-        assert_frame_equal(df, data.iloc[8:16, cols_95])
+        df = ph_rate(self.data.iloc[8:16, :3], 'Numerator', 'Denominator').drop(['Confidence'], axis=1)
+        assert_frame_equal(df, self.data.iloc[8:16, self.cols_95])
         
     def test_multiplier(self):
-        df = ph_rate(data.iloc[:8, :3], 'Numerator', 'Denominator', multiplier=100).drop(['Confidence'], axis=1)
-        assert_frame_equal(df, data.iloc[:8, cols_95])
+        df = ph_rate(self.data.iloc[:8, :3], 'Numerator', 'Denominator', multiplier=100).drop(['Confidence'], axis=1)
+        assert_frame_equal(df, self.data.iloc[:8, self.cols_95])
     
     @pytest.mark.parametrize('multiplier', [(-10), (1.5)])
-    def test_multiplier_error(data, multiplier):
+    def test_multiplier_error(self, multiplier):
         with pytest.raises(ValueError, match="'Multiplier' must be a positive integer"):
-            ph_rate(data, 'Numerator', 'Denominator', multiplier = multiplier)
+            ph_rate(self.data, 'Numerator', 'Denominator', multiplier = multiplier)
             
-    def test_2ci(data):
-         df = ph_rate(data.iloc[8:16, :3], 'Numerator', 'Denominator', confidence = [0.95, 0.998]).drop(['Confidence'], axis=1)
-         assert_frame_equal(df, data.iloc[8:16, :])
+    def test_2ci(self):
+         df = ph_rate(self.data.iloc[8:16, :3], 'Numerator', 'Denominator', confidence = [0.95, 0.998]).drop(['Confidence'], axis=1)
+         assert_frame_equal(df, self.data.iloc[8:16, :])
          
-    def test_NAs(data):
-        df = ph_rate(data.iloc[16:, :3], 'Numerator', 'Denominator').drop(['Confidence','Method'], axis=1)
-        assert_frame_equal(df, data.iloc[16:, cols_95].drop('Method', axis=1))
-        
-    def test_group(data, data_group):
-        df = ph_rate(data, 'Numerator', 'Denominator', group_cols = 'Area').drop(['Confidence','Method'], axis=1)
-        assert_frame_equal(df, data_group.drop(['Method','Confidence'], axis=1))
+    def test_NAs(self):
+        df = ph_rate(self.data.iloc[16:, :3], 'Numerator', 'Denominator').drop(['Confidence','Method'], axis=1)
+        assert_frame_equal(df, self.data.iloc[16:, self.cols_95].drop('Method', axis=1))
+    
+    # dropping 'method' column for now while figure out method column
+    def test_group(self):
+        df = ph_rate(self.data, 'Numerator', 'Denominator', group_cols = 'Area').drop(['Confidence','Method'], axis=1)
+        assert_frame_equal(df, self.data_group.drop(['Method','Confidence'], axis=1))
     
 
