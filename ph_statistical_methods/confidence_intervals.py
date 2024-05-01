@@ -249,17 +249,17 @@ def poisson_cis(z, x_a, x_b):
         
     return s / tot
 
-def student_t_dist(value, st_dev, confidence):
+def student_t_dist(value_count, st_dev, confidence=0.95):
 
     """Calculates the Student-t value to be used to create confidence intervals using the Student-t distribution.
     
     Args:
-        value: The value to calculate confidence intervals over.
+        value_count: The total value to calculate confidence intervals over.
         st_dev: Takes the standard deviation
         confidence: Takes a confidence interval (e.g. 0.95, 0.998)
     Returns:
         Upper confidence interval as a float
         
     """
-    return abs(stats.t.ppf((1-confidence)/2, value - 1)) * st_dev / value**.5
+    return abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5
 
