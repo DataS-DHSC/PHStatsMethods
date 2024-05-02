@@ -57,8 +57,3 @@ def join_age_groups(df, col, age_df, age_col, group_cols = None):
     return df
     
 
-
-
-
-
-

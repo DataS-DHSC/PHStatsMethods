@@ -6,7 +6,6 @@ Created on Thu Feb 29 11:38:17 2024
 """
 
 import pandas as pd
-import re
 from pandas.api.types import is_numeric_dtype
 from decimal import Decimal
 
@@ -136,10 +135,6 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     if denom_col is not None:
         if (df[denom_col] <= 0).any():
             raise ValueError('Denominators must be greater than zero')
-
-        if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')   
-
 
 
 def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None):
