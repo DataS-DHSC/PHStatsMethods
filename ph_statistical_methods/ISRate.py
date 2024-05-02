@@ -47,6 +47,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
     
     df['exp_rate'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
+    ## TODO: add ref rate groupby
     if obs_df is not None:
         df = df.groupby(group_cols)[['exp_rate']].apply(lambda x: x.sum(skipna=False)).reset_index()
         df = df.merge(obs_df, how='left', left_on=obs_join_left, right_on=obs_join_right)
@@ -55,7 +56,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
         
     df = df.rename(columns={num_col: 'Observed', 'exp_rate': 'Expected'}).reindex(columns=(group_cols + ['Observed', 'Expected']))
     
-    df['Rate'] = df['Observed'] / df['Expected'] * multiplier
+    df['Rate'] = df['Observed'] / df['Expected'] * df['ref_rate']
     
     for c in confidence:
         df[ci_col(c, 'lower')] = df.apply(lambda x: byars_lower(x['Observed'], c), axis=1) / df['Expected'] * multiplier
