@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from scipy.special import ndtri
+import re
 import pandas as pd
+from scipy.special import ndtri
 from scipy.stats import chi2
 
 def get_calc_variables(a):
@@ -36,7 +37,11 @@ def join_age_groups(df, col, age_df, age_col, group_cols = None):
     df['n1'] = df.apply(lambda x: str(re.findall(r'(\d+)', x[col])[0]), axis=1)
     age_df['n1'] = age_df.apply(lambda x: str(re.findall(r'(\d+)', x[age_col])[0]), axis=1)
     
-    age_df = age_df.sort_values(by='n1').drop(age_col, axis=1)
+    if df['n1'].nunique() == (len(df) if group_cols is None else n_group_rows.counts.unique()):
+        raise ValueError('There are duplicate minimum ages, which is not accepted as the function orders by the first number in each age band.\
+                         For example, <5 and 5-10 IS NOT accepted but <=4 and 5-10 IS accepted.')
+    
+    age_df = age_df.sort_values(by='n1')
     age_df['n1'] = age_df['n1'].rank()
     
     # order df values and assign over window
