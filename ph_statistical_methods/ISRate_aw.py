@@ -63,6 +63,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
         
     df['ref_rate'] = df[ref_num_col] / df[ref_denom_col] * multiplier
     
+    # Tidy dataframe
     df = df.rename(columns={num_col: 'Observed', 'exp_x': 'Expected'}).\
         drop([ref_num_col, ref_denom_col], axis=1).reindex(columns=(group_cols + ['Observed', 'Expected', 'ref_rate']))
     
