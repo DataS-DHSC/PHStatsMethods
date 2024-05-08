@@ -9,7 +9,7 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from quantiles import ph_quantile
+from ..quantiles import ph_quantile
 
 # Functionality Testing ----------------------------------------------------------------------------
 class TestQuantiles:

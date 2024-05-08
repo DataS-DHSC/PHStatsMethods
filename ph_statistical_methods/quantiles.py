@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import warnings
 
-from validation import format_args, check_arguments
+from .validation import format_args, check_arguments
 
 def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, type = "full"):
     """Assigns data to quantiles based on numeric data rankings.
