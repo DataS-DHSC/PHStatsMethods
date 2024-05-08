@@ -14,8 +14,3 @@ def get_calc_variables(a):
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
-
-
-
-
-
