@@ -50,7 +50,7 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
         raise TypeError("Pass 'nquantiles' as a integer")
     
     if not isinstance(invert, bool):
-        raise TypeError("Pass 'invert' as either a boolean or a string")
+        raise TypeError("Pass 'invert' as a boolean")
     
     check_arguments(df, [values] if group_cols is None else [values] + group_cols)
     
