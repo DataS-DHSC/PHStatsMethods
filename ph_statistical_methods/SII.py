@@ -6,7 +6,10 @@ Created on Thu May  2 18:15:36 2024
 """
 import pandas as pd
 import warnings
+import numpy as np
+from scipy.stats import norm
 from validation import format_args
+from utils import FindXValues
 
 df = pd.DataFrame({'area':['Area1']*10 + ['Area2'] * 10,
                    'decile':list(range(1,11)) * 2,
@@ -23,11 +26,21 @@ df = pd.DataFrame({'area':['Area1']*10 + ['Area2'] * 10,
 
 quantile = 'decile'
 se = 'StandardError'
-group_cols = ['area']
+group_cols = ['area'] # must pass a group
+confidence = 0.95
+value_type = 'other'
+denom_col = 'population'
+value = 'value'
+repetitions = 2000
 
 ########
 
+df = df.copy().reset_index()
+
 confidence, group_cols = format_args(confidence, group_cols)
+
+if value_type not in ['rate', 'proportion', 'other']:
+    raise ValueError("'value_type' must be either 'rate', 'proportion', or 'other'")
 
 if not isinstance(repetitions, int) or repetitions < 1000:
     raise TypeError("'Repetitions' must be an an integer bigger than 1000")
@@ -37,6 +50,8 @@ if se is None:
         raise TypeError("If 'se' is None, 'lowerCL' and 'upperCL' must be supplied")
     
 # do various data number validation checks - all can't be less than 0 either I guess?
+
+# there does not need to be a value if proportions and counts are provided - check?
 
 # can't be nulls for 'se' and 'population' or 'CL' - add this as a null check?
 
@@ -53,17 +68,75 @@ elif n_quantiles >= 10:
     
 # Remove records with missing essential data - negatives already filtered out by original checks?
 if se is not None:
-    df = df[df[se].notnull()]
+    valid_complete = df[df[se].notnull()]
 else: 
-    df = df[df[lowerCL].notnull() or df[upperCL].notnull()]
+    valid_complete = df[df[lowerCL].notnull() or df[upperCL].notnull()]
     
 # Only use areas where there are valid areas - are grouped columns always the area though? - can this just be 1 group then?
-valid_areas = df.groupby(group_cols)[quantile].size().reset_index()
+valid_areas = valid_complete.groupby(group_cols)[quantile].size().reset_index()
 valid_areas = valid_areas[valid_areas[quantile] == n_quantiles]
+# does this only allow 1 grouping column?
+valid_deciles = pd.concat([valid_areas] * n_quantiles, ignore_index = True).sort_values(by = group_cols)
+valid_deciles[quantile] = quantile_list * len(valid_areas)
+#valid_deciles['n'] = n_quantiles
+
+if len(valid_deciles) != len(df):
+    warnings.warn('Some records have been removed due to incomplete or invalid data')
     
+pops_prep = valid_deciles.merge(df, how = 'left', on = group_cols + [quantile])
+
+# calculate indicator value
+if value is not None:
+    pops_prep = pops_prep.rename(columns = {value: 'Value'})
+else:
+    pops_prep['Value'] = pops_prep[num_col] / pops_prep[denom_col]
     
+# Transform value if value is a rate or proportion
+if value_type == 'rate':
+    pops_prep['Value'] = np.log(pops_prep['Value'])
+    if se is not None:
+        pops_prep[lowerCL] = np.log(pops_prep[lowerCL])
+        pops_prep[upperCL] = np.log(pops_prep[upperCL])
+        
+elif value_type == 'proportion':
+    pops_prep['Value'] = np.log(pops_prep['Value'] / (1 - pops_prep['Value'])) # this means value must be bigger than 1?
+    if se is not None:
+        pops_prep[lowerCL] = np.log(pops_prep[lowerCL] / (1 - pops_prep[lowerCL]))
+        pops_prep[upperCL] = np.log(pops_prep[upperCL] / (1 - pops_prep[upperCL]))
     
+# Calculate standard error
+z = norm.ppf(0.975)
+
+if se is not None:
+    pops_prep = pops_prep.rename(columns = {se: 'se_calc'})
+else:
+    pops_prep['se_calc'] = (pops_prep[upperCL] - pops_prep[lowerCL]) / z / 2
+
+# sort values within groups in quantile ascending order for FindXValues
+data = pops_prep.sort_values(by = group_cols + [quantile])
     
+# writing it like this to keep calculations and resulting series in place?
+if group_cols is None:
+    data['a_vals'] = data[denom_col] / data[denom_col].sum()
+    data['b_vals'] = FindXValues(data[denom_col])
+else:
+    data['a_vals'] = data.groupby(group_cols).apply(lambda x: x[denom_col] / x[denom_col].sum()).reset_index()[denom_col]
+    data['b_vals'] = data.groupby(group_cols)[denom_col].apply(lambda x: FindXValues(x)).reset_index()[denom_col]
+
+
+
+# Calculate sqrt and bsqrt and un-transformed y value for regression
+data['sqrt_a'] = np.sqrt(data['a_vals'])
+data['b_sqrt_a'] = data['b_vals'] * data['sqrt_a']
+
+if transform == True or value_type == 'other':
+    data['value_transform'] = data['Value']
+else:
+    data['value_transform'] = np.where(value_type == 'rate', np.exp(data['Value']), # does it need to be a float or do integers work?
+                                   np.exp(data['Value']) / (1 + np.exp(data['Value'])))
     
-    
+data['yvals'] = data['sqrt_a'] * data['value_transform']
+
+# Calculate confidence interval for SII via simulation
+
     

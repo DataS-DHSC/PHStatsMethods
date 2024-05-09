@@ -131,11 +131,6 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
         if (df[col] < 0).any():
             raise ValueError('No negative numbers can be used to calculate these statistics')
 
-    # Denominator must greater than 0
-    if denom_col is not None:
-        if (df[denom_col] <= 0).any():
-            raise ValueError('Denominators must be greater than zero')
-
 
 def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None):
     
