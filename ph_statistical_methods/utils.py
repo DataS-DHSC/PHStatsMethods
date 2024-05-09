@@ -38,37 +38,45 @@ def funnel_ratio_significance(obs, expected, p, side):
 
     The function handles special cases for small sample sizes (less than 10) and a special condition when the observation is zero and considering the lower side. For larger sample sizes (10 or more), it uses adjusted formulas to compute the test statistic.
     """
-    # Special case handling when observation is 0 and considering the lower side
-    if obs == 0 and side == "low":
+    # Calculate z once
+    z = stats.norm.ppf(0.5 + p / 2)
+    
+    # Calculate obs_adjusted based on the side
+    obs_adjusted = obs if side == "low" else obs + 1
+    
+    # Check if obs_adjusted is zero to avoid division by zero error
+    if obs_adjusted == 0:
+        # Handle the division by zero error, set test_statistic to 0 or handle appropriately
         test_statistic = 0
-        
-    # For small sample sizes (less than 10)
-    elif obs < 10:
-        if side == "low":
-            degree_freedom = 2 * obs
-            lower_tail_setting = False
-        elif side == "high":
-            degree_freedom = 2 * obs + 2
-            lower_tail_setting = True
-            
-        # Chi-squared test statistic calculation
-        if lower_tail_setting:
-            test_statistic = stats.chi2.ppf(0.5 + p / 2, df=degree_freedom) / 2
-        else:
-            test_statistic = stats.chi2.ppf(1 - (0.5 + p / 2), df=degree_freedom) / 2
-
-    # For larger sample sizes (10 or more)
     else:
-        if side == "low":
-            obs_adjusted = obs
-            z = stats.norm.ppf(0.5 + p / 2)
-            test_statistic = obs_adjusted * (1 - 1 / (9 * obs_adjusted) - z / 3 / np.sqrt(obs_adjusted))**3
-        elif side == "high":
-            obs_adjusted = obs + 1
-            z = stats.norm.ppf(0.5 + p / 2)
-            test_statistic = obs_adjusted * (1 - 1 / (9 * obs_adjusted) + z / 3 / np.sqrt(obs_adjusted))**3
+        x = 1 - 1 / (9 * obs_adjusted) 
+        y = (3 * np.sqrt(obs_adjusted))
+
+        # Special case handling when observation is 0 and considering the lower side
+        if obs == 0 and side == "low":
+            test_statistic = 0
+            
+        # For small sample sizes (less than 10)
+        elif obs < 10:
+            if side == "low":
+                degree_freedom = 2 * obs
+                lower_tail_setting = False
+            elif side == "high":
+                degree_freedom = 2 * obs + 2
+                lower_tail_setting = True
+                
+            # Chi-squared test statistic calculation
+            if lower_tail_setting:
+                test_statistic = stats.chi2.ppf(0.5 + p / 2, df=degree_freedom) / 2
+            else:
+                test_statistic = stats.chi2.ppf(1 - (0.5 + p / 2), df=degree_freedom) / 2
+
+        # For larger sample sizes (10 or more)
+        else:
+            if side == "low":
+                test_statistic = obs_adjusted * (x - z / y)**3
+            elif side == "high":
+                test_statistic = obs_adjusted * (x + z / y)**3
 
     test_statistic = test_statistic / expected
     return test_statistic
-
-
