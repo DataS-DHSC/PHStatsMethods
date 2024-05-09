@@ -16,27 +16,28 @@ def get_calc_variables(a):
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
-<<<<<<< HEAD
-def findxvalues(xvals, no_quantiles):
+
+
+def findxvalues(xvals):
     """Calculates mid-points of cumulative population for each quantile.
     
     Args:
-        xvals: field name in input Dataset that contains the quantile populations
-        no_quantiles: (integer) number of quantiles supplied in dataset for SII
+        xvals: series name in input dataset that contains the grouped quantile populations
         
         Returns:
             Output field of mid-points
             
     """
-    df = pd.DataFrame({'prop': [0.0] * no_quantiles,
-                       'cumprop': [0.0] * no_quantiles,
-                       'output': [0.0] * no_quantiles})
-
-    xvals = np.array(xvals)
+    df = pd.DataFrame() #initialising dataframe
     
-    df['prop'] = xvals / sum(xvals)
-    df['cumprop'] = df['prop'].cumsum()
-    df['output'] = #np.where(df['cumprop'].shift(1).isna(), df['prop'] / 2, df['prop'] / 2 + df['cumprop'].fillna(0) / 2)
+    df['prop'] = xvals / sum(xvals) #proportion
+    df['cumprop'] = df['prop'].cumsum(skipna = False) #cumulative proportion
+    
+    df['lagged_cumprop'] = df['cumprop'].shift(1) #calling shift will move the lagged-cumporop column down one index, leaving NA in index 0.
+    
+    df['output'] = np.where(df['lagged_cumprop'].isna(), #where value is NA in lagged cumprop column
+                            df['prop'] / 2,    # Proportion divided by 2 is the value used for output
+                            df['prop'] / 2 + df['lagged_cumprop']) #otherwise value in output is Proportion divided by 2 plus value in lagged_cumprop
     
     return df['output']
 
@@ -49,8 +50,3 @@ def findxvalues(xvals, no_quantiles):
 
 
 
-
-
-
-=======
->>>>>>> Dev
