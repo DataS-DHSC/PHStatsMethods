@@ -2,12 +2,6 @@
 
 from scipy.special import ndtri
 from scipy.stats import chi2
-import math
-from scipy import stats 
-import pandas as pd
-import numpy as np
-
-
 
 def get_calc_variables(a):
     """
@@ -21,8 +15,10 @@ def get_calc_variables(a):
     return norm_cum_dist, z
 
 
-
-
+import math
+from scipy import stats 
+import pandas as pd
+import numpy as np
 
 
 def funnel_ratio_significance(obs, expected, p, side):
