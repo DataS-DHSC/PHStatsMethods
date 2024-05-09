@@ -136,10 +136,6 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
         if (df[denom_col] <= 0).any():
             raise ValueError('Denominators must be greater than zero')
 
-        if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')   
-
-
 
 def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None):
     

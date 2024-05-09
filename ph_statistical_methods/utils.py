@@ -16,6 +16,7 @@ def get_calc_variables(a):
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
+<<<<<<< HEAD
 def findxvalues(xvals, no_quantiles):
     """Calculates mid-points of cumulative population for each quantile.
     
@@ -51,3 +52,5 @@ def findxvalues(xvals, no_quantiles):
 
 
 
+=======
+>>>>>>> Dev
