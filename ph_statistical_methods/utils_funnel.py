@@ -106,14 +106,14 @@ def sigma_adjustment(p, population, average_proportion, side, multiplier):
         
     """
     
-    first_part = average_proportion * (population / st.norm.ppf(p)^2 + 1)
+    first_part = average_proportion * (population / st.norm.ppf(p)**2 + 1)
     
-    adj = math.sqrt((-8 * average_proportion * (population / st.norm.ppf(p)^2 + 1)) ^2 - 64 *
-                    (1 / st.norm.ppf(p)^2 + 1 / population) * average_proportion  *
-                    (population * (average_proportion * (population / st.norm.ppf(p)^2 + 2) -1)
-                    + st.norm.ppf(p)^2 * (average_proportion -1)))
+    adj = math.sqrt((-8 * average_proportion * (population / st.norm.ppf(p)**2 + 1))**2 - 64 *
+                    (1 / st.norm.ppf(p)**2 + 1 / population) * average_proportion  *
+                    (population * (average_proportion * (population / st.norm.ppf(p)**2 + 2) -1)
+                    + st.norm.ppf(p)**2 * (average_proportion -1)))
     
-    last_part = (1 / st.norm.ppf(p)^2 + 1 / population)
+    last_part = (1 / st.norm.ppf(p)**2 + 1 / population)
     
     if side == "low":
         adj_return = (first_part - adj / 8) / last_part
