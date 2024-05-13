@@ -98,8 +98,8 @@ def check_arguments(df, columns, metadata = None):
     
     #metadata is bool
     if metadata is not None and not isinstance(metadata, bool):
-        raise TypeError("'Metadata' must be either True or False")
-        
+        raise TypeError("'metadata' must be either True or False")
+
 
 ## make sure nulls are np nan?
 def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
@@ -107,7 +107,7 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     # adding this as not obvious to pass column as a list for developers using this function
     if group_cols is not None:
         if not isinstance(group_cols, list):
-            raise TypeError('Pass group_cols as a list')
+            raise TypeError("Pass 'group_cols' as a list")
             
         if ref_df is not None:
             n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
@@ -135,10 +135,6 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     if denom_col is not None:
         if (df[denom_col] <= 0).any():
             raise ValueError('Denominators must be greater than zero')
-
-        if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')   
-
 
 
 def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None):

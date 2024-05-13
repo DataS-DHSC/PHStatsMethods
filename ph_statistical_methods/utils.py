@@ -15,7 +15,68 @@ def get_calc_variables(a):
     return norm_cum_dist, z
 
 
+import math
+from scipy import stats 
+import pandas as pd
+import numpy as np
 
 
+def funnel_ratio_significance(obs, expected, p, side):
+    """Calculate funnel ratio significance for given observations, expected value, probability, and side.
 
+    Args:
+        obs (int): Observations, an integer representing the number of observed events.
+        
+        expected (float): Expected value, a float representing the expected number of events under the null hypothesis.
+        
+        p (float): Probability, a float representing the probability threshold for significance.
+        
+        side (str): Side, a string that should be either 'high' or 'low', indicating the tail of the distribution to consider.
 
+    Returns:
+        float: Test statistic, a float representing the calculated test statistic for the funnel ratio significance.
+
+    The function handles special cases for small sample sizes (less than 10) and a special condition when the observation is zero and considering the lower side. For larger sample sizes (10 or more), it uses adjusted formulas to compute the test statistic.
+    """
+    # Calculate z once
+    z = stats.norm.ppf(0.5 + p / 2)
+    
+    # Calculate obs_adjusted based on the side
+    obs_adjusted = obs if side == "low" else obs + 1
+    
+    # Check if obs_adjusted is zero to avoid division by zero error
+    if obs_adjusted == 0:
+        # Handle the division by zero error, set test_statistic to 0 or handle appropriately
+        test_statistic = 0
+    else:
+        x = 1 - 1 / (9 * obs_adjusted) 
+        y = (3 * np.sqrt(obs_adjusted))
+
+        # Special case handling when observation is 0 and considering the lower side
+        if obs == 0 and side == "low":
+            test_statistic = 0
+            
+        # For small sample sizes (less than 10)
+        elif obs < 10:
+            if side == "low":
+                degree_freedom = 2 * obs
+                lower_tail_setting = False
+            elif side == "high":
+                degree_freedom = 2 * obs + 2
+                lower_tail_setting = True
+                
+            # Chi-squared test statistic calculation
+            if lower_tail_setting:
+                test_statistic = stats.chi2.ppf(0.5 + p / 2, df=degree_freedom) / 2
+            else:
+                test_statistic = stats.chi2.ppf(1 - (0.5 + p / 2), df=degree_freedom) / 2
+
+        # For larger sample sizes (10 or more)
+        else:
+            if side == "low":
+                test_statistic = obs_adjusted * (x - z / y)**3
+            elif side == "high":
+                test_statistic = obs_adjusted * (x + z / y)**3
+
+    test_statistic = test_statistic / expected
+    return test_statistic

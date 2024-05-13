@@ -7,15 +7,27 @@ Created on Thu Mar 28 11:12:17 2024
 
 import numpy as np
 import pandas as pd
-from scipy import stats
+from confidence_intervals import student_t_dist
 
 from .validation import metadata_cols, ci_col, validate_data, format_args
 
-df = pd.DataFrame({'area': ['Area1', 'Area1','Area1','Area2','Area2','Area2'],
-                  'num': [20,np.nan,40,200,300,400]})
-
-
 def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
+    
+    """Calculates means with confidence limits using Student-t distribution.
+
+       Args:
+            df: DataFrame containing the data to calculate proportions for.
+            num_col (str): Name of column containing observed number of cases in the sample
+                    (the numerator of the population).
+            group_cols: A string or list of column name(s) to group the data by. 
+            metadata (bool): Whether to include information on the statistic and confidence interval methods.
+            confidence: Confidence interval(s) to use, either as a float, list of float values or None.
+                    Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
+
+        Returns:
+            DataFrame of calculated mean statistics with confidence intervals.
+            
+        """
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
@@ -25,7 +37,6 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
         raise TypeError('group_cols cannot be None for a mean statistic')
         
     # get grouped statistics
-    # TODO: multiple lambda not working?
     df = df.groupby(group_cols)[num_col].agg([lambda x: x.sum(skipna=False), 
                                               lambda x: x.count(), 
                                               lambda x: x.std(skipna=False)]).reset_index()
@@ -35,13 +46,11 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     df['Value'] = df['value_sum'] / df['value_count']
     
     for c in confidence:
-        t_dist = abs(stats.t.ppf((1-c)/2, df['value_count'] - 1)) * df['stdev'] / df['value_count']**.5
-        
-        df[ci_col(c, 'lower')] = df['Value'] - t_dist 
-        df[ci_col(c, 'upper')] = df['Value'] + t_dist
+        student_t = student_t_dist(df['value_count'], df['stdev'], c)
+        df[ci_col(c, 'lower')] = df['Value'] - student_t
+        df[ci_col(c, 'upper')] = df['Value'] + student_t
 
     if metadata:
-        df = metadata_cols(df, "Mean", confidence, "Student's t-distribution")
+        df = metadata_cols(df, 'Mean', confidence, "Student's t-distribution")
     
     return df
-
