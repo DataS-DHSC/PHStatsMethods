@@ -9,19 +9,6 @@ from confidence_intervals import dobson_lower, dobson_upper
 from validation import format_args, validate_data, check_kwargs, ci_col, metadata_cols
 
 
-
-df = pd.DataFrame({'year': [2017] * 19 + [2018]*19 + [2019]*19 + [2020]*19, 
-                   'ageband': [0, 5, 10, 15, 20, 25, 30, 35, 40, 45,
-                               50, 55, 60, 65, 70, 75, 80, 85, 90] * 4,
-                   'obs': [100, 300, 250, 400, 350] * 15 + [380],
-                   'pop': [1000, 3000, 900, 1200, 2000] * 15 + [900]})
-
-group_cols = 'year'
-confidence = 0.95
-denom_col = 'pop'
-num_col = 'obs'
-ref_denom_col='ageband'
-
 def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = True, 
            confidence = 0.95, multiplier = 100000, euro_standard_pops = True, **kwargs):
 
