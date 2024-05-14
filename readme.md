@@ -10,6 +10,7 @@ Any feedback would be appreciated and can be provided using the Issues
 section of the [PH_statistical_methods GitHub
 repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
 
+
 ## Installation
  
 This packaged should be installed using pip:
@@ -23,6 +24,7 @@ Or it can be compiled from source (still requires pip):
 ```
 pip install git+https://github.com/DataS-DHSC/PH_statistical_methods.git
 ```
+
 
 ## Usage
 
@@ -39,6 +41,7 @@ For more information on any function, you can use:
 ```
 help(*PH_statistical_methods function name*)
 ```
+
 
 ## Licence
 
