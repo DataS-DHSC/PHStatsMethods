@@ -49,7 +49,7 @@ def join_euro_standard_pops(df, age_col, group_cols = None):
             
     else:
         if len(df) != 19:
-            raise ValueError('Dataframe, if ungrouped, must have 19 rows')
+            raise ValueError('Dataframe, if ungrouped, must have 19 rows for the 19 agebands')
     
     # Get euro standard pops and rank order
     esp = euro_standard_pop()

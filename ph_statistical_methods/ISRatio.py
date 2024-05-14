@@ -34,7 +34,7 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         
         ref_denom_col (str): the reference population for each standardisation category (eg age band)
         
-        group_cols: A string or list of column name(s) to group the data by. Defaults to None.
+        group_cols: A string or list of column name(s) to group the data by.
         
         confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
         Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
