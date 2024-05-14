@@ -1,56 +1,46 @@
-## How to use Git in Spyder
+# PH_statistical_methods
+This is a Python package to support analysts in the execution of statistical
+methods approved for use in the production of Public Health indicators such as
+those presented via [Fingertips](https://fingertips.phe.org.uk/). It
+provides functions for the generation of Proportions, Rates, DSRs, ISRs,
+Means and Life Expectancy including confidence intervals for these statistics,
+and a function for assigning data to quantiles.
+
+Any feedback would be appreciated and can be provided using the Issues
+section of the [PH_statistical_methods GitHub
+repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
+
+## Installation
+ 
+This packaged should be installed using pip:
 
 ```
-# get the repo
-!git clone [url]
-```
+pip install PH_statistical_methods
+``` 
 
-### Push changes to Git
-```
-# see if there are any changes
-!git pull
-!git status
-!git add --all
-!git commit -m "MESSAGE"
-!git push
+Or it can be compiled from source (still requires pip):
 
 ```
-
-### Working with branches
-```
-# See branch you are currently working on
-!git branch
-
-# View all branches in the GitHub repo
-!git pull
-!git branch -r
-
-# move to a new branch and pull changes so local branch is up-to-date
-!git switch branch_name
-!git pull
-
+pip install git+https://github.com/DataS-DHSC/PH_statistical_methods.git
 ```
 
-### Running tests
-(may need to install pytest first - !pip install pytest)
+## Usage
+
+PH_statistical_methods should be imported and used in line with standard python
+conventions. It is suggested that if the whole package is to be imported 
+then the following convention is used:
+ 
 ```
-# run all tests
-!pytest
-
-# run all tests in file
-!pytest tests/file.py
-
-# run test function (outside of class)
-!pytest tests/file.py::TestFunction
-
-# run test class
-!pytest tests/file.py::TestClass
-
-# run test method (a method is a function in a class)
-!pytest tests/file.py::TestClass::TestMethod
+import PH_statistical_methods as phm
 ```
 
-### Running a module (with relative paths)
+For more information on any function, you can use:
+
 ```
-# in terminal - class notation NOT file (.py)
-python -m ph_statistical_methods.rates
+help(*PH_statistical_methods function name*)
+```
+
+## Licence
+
+This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
+licence.
