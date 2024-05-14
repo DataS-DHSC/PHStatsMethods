@@ -4,6 +4,8 @@ Created on Wed Mar 20 17:34:08 2024
 
 @author: Annabel.Westermann
 """
+import scipy.stats as st
+import math
 
 def poisson_cis(z, x_a, x_b):
     """Calculates the cumulative dribution function of a Poisson distribution.
@@ -86,5 +88,40 @@ def poisson_funnel(obs, p, side):
     p_funnel = (1 + obs) * v / (1 - v)
     
     return p_funnel
+
+def sigma_adjustment(p, population, average_proportion, side, multiplier):
+    """
+    Calculate the proportion funnel point value for a specific population based on a population average value
+    
+    Args:
+        p : Probability to calculate funnel plot point (noramlly 0.975 or 0.999)
+        must be a numeric value between 0 and 1.
+        population: Population for the area (Numeric)
+        average_proportion : The average proportion for all the areas in the funnel plot (Numeric)
+        side: determines which funnel to calculate, possible values are "low" and "high" (string)
+        multiplier: multiplier used to express final values - default = 100 (100 = percentage) (Numeric)
+
+    Returns:
+        A value equivalent to the specified funnel point plot.
+        
+    """
+    
+    first_part = average_proportion * (population / st.norm.ppf(p)**2 + 1)
+    
+    adj = math.sqrt((-8 * average_proportion * (population / st.norm.ppf(p)**2 + 1))**2 - 64 *
+                    (1 / st.norm.ppf(p)**2 + 1 / population) * average_proportion  *
+                    (population * (average_proportion * (population / st.norm.ppf(p)**2 + 2) -1)
+                    + st.norm.ppf(p)**2 * (average_proportion -1)))
+    
+    last_part = (1 / st.norm.ppf(p)**2 + 1 / population)
+    
+    if side == "low":
+        adj_return = (first_part - adj / 8) / last_part
+    elif side == "high":
+        adj_return = (first_part + adj / 8) / last_part
+    
+    adj_return = (adj_return / population) * multiplier
+    
+    return(adj_return)
 
 
