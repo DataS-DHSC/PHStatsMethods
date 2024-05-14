@@ -228,3 +228,24 @@ def student_t_dist(value_count, st_dev, confidence=0.95):
     return abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5
 
 
+def dobson_lower(value, total_count, var, confidence, multiplier):
+    
+    if total_count < 10:
+        x = np.nan
+    else:
+        x = value + sqrt(var / total_count) * (byars_lower(total_count, confidence) - total_count) * multiplier
+    
+    return x
+    
+
+def dobson_upper(value, total_count, var, confidence, multiplier):
+    
+    if total_count < 10:
+        x = np.nan
+    else:
+        x = value + sqrt(var / total_count) * (byars_upper(total_count, confidence) - total_count) * multiplier
+    
+    return x
+   
+
+

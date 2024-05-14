@@ -34,6 +34,9 @@ def euro_standard_pop():
 
 def join_euro_standard_pops(df, age_col, group_cols = None):
     
+    if age_col not in df.columns:
+        raise ValueError(f"'{age_col}' is not a column name in the data")
+    
     # Check number of rows
     if group_cols is not None:
         n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
@@ -69,6 +72,12 @@ def join_euro_standard_pops(df, age_col, group_cols = None):
     # join by columns
     df = df.merge(esp, how='left', on='n1').drop('n1', axis=1)
     
+    # Print out age bands for user to check
+    print(df[[age_col, 'esp_age_bands']].drop_duplicates())
+    print("Please check how the your ageband columns have joined to the 'esp_age_bands' above")
+    
     return df
+
+
     
 
