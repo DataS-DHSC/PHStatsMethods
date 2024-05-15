@@ -4,6 +4,7 @@ Created on Wed Mar 20 17:34:08 2024
 
 @author: Annabel.Westermann
 """
+from math import floor, ceil
 
 def poisson_cis(z, x_a, x_b):
     """Calculates the cumulative dribution function of a Poisson distribution.
@@ -87,4 +88,14 @@ def poisson_funnel(obs, p, side):
     
     return p_funnel
 
+def signif_floor(x, percentage_down=0.95):
+    n = len(str(floor(x * percentage_down))) - 1
+    y = floor(x * percentage_down / 10**n) * 10**n
+    y = 0 if x == 0 else y
+    return y
 
+def signif_ceiling(x, percentage_up=1.05):
+    n = len(str(ceil(x * percentage_up))) - 2
+    y = ceil(x * percentage_up / 10**n) * 10**n
+    y = 0 if x == 0 else y
+    return y
