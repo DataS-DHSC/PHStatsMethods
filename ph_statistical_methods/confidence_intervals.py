@@ -23,11 +23,11 @@ def wilson_lower(count, denominator, confidence=0.95):
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
     Args:
-        count: Numerator
-        denominator: Denominator
-        confidence: confidence - default 0.95 for 95% confidence interval
+        count (int | float): Numerator
+        denominator (int | float): Denominator
+        confidence (float): confidence - default 0.95 for 95% confidence interval
     Returns: 
-        Lower confidence interval as float
+        Lower confidence interval (float)
         
     """
     norm_cum_dist, z = get_calc_variables(confidence)
@@ -46,11 +46,11 @@ def wilson_upper(count, denominator, confidence=0.95):
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
     Args:
-        count: Numerator
-        denominator: Denominator
-        confidence: confidence - default 0.95 for 95% confidence interval
+        count (int | float): Numerator
+        denominator (int | float): Denominator
+        confidence (float): confidence - default 0.95 for 95% confidence interval
     Returns: 
-        Upper confidence interval as float
+        Upper confidence interval (float)
         
     """
     norm_cum_dist, z = get_calc_variables(confidence)
@@ -69,11 +69,11 @@ def wilson(count, denominator, confidence=0.95):
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
     Args:
-        count: Numerator
-        denominator: Denominator
-        confidence: confidence - default 0.95 for 95% confidence interval
+        count (int | float): Numerator
+        denominator (int | float): Denominator
+        confidence (float): confidence - default 0.95 for 95% confidence interval
     Returns:
-        Lower and Upper confidence intervals as a tuple
+        Lower and Upper confidence intervals(tuple)
         
     """
     return wilson_lower(count, denominator, confidence), wilson_upper(count, denominator, confidence)
@@ -85,10 +85,10 @@ def exact_upper(value, confidence=0.95):
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     Args:
-        value: Value to calculate upper confidence interval
-        confidence: Confidence - default 0.95 for 95% confidence interval
+        value (int | float): Value to calculate upper confidence interval
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
     Returns:
-        Upper confidence interval as a float
+        Upper confidence interval (float)
         
     """
     o = 2 * value + 2
@@ -102,10 +102,10 @@ def exact_lower(value, confidence=0.95):
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     Args:
-        value: Value to calculate lower confidence interval
-        confidence: Confidence - default 0.95 for 95% confidence interval
+        value (int | float): Value to calculate lower confidence interval
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
     Returns:
-        Lower confidence interval as a float
+        Lower confidence interval (float)
         
     """
     o = 2 * value
@@ -119,10 +119,10 @@ def exact(value, confidence=0.95):
     [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
 
     Args:
-        value: Value to calculate confidence intervals
-        confidence: Confidence - default 0.95 for 95% confidence interval
+        value (int | float): Value to calculate confidence intervals
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
     Returns: 
-        Lower and Upper confidence intervals as a tuple
+        Lower and Upper confidence intervals (tuple)
         
     """
     return exact_lower(value, confidence=confidence), exact_upper(value, confidence=confidence)
@@ -136,10 +136,10 @@ def byars_lower(value, confidence=0.95):
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     Args:
-        value: Value to calculate lower confidence interval
-        confidence: Confidence - default 0.95 for 95% confidence interval
+        value (int | float): Value to calculate lower confidence interval
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
     Returns: 
-        Lower confidence interval as a float
+        Lower confidence interval (float)
         
     """
     if value < 0:
@@ -160,10 +160,10 @@ def byars_upper(value, confidence=0.95):
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     Args:
-        value: Value to calculate upper confidence interval
-        confidence: Confidence - default 0.95 for 95% confidence interval
+        value (int | float): Value to calculate upper confidence interval
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
     Returns: 
-        Upper confidence interval as a float
+        Upper confidence interval (float)
         
     """
     if value <= 0:
@@ -185,11 +185,11 @@ def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_
     studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
 
     Args:
-        value: Value to calculate confidence intervals, must be over 9 to calculate Byar's, else exact method is used
-        confidence: Confidence - default 0.95 for 95% confidence interval
-        denominator: (Optional) Denominator to calculate Byar's on a rate
-        rate: (Optional) Rate
-        exact_method_for_low_numbers: Boolean instruction as to whether to use exact method for low numbers. Default
+        value (int | float): Value to calculate confidence intervals, must be over 9 to calculate Byar's, else exact method is used
+        confidence (float): Confidence - default 0.95 for 95% confidence interval
+        denominator (int | float): (Optional) Denominator to calculate Byar's on a rate
+        rate (int | float): (Optional) Rate
+        exact_method_for_low_numbers (bool): Boolean instruction as to whether to use exact method for low numbers. Default
                                          True
     Returns: Either exact method or Byar's method confidence intervals in a tuple
     
@@ -218,11 +218,11 @@ def student_t_dist(value_count, st_dev, confidence=0.95):
     """Calculates the Student-t value to be used to create confidence intervals using the Student-t distribution.
     
     Args:
-        value_count: The total value to calculate confidence intervals over.
-        st_dev: Takes the standard deviation
-        confidence: Takes a confidence interval (e.g. 0.95, 0.998)
+        value_count (int | float): The total value to calculate confidence intervals over.
+        st_dev (int | float): Takes the standard deviation
+        confidence (float): Takes a confidence interval (e.g. 0.95, 0.998)
     Returns:
-        Upper confidence interval as a float
+        Student-t distribution value (float)
         
     """
     return abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5

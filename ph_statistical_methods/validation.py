@@ -11,6 +11,18 @@ from decimal import Decimal
 
 
 def metadata_cols(df, statistic, confidence = None, method = None):
+    """Applies columns to a dataframe detailing metadata used to produce that dataframe."
+    
+    Args:
+        df: Pandas DataFrame.
+        statistic (str): Statistic being produced
+        confidence (float): Confidence(s) being calulated
+        method (str): metjod used to calculate confidence intervals
+        
+    Returns:
+        Pandas DataFrame detailing metadata used to calculate statistic (df)
+
+    """
     
     df['Statistic'] = statistic
     
@@ -23,6 +35,16 @@ def metadata_cols(df, statistic, confidence = None, method = None):
     
 
 def ci_col(confidence_interval, ci_type = None):
+    """Creates string relating to confidence interval calculated.
+    
+    Args:
+        confidence_interval (float): confidence interval being calculated (e.g. 0.95, 0.998)
+        ci_type (str): denotes upper or lower confidence interval status; default None
+        
+    Returns:
+        col_name (str): a string for the column name containing the related confidence intervals calculated.
+        
+    """
     
     if ci_type not in ['upper', 'lower', None]:
         raise ValueError("'ci_type' must be either 'upper', 'lower' or None")
@@ -46,7 +68,16 @@ def ci_col(confidence_interval, ci_type = None):
 
 
 def check_cis(confidence):
+    """Validates confidence intervals passed to a function. Ensures confidence interval is a float, within range (0.9 - 1), rounds to 4 d.p. where needed and ensures no duplicates. 
+
+    Args:
+        confidence (float | list): confidence interval(s) passed
         
+    Returns:
+        confidence (float | list): confidence interval(s) passed
+        
+    """
+    
     for c in confidence:
         if not isinstance(c, float):
             raise TypeError('Confidence intervals must be of type: float')

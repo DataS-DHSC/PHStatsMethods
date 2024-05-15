@@ -11,11 +11,11 @@ def poisson_cis(z, x_a, x_b):
     """Calculates the cumulative dribution function of a Poisson distribution.
     
     Args:
-        z: The average rate of occurence of events within a fixed interval of time or space.
-        x_a: The lower bound of the interval to be used in the calculation.
-        x_b: The upper bound of the interval to be used in the calculation.
+        z (int | float): The average rate of occurence of events within a fixed interval of time or space.
+        x_a (int | float): The lower bound of the interval to be used in the calculation.
+        x_b (int | float): The upper bound of the interval to be used in the calculation.
     Returns:
-        The cumulative probability of a number of events falling between the intervals given the average rate.
+        (float) The cumulative probability of a number of events falling between the intervals given the average rate.
     
     """
     
@@ -46,12 +46,14 @@ def poisson_cis(z, x_a, x_b):
 
 
 def poisson_funnel(obs, p, side):
-    """
-    Calculates the poisson distrbution, takes in observations, poisson standard deviation, and side.
-    :param obs: Observations as integer
-    :param p: Poisson stamdard deviation, given as float, 2 sigma is 0.025, 3 sigma is 0.001
-    :param side: Side given as str, value can be "high" or "low"
-    :return p_funnel: Poisson funnel given as float
+    """Calculates the poisson distrbution, takes in observations, poisson standard deviation, and side.
+    
+    Args:
+        obs (int): Observations as integer
+        p (float): Poisson stamdard deviation, given as float, 2 sigma is 0.025, 3 sigma is 0.001
+        side (str): Side given as str, value can be "high" or "low"
+    Returns:
+        p_funnel (float): Poisson funnel
 
     """
     v = 0.5
@@ -94,12 +96,12 @@ def sigma_adjustment(p, population, average_proportion, side, multiplier):
     Calculate the proportion funnel point value for a specific population based on a population average value
     
     Args:
-        p : Probability to calculate funnel plot point (noramlly 0.975 or 0.999)
+        p (int | float: Probability to calculate funnel plot point (noramlly 0.975 or 0.999)
         must be a numeric value between 0 and 1.
-        population: Population for the area (Numeric)
-        average_proportion : The average proportion for all the areas in the funnel plot (Numeric)
-        side: determines which funnel to calculate, possible values are "low" and "high" (string)
-        multiplier: multiplier used to express final values - default = 100 (100 = percentage) (Numeric)
+        population (int): Population for the area
+        average_proportion (int | float) : The average proportion for all the areas in the funnel plot
+        side (str): determines which funnel to calculate, possible values are "low" and "high"
+        multiplier (int): multiplier used to express final values - default = 100 (100 = percentage)
 
     Returns:
         A value equivalent to the specified funnel point plot.

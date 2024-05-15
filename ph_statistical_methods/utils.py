@@ -4,11 +4,12 @@ from scipy.special import ndtri
 from scipy.stats import chi2
 
 def get_calc_variables(a):
-    """
-    Creates the cumulative normal distribution and z score for a given alpha
-
-    :param a: alpha
-    :return: cumulative normal distribution, z score
+    """Creates the cumulative normal distribution and z score for a given alpha
+    
+    Args:
+        a (float): alpha
+    Returns: 
+        (float): cumulative normal distribution, z score
     """
     norm_cum_dist = ndtri((100 + (100 - (100 * (1-a)))) / 200)
     z = ndtri(1 - (1-a )/ 2)
