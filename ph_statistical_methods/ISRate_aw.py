@@ -49,7 +49,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
     
     ## TODO: add ref rate groupby
     
-   # Condiiton if group_cols is None
+   # Conditon if group_cols is None
     if group_cols is None:
         df['temp_gc'] = 'group'
         group_cols = ['temp_gc']
@@ -80,6 +80,6 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
 
     if metadata:
         method = np.where(df['Observed'] < 10, 'Exact', 'Byars')
-        df = metadata_cols(df, f'Indirectly standardized rate per {multiplier}', confidence, method)
+        df = metadata_cols(df, f'indirectly standardised rate per {multiplier}', confidence, method)
     
     return df
