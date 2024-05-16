@@ -9,13 +9,31 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from ISRate import calculate_ISRate
+from ISRate_aw import calculate_ISRate
 
 data = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testdata_multiarea_isr')
-data_multiarea = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testdata_multiarea')
-
 results = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testresults_ISR')
 
+test_ISR_lookup = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testdata_multiarea_lookup')
+
+def test_default():
+        df = calculate_ISRate(data, 'count', 'pop', 'refcount', 'refpop', group_cols='area').iloc[:, :7]
+        assert_frame_equal(df, results.iloc[:3, :7], check_dtype=False)
+
+def test_default_obs_total():
+        df = calculate_ISRate(data, 'total_count', 'pop', 'refcount', 'refpop', group_cols='area',
+                              obs_df = test_ISR_lookup, obs_join_left = 'area', obs_join_right = 'area').iloc[:, :7]
+        assert_frame_equal(df, results.iloc[:3, :7], check_dtype=False)
+
+
+
+
+
+
+
+
+
+data_multiarea = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name = 'testdata_multiarea')
 
 
 est_multiarea   <- read_excel("tests/testthat/testdata_DSR_ISR.xlsx", sheet="testdata_multiarea", col_names=TRUE) %>%

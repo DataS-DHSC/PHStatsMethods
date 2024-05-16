@@ -49,6 +49,11 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
     
     ## TODO: add ref rate groupby
     
+   # Condiiton if group_cols is None
+    if group_cols is None:
+        df['temp_gc'] = 'group'
+        group_cols = ['temp_gc']
+
     if obs_df is not None:
         df = df.groupby(group_cols).agg({'exp_x': lambda x: x.sum(skipna=False),
                                          ref_num_col: 'sum',
