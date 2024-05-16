@@ -10,7 +10,7 @@ import numpy as np
 from confidence_intervals import byars_lower, byars_upper
 from validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
-def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
+def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
                      metadata = True, confidence = 0.95, multiplier = 100000, **kwargs):
     
     """Calculates indirectly standardized rates with confidence limits using Byar's or exact CI method.
@@ -48,11 +48,6 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
     ## TODO: add ref rate groupby
-    
-   # Conditon if group_cols is None
-    if group_cols is None:
-        df['temp_gc'] = 'group'
-        group_cols = ['temp_gc']
 
     if obs_df is not None:
         df = df.groupby(group_cols).agg({'exp_x': lambda x: x.sum(skipna=False),
@@ -82,4 +77,6 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
         method = np.where(df['Observed'] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'indirectly standardised rate per {multiplier}', confidence, method)
     
+    df.drop(columns='ph_pkg_group') if group_cols == ['ph_pkg_group'] else None
+
     return df

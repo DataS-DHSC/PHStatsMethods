@@ -78,6 +78,9 @@ def format_args(confidence, group_cols = None):
     if group_cols is not None and not isinstance(group_cols, list):
         group_cols = [group_cols]
 
+    if group_cols is None: 
+        group_cols = ['ph_pkg_group']
+
     return confidence, group_cols
 
 
