@@ -40,7 +40,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
     obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)
-    validate_data(df, denom_col, group_cols, metadata, ref_df=ref_df)
+    df = validate_data(df, denom_col, group_cols, metadata, ref_df=ref_df)
     
     if ref_df is not None:
         df = df.merge(ref_df, how='left', left_on=ref_join_left, right_on=ref_join_right).drop(ref_join_right, axis=1)
@@ -77,6 +77,7 @@ def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_c
         method = np.where(df['Observed'] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'indirectly standardised rate per {multiplier}', confidence, method)
     
-    df.drop(columns='ph_pkg_group') if group_cols == ['ph_pkg_group'] else None
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group') 
 
     return df

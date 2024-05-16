@@ -107,6 +107,10 @@ def check_arguments(df, columns, metadata = None):
 ## make sure nulls are np nan?
 def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
     
+    # Allows us to group data when group_cols is None in format args.
+    if group_cols == ['ph_pkg_group']:
+        df['ph_pkg_group'] = 'ph_pkg_group'
+
     # adding this as not obvious to pass column as a list for developers using this function
     if group_cols is not None:
         if not isinstance(group_cols, list):
@@ -141,6 +145,10 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
 
         if (df[num_col] > df[denom_col]).any():
             raise ValueError('Numerators must be less than or equal to the denominator')   
+
+    # 
+
+    return(df)
 
 
 
