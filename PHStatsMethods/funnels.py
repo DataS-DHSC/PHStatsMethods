@@ -15,10 +15,10 @@ from .utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisso
 
 def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
                             rate = None, ratio_type = None, rate_type = None, years_of_data = None):
-    """Calculates proportions with confidence limits using Wilson Score method.
+    """Calculates control limits adopting a consistent method as per the Fingertips Technical Guidance
 
     Args:
-        df: DataFrame containing the data to calculate proportions for.
+        df: DataFrame containing the data to calculate control limits for.
         num_col (str): Name of column containing observed number of cases in the sample
                 (the numerator of the population).
         denom_col (str): Name of column containing number of cases in sample 
@@ -53,8 +53,8 @@ def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None
         if rate_type not in ['dsr', 'crude']:
             raise ValueError("only 'dsr' and 'crude' are valid rate_types")
         
-        if (df[rate].isna()).any():
-            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0")
+        if denom_col is None and (df[rate].isna()).any():
+            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0 or a denominator must be provided")
         
         if denom_col is None and (df[num_col] == 0).any():
             raise ValueError("For rates, where there are 0 events for a record, 'denom_col' must be provided")
@@ -194,8 +194,8 @@ def assign_funnel_significance(df, num_col, denom_col, statistic, rate = None, r
         elif rate_type not in ['dsr', 'crude']:
             raise ValueError("only 'dsr' and 'crude' are valid rate_types")
         
-        elif (df[rate].isna()).any():
-            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0")
+        elif denom_col is None and (df[rate].isna()).any():
+            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0 or a denominator must be provided")
             
         if denom_col is None and (df[num_col] == 0).any():
             raise ValueError("For rates, where there are 0 events for a record, 'denom_col' must be provided")
