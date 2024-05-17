@@ -4,8 +4,8 @@ from setuptools import setup
 setup(
     name='PHStatsMethods',
     version='0.1.4',
-    packages=['ph_statistical_methods'],
-    url='https://github.com/DataS-DHSC/PH_statistical_methods',
+    packages=['PHStatsMethods'],
+    url='https://github.com/DataS-DHSC/PHStatsMethods',
     license='GPL3',
     author='Department of Health and Social Care',
     author_email='annabel.westermann@dhsc.gov.uk, phds@phe.gov.uk',

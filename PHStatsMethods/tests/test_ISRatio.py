@@ -18,8 +18,7 @@ class TestISRatio:
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
     data = pd.read_excel(path, sheet_name = 'testdata_multiarea_isr')
     data_ref = pd.read_excel(path, sheet_name = 'refdata')
-    data_results = pd.read_excel(path, sheet_name = 'testresults_ISR')\
-        .drop(['ref_rate'], axis=1).astype({'Observed':'float64'})  
+    data_results = pd.read_excel(path, sheet_name = 'testresults_ISR').drop(['ref_rate'], axis=1).astype({'Observed':'float64'})  
     data_obs = pd.read_excel(path, sheet_name = 'testdata_multiarea_lookup')
     
     cols_95 = [0,1,2,3,4,5,8,9]
