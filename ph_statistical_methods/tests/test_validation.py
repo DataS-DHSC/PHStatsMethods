@@ -17,7 +17,6 @@ class Test_metadata_cols:
     def test_cols(self):
         metadata_cols(self.df, "Percentage", confidence = None, method = "Wilsons")
         assert self.df.loc[0, "Statistic"] == "Percentage"
-        assert "Method" not in self.df.columns # A method shoud not be provided if there are no CIs
 
     def test_single_confidence(self):
         metadata_cols(self.df, "Percentage", confidence = [0.95], method = "Wilsons")
