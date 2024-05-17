@@ -15,6 +15,25 @@ from .utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisso
 
 def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
                             rate = None, ratio_type = None, rate_type = None, years_of_data = None):
+    """Calculates proportions with confidence limits using Wilson Score method.
+
+    Args:
+        df: DataFrame containing the data to calculate proportions for.
+        num_col (str): Name of column containing observed number of cases in the sample
+                (the numerator of the population).
+        denom_col (str): Name of column containing number of cases in sample 
+                (the denominator of the population).
+        group_cols (str | list): A string or list of column name(s) to group the data by. 
+                Defaults to None.
+        metadata (bool): Whether to include information on the statistic and confidence interval methods.
+        confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
+                Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
+        multiplier (int): multiplier used to express the final values (e.g. 100 = percentage)
+
+    Returns:
+        DataFrame of calculated proportion statistics with confidence intervals (df).
+        
+    """
     
     df = validate_data(df, num_col, denom_col = denom_col, metadata = metadata)
     

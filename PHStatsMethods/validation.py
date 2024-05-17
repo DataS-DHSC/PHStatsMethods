@@ -140,7 +140,7 @@ def check_arguments(df, columns, metadata = None):
 def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
     
     # Create copy of data to avoid changing original dataset
-    df = df.copy().reset_index()
+    df = df.copy().reset_index(drop=True)
     
     # Allows us to group data when group_cols is None in format args.
     if group_cols == ['ph_pkg_group']:
