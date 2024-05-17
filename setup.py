@@ -14,6 +14,6 @@ setup(
                       'pandas >= 2.0.0',
                       'pytest >= 8.0.0',
                       'scipy >= 1.8.0',
-                      'openpyxl >= 3.1.0']
+                      'openpyxl >= 3.1.0'],
 )
 
