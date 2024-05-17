@@ -48,8 +48,6 @@ def ph_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = N
     
     df['exp_x'] = df[ref_num_col].fillna(0) / df[ref_denom_col] * df[denom_col].fillna(0)
     
-    ## TODO: add ref rate groupby
-
     if obs_df is not None:
         df = df.groupby(group_cols).agg({'exp_x': lambda x: x.sum(skipna=False),
                                          ref_num_col: 'sum',

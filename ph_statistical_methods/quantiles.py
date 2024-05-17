@@ -55,7 +55,7 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     check_arguments(df, [values] if group_cols is None else [values] + group_cols)
     
     # Additional columns in output
-    df["nquantiles"] = nquantiles
+    df['nquantiles'] = nquantiles
 
     # Calculate Quantiles 
     if group_cols is None:

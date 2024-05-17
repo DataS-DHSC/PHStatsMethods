@@ -69,7 +69,7 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
         
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_denom_col)
-    validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
+    df = validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
         
     if ref_df is not None and euro_standard_pops == False:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)
@@ -77,18 +77,12 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
     df['wt_rate'] = df[num_col].fillna(0) * df[ref_denom_col] / df[denom_col]
     df['sq_rate'] = df[num_col].fillna(0) * (df[ref_denom_col] / df[denom_col])**2
     
-    if group_cols is not None:
-        df = df.groupby(group_cols).agg({num_col: 'sum', 
-                                          denom_col: lambda x: x.sum(skipna=False), 
-                                          'wt_rate': lambda x: x.sum(skipna=False),
-                                          ref_denom_col: lambda x: x.sum(skipna=False), 
-                                          'sq_rate': lambda x: x.sum(skipna=False)}).reset_index()
-    else:
-        df[num_col] = df[num_col].sum()
-        for col in [denom_col, 'wt_rate', ref_denom_col, 'sq_rate']:
-            df[col] = df[col].sum(skipna=False)
-        df = df[[num_col, denom_col, 'wt_rate', ref_denom_col, 'sq_rate']].drop_duplicates()
-    
+    df = df.groupby(group_cols).agg({num_col: 'sum', 
+                                      denom_col: lambda x: x.sum(skipna=False), 
+                                      'wt_rate': lambda x: x.sum(skipna=False),
+                                      ref_denom_col: lambda x: x.sum(skipna=False), 
+                                      'sq_rate': lambda x: x.sum(skipna=False)}).reset_index()
+
     df['Value'] = df['wt_rate'] / df[ref_denom_col] * multiplier
     df['vardsr'] = 1 / df[ref_denom_col]**2 * df['sq_rate']
     
@@ -103,6 +97,9 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
     
     if metadata:
         df = metadata_cols(df, f'DSR per {multiplier}', confidence, 'Dobson')
+    
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group') 
             
     return df
         
