@@ -51,19 +51,19 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     
     if not isinstance(invert, bool):
         raise TypeError("Pass 'invert' as a boolean")
+
+    # Allows us to group data when group_cols is None in format args.
+    if group_cols == ['ph_pkg_group']:
+        df['ph_pkg_group'] = 'ph_pkg_group'
     
     check_arguments(df, [values] if group_cols is None else [values] + group_cols)
     
     # Additional columns in output
     df['nquantiles'] = nquantiles
 
-    # Calculate Quantiles 
-    if group_cols is None:
-        df['num_rows'] = df[values].count() # Number of rows in total
-        df['rank'] = df[values].rank(ascending = not invert, method='min') # Rank each value
-    else:   
-        df['num_rows'] = df.groupby(group_cols)[values].transform(lambda x: x.count()) # Number of rows in each group
-        df['rank'] = df.groupby(group_cols)[values].rank(ascending = not invert, method='min') # Rank each value in each group
+    # Calculate Quantiles  
+    df['num_rows'] = df.groupby(group_cols)[values].transform(lambda x: x.count()) # Number of rows in each group
+    df['rank'] = df.groupby(group_cols)[values].rank(ascending = not invert, method='min') # Rank each value in each group
 
 
     # Assign a quantile based on rank and number of rows in each group 
@@ -87,5 +87,8 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     # Drop columns if required
     if type == "standard":
         df = df.drop(['num_rows', 'rank', 'nquantiles', 'qinverted'], axis=1)
+        
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group')
 
     return df
