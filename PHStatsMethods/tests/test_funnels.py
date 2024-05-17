@@ -91,7 +91,7 @@ class TestFunnelSignif:
     
     path = Path(__file__).parent / 'test_data/testdata_funnels.xlsx'
     
-    rate_data = pd.read_csv(path, sheet_name = 'rate_dsr_inputs')
+    rate_data = pd.read_excel(path, sheet_name = 'rate_dsr_inputs')
 
     def test_signif_prop(self):
         data = pd.read_excel(self.path, sheet_name = 'prop_inputs.csv')
