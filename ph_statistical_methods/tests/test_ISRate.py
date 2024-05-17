@@ -9,7 +9,7 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from ISRate_aw import calculate_ISRate
+from ISRate import calculate_ISRate
 
 
 class TestISRate:

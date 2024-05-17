@@ -18,7 +18,7 @@ def wilson_lower(count, denominator, confidence=0.95):
     """Calculates the lower CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
      (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212. \cr
+    209 to 212.
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
@@ -41,7 +41,7 @@ def wilson_upper(count, denominator, confidence=0.95):
     """Calculates the upper CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
      (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212. \cr
+    209 to 212.
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
@@ -64,7 +64,7 @@ def wilson(count, denominator, confidence=0.95):
     """Calculates the CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
      (default 0.95)
     [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212. \cr
+    209 to 212.
     [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
      (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
      
@@ -226,5 +226,26 @@ def student_t_dist(value_count, st_dev, confidence=0.95):
         
     """
     return abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5
+
+
+def dobson_lower(value, total_count, var, confidence, multiplier):
+    
+    if total_count < 10:
+        x = np.nan
+    else:
+        x = value + sqrt(var / total_count) * (byars_lower(total_count, confidence) - total_count) * multiplier
+    
+    return x
+    
+
+def dobson_upper(value, total_count, var, confidence, multiplier):
+    
+    if total_count < 10:
+        x = np.nan
+    else:
+        x = value + sqrt(var / total_count) * (byars_upper(total_count, confidence) - total_count) * multiplier
+    
+    return x
+   
 
 

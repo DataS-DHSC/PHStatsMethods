@@ -166,6 +166,11 @@ def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None)
         validate_data(ref_df, num_col = ref_num_col, group_cols = join_right, denom_col = ref_denom_col)
         check_arguments(df, join_left)
         
+        # remove columns in common to avoid duplicate columns after join
+        same_cols = [col for col in df.columns if col in ref_df.columns and col not in join_left+join_right]
+        if len(same_cols) > 0:
+            ref_df = ref_df.drop(same_cols, axis=1)
+        
         return (ref_df, join_left, join_right)
     
     else:
@@ -174,7 +179,6 @@ def check_kwargs(df, kwargs, ref_type, ref_num_col = None, ref_denom_col = None)
         return(None, None, None)
     
     
-## join with ages?
 
 
 
