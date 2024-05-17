@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-<<<<<<< HEAD
 Created on Wed Mar 13 13:58:18 2024
 
 @author: Karandeep.Kaur

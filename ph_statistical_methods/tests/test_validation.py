@@ -135,8 +135,3 @@ class Test_validate_data:
         df = pd.DataFrame({'area': [1, 2], 'num': [0, 82], 'den': [0, 10000]})
         with pytest.raises(ValueError, match = "Denominators must be greater than zero"):
             validate_data(df, "num", ["area"], True, denom_col = "den")
-
-    def test_validate_data_den0(self):
-        df = pd.DataFrame({'area': [1, 2], 'num': [5, 82], 'den': [1, 10000]})
-        with pytest.raises(ValueError, match = "Numerators must be less than or equal to the denominator"):
-            validate_data(df, "num", ["area"], True, denom_col = "den")

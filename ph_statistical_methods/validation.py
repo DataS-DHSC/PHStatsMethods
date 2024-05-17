@@ -16,8 +16,9 @@ def metadata_cols(df, statistic, confidence = None, method = None):
     
     if confidence is not None:
         df['Confidence'] = ', '.join([f'{int(c * 100)}%' if len(str(c)) < 5 else f'{c * 100}%' for c in confidence])
-        if method is not None:
-            df['Method'] = method
+    
+    if method is not None:
+        df['Method'] = method
         
     return df
     
@@ -142,11 +143,6 @@ def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = N
     if denom_col is not None:
         if (df[denom_col] <= 0).any():
             raise ValueError('Denominators must be greater than zero')
-
-        if (df[num_col] > df[denom_col]).any():
-            raise ValueError('Numerators must be less than or equal to the denominator')   
-
-    # 
 
     return(df)
 

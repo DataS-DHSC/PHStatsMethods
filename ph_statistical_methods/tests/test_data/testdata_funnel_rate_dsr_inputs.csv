@@ -38,4 +38,4 @@ count,rate_dsr,pop,rate_crude_per_100000,rate_crude_per_100,dsr_per_100000_with_
 1649,667.6454503,285959,576.6560941,0.576656094,Low (0.025),Low (0.025),Low (0.025),Low (0.025),Low (0.001),Low (0.001),Low (0.001),Low (0.001)
 1553,604.1141693,274661,565.4242867,0.565424287,Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001)
 1332,469.5645784,281425,473.3054988,0.473305499,Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001),Low (0.001)
-0,NA,297820,0,0,Not applicable for events less than 10 for dsrs,Not applicable for events less than 10 for dsrs,Not significant,Not significant,Low (0.001),Low (0.001),Not significant,Not significant
+0,NA,297820,0,0,Not applicable for events less than 10 for DSRs,Not applicable for events less than 10 for DSRs,Not significant,Not significant,Low (0.001),Low (0.001),Not significant,Not significant

@@ -1,5 +1,4 @@
-﻿"Observed_events
-",lower_2s_exp_events,lower_2s_count,lower_2s_isr,upper_2s_exp_events,upper_2s_count,upper_2s_isr,lower_3s_exp_events,lower_3s_count,lower_3s_isr,upper_3s_exp_events,upper_3s_count,upper_3s_isr
+﻿Observed_events,lower_2s_exp_events,lower_2s_count,lower_2s_isr,upper_2s_exp_events,upper_2s_count,upper_2s_isr,lower_3s_exp_events,lower_3s_count,lower_3s_isr,upper_3s_exp_events,upper_3s_count,upper_3s_isr
 1,5.571644585,-0.820519779,17.94802207,0.025317898,38.49774946,3949.774946,9.233410143,-0.891697652,10.83023482,0.001000547,998.4532721,99945.32721
 2,7.224687515,-0.723171418,27.6828582,0.242209467,7.257315569,825.7315569,11.22886836,-0.821887662,17.81123382,0.04540199,43.05093268,4405.093268
 3,8.767273828,-0.657818376,34.21816244,0.618671905,3.849096876,484.9096876,13.06224507,-0.770330446,22.96695541,0.190533306,14.7452787,1574.52787
