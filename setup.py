@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(
-    name='ph_statistical_methods',
+    name='PHStatsMethods',
     version='0.1.3',
     packages=['ph_statistical_methods'],
     url='https://github.com/DataS-DHSC/PH_statistical_methods',
