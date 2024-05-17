@@ -42,10 +42,8 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
         
     **kwargs:
         ref_df: DataFrame of reference data to join.
-        
-        ref_join_left: A string or list of column name(s) in `df` to join on to.
-        
-        ref_join_right: A string or list of column name(s) in `ref_df` to join on to.
+        ref_join_left (str | list): A string or list of column name(s) in `df` to join on to.
+        ref_join_right (str | list): A string or list of column name(s) in `ref_df` to join on to.
         
     Returns:
         DataFrame of calculated rates and confidence intervals
@@ -56,8 +54,6 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
         (2) Dobson A et al. Confidence intervals for weighted sums of Poisson parameters. Stat Med 1991;10:457-62.
 
     """
-
-    df = df.copy().reset_index(drop=True)
     
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
