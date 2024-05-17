@@ -10,7 +10,6 @@ Any feedback would be appreciated and can be provided using the Issues
 section of the [PH_statistical_methods GitHub
 repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
 
-
 ## Installation
 This packaged should be installed using pip:
 
