@@ -5,6 +5,6 @@ from .ISRate import ph_ISRate
 from .ISRatio import ph_ISRatio
 from .means import ph_mean
 from .proportions import ph_proportion
-from .quantiles import ph_quantiles
+from .quantiles import ph_quantile
 from .rates import ph_rate
 from .utils import euro_standard_pop
