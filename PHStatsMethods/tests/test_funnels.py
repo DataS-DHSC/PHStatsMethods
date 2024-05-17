@@ -17,8 +17,6 @@ class TestFunnelLimits:
     
     path = Path(__file__).parent / 'test_data/testdata_funnels.xlsx'
     
-    path = 'tests/test_data/testdata_funnels.xlsx'
-    
     def test_conf_lim_prop(self):
         data = pd.read_excel(self.path, sheet_name='prop_inputs')
         results = pd.read_excel(self.path, sheet_name='prop_outputs')
@@ -94,7 +92,7 @@ class TestFunnelSignif:
     rate_data = pd.read_excel(path, sheet_name = 'rate_dsr_inputs')
 
     def test_signif_prop(self):
-        data = pd.read_excel(self.path, sheet_name = 'prop_inputs.csv')
+        data = pd.read_excel(self.path, sheet_name = 'prop_inputs')
         
         df = assign_funnel_significance(data.drop('significance', axis=1), 
                                         'numerator', 'denominator', statistic = 'proportion')
