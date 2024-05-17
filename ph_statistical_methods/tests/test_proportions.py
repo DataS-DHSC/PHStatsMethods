@@ -7,9 +7,10 @@ Created on Tue Mar 12 17:07:04 2024
 
 import pytest
 import pandas as pd
+from pathlib import Path
 from pandas.testing import assert_frame_equal
 
-from proportions import ph_proportion
+from ..proportions import ph_proportion
 
 
 class TestProportions:
@@ -18,8 +19,10 @@ class TestProportions:
     ## more info: https://pynative.com/python-class-variables/
     
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
-    data = pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop').iloc[:,:-1]
-    data_group = pd.read_excel('tests/test_data/testdata_Proportion.xlsx', sheet_name = 'testdata_Prop_g').iloc[:,:-1]
+    path = Path(__file__).parent / 'test_data/testdata_Proportion.xlsx'
+    
+    data = pd.read_excel(path, sheet_name = 'testdata_Prop').iloc[:,:-1]
+    data_group = pd.read_excel(path, sheet_name = 'testdata_Prop_g').iloc[:,:-1]
     
     # Columns for 95% CI, so dropping 99.8% and Confidence column containing '95%, 99.8%'
     cols_95 = [0,1,2,3,4,5,8,10]

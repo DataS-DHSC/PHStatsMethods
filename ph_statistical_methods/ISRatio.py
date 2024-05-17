@@ -8,8 +8,8 @@ Created on Wed Mar 13 13:58:18 2024
 import pandas as pd
 import numpy as np
 
-from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
+from .confidence_intervals import byars_lower, byars_upper
+from .validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
 
 def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
