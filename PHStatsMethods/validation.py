@@ -139,6 +139,9 @@ def check_arguments(df, columns, metadata = None):
 ## make sure nulls are np nan?
 def validate_data(df, num_col, group_cols = None, metadata = None, denom_col = None, ref_df = None):
     
+    # Create copy of data to avoid changing original dataset
+    df = df.copy().reset_index()
+    
     # Allows us to group data when group_cols is None in format args.
     if group_cols == ['ph_pkg_group']:
         df['ph_pkg_group'] = 'ph_pkg_group'

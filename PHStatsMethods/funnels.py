@@ -9,12 +9,21 @@ import pandas as pd
 import numpy as np
 from math import floor, ceil
 
-from .validation import metadata_cols
+from .validation import metadata_cols, validate_data
 from .utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisson_funnel, funnel_ratio_significance
 
 
 def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
                             rate = None, ratio_type = None, rate_type = None, years_of_data = None):
+    
+    df = validate_data(df, num_col, denom_col = denom_col, metadata = metadata)
+    
+    if (df[num_col].isna()).any():
+        raise ValueError('Numerators must provided for all records, even when their values are 0')
+        
+    if denom_col is not None:
+        if (df[denom_col].isna()).any():
+            raise ValueError('Numerators must provided for all records, even when their values are 0')
     
     if statistic not in ['rate', 'proportion', 'ratio']:
         raise ValueError("'statistic' must be either 'proportion', 'ratio' or 'rate")
@@ -22,8 +31,14 @@ def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None
     if statistic == 'rate':
         if rate is None or rate_type is None or years_of_data is None or multiplier is None:
             raise TypeError("'rate', 'rate_type', 'years_of_data' and 'multiplier' are required for rate statistics")
-        elif rate_type not in ['dsr', 'crude']:
+        if rate_type not in ['dsr', 'crude']:
             raise ValueError("only 'dsr' and 'crude' are valid rate_types")
+        
+        if (df[rate].isna()).any():
+            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0")
+        
+        if denom_col is None and (df[num_col] == 0).any():
+            raise ValueError("For rates, where there are 0 events for a record, 'denom_col' must be provided")
     
     elif statistic in ['proportion', 'ratio']:
         if denom_col is None:
@@ -138,7 +153,42 @@ def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None
 
 def assign_funnel_significance(df, num_col, denom_col, statistic, rate = None, rate_type = None, multiplier = None):
     
+    if statistic not in ['rate', 'proportion', 'ratio']:
+        raise ValueError("'statistic' must be either 'proportion', 'ratio' or 'rate")
+        
+    df = validate_data(df, num_col, denom_col = denom_col)
+    
+    if (df[num_col].isna()).any():
+        raise ValueError('Numerators must provided for all records, even when their values are 0')
+        
+    if denom_col is not None:
+        if (df[denom_col].isna()).any():
+            raise ValueError('Numerators must provided for all records, even when their values are 0')
+    
+    if statistic not in ['rate', 'proportion', 'ratio']:
+        raise ValueError("'statistic' must be either 'proportion', 'ratio' or 'rate")
+    
+    if statistic == 'rate':
+        if rate is None or rate_type is None or multiplier is None:
+            raise TypeError("'rate', 'rate_type', and 'multiplier' are required for rate statistics")
+        
+        elif rate_type not in ['dsr', 'crude']:
+            raise ValueError("only 'dsr' and 'crude' are valid rate_types")
+        
+        elif (df[rate].isna()).any():
+            raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0")
+            
+        if denom_col is None and (df[num_col] == 0).any():
+            raise ValueError("For rates, where there are 0 events for a record, 'denom_col' must be provided")
+    
+    elif statistic in ['proportion', 'ratio']:
+        if denom_col is None:
+            raise TypeError("'denom_col' must be given for 'proportion' and 'ratio' statistics")
+            
     if statistic == 'proportion':
+        if (df[num_col] > df[denom_col]).any():
+            raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')  
+            
         av = df[num_col].sum() / df[denom_col].sum() # don't need skipna here as validation ensures no nulls
         
         df['significance'] = np.where(df[num_col] / df[denom_col] < df[denom_col].apply(lambda x: sigma_adjustment(0.999, x, av, 'low', 1)), 'Low (0.001)',
@@ -180,7 +230,18 @@ def assign_funnel_significance(df, num_col, denom_col, statistic, rate = None, r
 
 
 def calculate_funnel_points(df, num_col, rate, rate_type, denom_col = None,
-                            multiplier = None, years_of_data = None):
+                            multiplier = 100000, years_of_data = 1):
+    
+    df = validate_data(df, num_col, denom_col = denom_col)
+    
+    if rate_type not in ['dsr', 'crude']:
+        raise ValueError("only 'dsr' and 'crude' are valid rate_types")
+    
+    if (df[rate].isna()).any():
+        raise ValueError("For rates, 'rate' must be provided for all records even if the rate is 0")
+        
+    if denom_col is None and (df[num_col] == 0).any():
+        raise ValueError("For rates, where there are 0 events for a record, 'denom_col' must be provided")
     
     if rate_type == 'dsr':
         df[f'{rate}_chart'] = np.where(df[num_col] < 10, np.nan, 
