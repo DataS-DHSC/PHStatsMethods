@@ -26,6 +26,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
+        pip install -r requirements.txt
         if [ -f ph_statistical_methods/requirements.txt ]; then pip install -r ph_statistical_methods/requirements.txt; fi
     - name: Lint with flake8
       run: |
