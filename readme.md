@@ -1,62 +1,39 @@
-## How to use Git in Spyder
+# PH_statistical_methods
+This is a Python package to support analysts in the execution of statistical
+methods approved for use in the production of Public Health indicators such as
+those presented via [Fingertips](https://fingertips.phe.org.uk/). It
+provides functions for the generation of Proportions, Rates, DSRs, ISRs,
+and Means including confidence intervals for these statistics,
+and a function for assigning data to quantiles.
 
-```
-# get the repo
-!git clone [url]
-```
+Any feedback would be appreciated and can be provided using the Issues
+section of the [PH_statistical_methods GitHub
+repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
 
-### Push changes to Git
-```
-# see if there are any changes
-!git pull
-!git status
-!git add --all
-!git commit -m "MESSAGE"
-!git push
 
-```
+## Installation
+This packaged should be installed using pip:
 
-### Working with branches 
-```
-# See branch you are currently working on
-!git branch
 
-# View all branches in the GitHub repo
-!git pull
-!git branch -r
+    pip install PH_statistical_methods
 
-# move to a new branch and pull changes so local branch is up-to-date
-!git switch branch_name
-!git pull
 
-```
+Or it can be compiled from source (still requires pip):
 
-### Keep synced with Dev
-```
-# Move into Dev and pull most recent changes
-!git switch Dev
-!git pull
+    pip install git+https://github.com/DataS-DHSC/PH_statistical_methods.git
 
-# Move back to your branch and merge in Dev
-!git switch [your_branch]
-!git merge Dev
-```
+## Usage
+PH_statistical_methods should be imported and used in line with standard python
+conventions. It is suggested that if the whole package is to be imported 
+then the following convention is used:
+ 
+    import PH_statistical_methods as phm
 
-### Running tests
-(may need to install pytest first - !pip install pytest)
-```
-# run all tests
-!pytest
 
-# run all tests in file
-!pytest tests/file.py
+For more information on any function, you can use:
 
-# run test function (outside of class)
-!pytest tests/file.py::TestFunction
+    help(*PH_statistical_methods function name*)
 
-# run test class
-!pytest tests/file.py::TestClass
-
-# run test method (a method is a function in a class)
-!pytest tests/file.py::TestClass::TestMethod
-```
+## Licence
+This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
+licence.

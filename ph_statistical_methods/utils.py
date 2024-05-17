@@ -1,84 +1,86 @@
 # -*- coding: utf-8 -*-
 
+import re
+import pandas as pd
+import numpy as np
+from scipy import stats
 from scipy.special import ndtri
-
+from scipy.stats import chi2
 
 def get_calc_variables(a):
-    """
-    Creates the cumulative normal distribution and z score for a given alpha
-
-    :param a: alpha
-    :return: cumulative normal distribution, z score
+    """Creates the cumulative normal distribution and z score for a given alpha
+    
+    Args:
+        a (float): alpha
+    Returns: 
+        (float): cumulative normal distribution, z score
     """
     norm_cum_dist = ndtri((100 + (100 - (100 * (1-a)))) / 200)
     z = ndtri(1 - (1-a )/ 2)
     return norm_cum_dist, z
 
 
-def poisson_cis(z, x_a, x_b):
+
+def euro_standard_pop():
     
-    q =1
-    tot = 0
-    s = 0
-    k= 0
+    age_groups = ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34',
+                  '35-39', '40-44', '45-49', '50-54', '55-59', '60-64',
+                  '65-69', '70-74', '75-79', '80-84', '85-89', '90+']
     
-    while k<= z or q > tot * 1e-10:
-        tot += q
-        if x_a <= k <= x_b:
-            s+= q
-        if tot > 1e30:
-            s /= 1e30
-            tot /= 1e30
-            q /= 1e30
-        
-        k += 1
-        q*= z / k
+    pops = [5000, 5500, 5500, 5500, 6000, 6000, 6500, 7000, 7000, 7000, 
+            7000, 6500, 6000, 5500, 5000, 4000, 2500, 1500, 1000]
     
-    return s / tot
+    data = pd.DataFrame({'esp_age_bands': age_groups,
+                         'euro_standard_pops': pops})
+    
+    return data
 
 
-def poisson_funnel(obs, p, side):
-    """
-    Calculates the poisson distrbution, takes in observations, poisson standard deviation, and side.
-    :param obs: Observations as integer
-    :param p: Poisson stamdard deviation, given as float, 2 sigma is 0.025, 3 sigma is 0.001
-    :param side: Side given as str, value can be "high" or "low"
-    :return p_funnel: Poisson funnel given as float
+def join_euro_standard_pops(df, age_col, group_cols = None):
+    
+    if age_col not in df.columns:
+        raise ValueError(f"'{age_col}' is not a column name in the data")
+    
+    # Check number of rows
+    if group_cols is not None:
+        n_group_rows = df.groupby(group_cols).size().reset_index(name='counts')
+    
+        if n_group_rows.counts.nunique() > 1:
+            raise ValueError('There must be the same number of rows per group')
+            
+        if n_group_rows.counts.unique() != 19:
+            raise ValueError('There must be 19 rows of data per group')
+            
+    else:
+        if len(df) != 19:
+            raise ValueError('Dataframe, if ungrouped, must have 19 rows for the 19 agebands')
+    
+    # Get euro standard pops and rank order
+    esp = euro_standard_pop()
+    esp['n1'] = list(range(1, 20))
+    
+    # Get first number of age and sort ascending
+    df['n1'] = df.apply(lambda x: int(re.findall(r'(\d+)', str(x[age_col]))[0]), axis=1)
+    
+    if df['n1'].nunique() != 19:
+        raise ValueError('There are duplicate minimum ages, which is not accepted as the function orders by the first number in each age band.\
+                         For example, <5 and 5-10 IS NOT accepted but <=4 and 5-10 IS accepted.')
+    
+    # order df values and assign over window
+    df = df.sort_values(by='n1')
+    if group_cols is not None:
+        df['n1'] = df.groupby(group_cols)['n1'].rank()
+    else:
+        df['n1'] = df['n1'].rank()
+    
+    # join by columns
+    df = df.merge(esp, how='left', on='n1').drop('n1', axis=1)
+    
+    # Print out age bands for user to check
+    print(df[[age_col, 'esp_age_bands']].drop_duplicates())
+    print("Please check how the your ageband columns have joined to the 'esp_age_bands' above")
+    
+    return df
 
-    """
-    v = 0.5
-    dv = 0.5
 
-    if side == "low":
-
-    # this is in the Excel macro code, but obs can't be 0 based on Funnels.R
-    # if (obs == 0) return(0)
-
-     while dv > 1e-7 :
-      dv = dv / 2
-
-      if (poisson_cis((1 + obs) * v / (1 - v),
-                      obs,
-                      10000000000) > p) :
-        v = v - dv
-      
-      else:
-        v = v + dv
-     
-
-    elif side == "high":
-
-     while dv > 1e-7: 
-      dv = dv / 2
-      if (poisson_cis((1 + obs) * v / (1 - v),
-                      0,
-                      obs) < p):
-        v = v - dv
-      else:
-        v = v + dv
-
-    p_funnel = (1 + obs) * v / (1 - v)
-    return p_funnel
-
-
-
+  
