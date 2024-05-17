@@ -33,7 +33,7 @@ def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confiden
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    validate_data(df, num_col, group_cols, metadata, denom_col)
+    df = validate_data(df, num_col, group_cols, metadata, denom_col)
     
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
@@ -54,5 +54,8 @@ def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confiden
     if metadata:
         method = np.where(df[num_col] < 10, 'Exact', 'Byars')
         df = metadata_cols(df, f'Rate per {multiplier}', confidence, method)
+        
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group') 
     
     return df 

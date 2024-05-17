@@ -20,7 +20,6 @@ class TestProportions:
 
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
     path = Path(__file__).parent / 'test_data/testdata_Proportion.xlsx'
-    path = 'tests/test_data/testdata_Proportion.xlsx'
     
     data = pd.read_excel(path, sheet_name = 'testdata_Prop').iloc[:,:-1]
     data_group = pd.read_excel(path, sheet_name = 'testdata_Prop_g').iloc[:,:-1]
