@@ -8,32 +8,37 @@ Created on Thu May 16 13:23:25 2024
 import pytest
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from pandas.testing import assert_frame_equal
 
 from ..funnels import calculate_funnel_limits, assign_funnel_significance, calculate_funnel_points
 
 class TestFunnelLimits:
     
-    def test_conf_lim_prop():
-        data = pd.read_csv('tests/test_data/testdata_funnel_prop_inputs.csv')
-        results = pd.read_csv('tests/test_data/testdata_funnel_prop_outputs.csv')
+    path = Path(__file__).parent / 'test_data/testdata_funnels.xlsx'
+    
+    path = 'tests/test_data/testdata_funnels.xlsx'
+    
+    def test_conf_lim_prop(self):
+        data = pd.read_excel(self.path, sheet_name='prop_inputs')
+        results = pd.read_excel(self.path, sheet_name='prop_outputs')
         
         df = calculate_funnel_limits(data, 'numerator', denom_col='denominator', statistic = 'proportion', multiplier = 100, metadata=False)
         assert_frame_equal(df, results)
     
-    def test_conf_lim_prop_axis_variation():
-        data = pd.read_csv('tests/test_data/testdata_funnel_prop_inputs.csv')
-        results_axis_var = pd.read_csv('tests/test_data/testdata_funnel_prop_outputs_with_axis_variation.csv')
+    def test_conf_lim_prop_axis_variation(self):
+        data = pd.read_excel(self.path, sheet_name = 'prop_inputs')
+        results_axis_var = pd.read_excel(self.path, sheet_name = 'prop_outputs_axis_var')
         
         df = calculate_funnel_limits(data[data['denominator'] < 31000], 'numerator', denom_col='denominator', 
                                       statistic = 'proportion', multiplier = 100, metadata=False)
         assert_frame_equal(df, results_axis_var)
     
     @pytest.mark.parametrize('ratio_type', ['count', 'isr'])
-    def test_conf_lim_ratio(ratio_type):
+    def test_conf_lim_ratio(self, ratio_type):
         
-        data = pd.read_csv('tests/test_data/testdata_funnel_ratio_inputs.csv')
-        results = pd.read_csv('tests/test_data/testdata_funnel_ratio_outputs.csv')
+        data = pd.read_excel(self.path, sheet_name = 'ratio_inputs')
+        results = pd.read_excel(self.path, sheet_name = 'ratio_outputs')
         
         # ratio_type = 'count'
         df = calculate_funnel_limits(data, 'obs', denom_col='expected', statistic = 'ratio', 
@@ -46,18 +51,18 @@ class TestFunnelLimits:
         assert_frame_equal(df, type_results)
         
         
-    def test_conf_lim_rate_dsr():
-        data = pd.read_csv('tests/test_data/testdata_funnel_rate_input_funnels.csv')
-        results = pd.read_csv('tests/test_data/testdata_funnel_rate_outputs.csv')
+    def test_conf_lim_rate_dsr(self):
+        data = pd.read_excel(self.path, sheet_name = 'rate_inputs')
+        results = pd.read_excel(self.path, sheet_name = 'rate_outputs')
         
         df = calculate_funnel_limits(data, 'ev', statistic = 'rate', rate = 'rate', 
                                       multiplier = 100000, rate_type = 'dsr', years_of_data = 3)
         
         assert_frame_equal(df, results)
     
-    def test_conf_lim_rate_crude():
-        data = pd.read_csv('tests/test_data/testdata_funnel_rate_input_funnels.csv')
-        results = pd.read_csv('tests/test_data/testdata_funnel_rate_outputs_2.csv')
+    def test_conf_lim_rate_crude(self):
+        data = pd.read_excel(self.path, sheet_name = 'rate_inputs')
+        results = pd.read_excel(self.path, sheet_name = 'rate_outputs_2')
         
         data['ev'] = np.where(data['ev'] == data['ev'].max(), 5, data['ev'])
         
@@ -66,9 +71,9 @@ class TestFunnelLimits:
         
         assert_frame_equal(df, results)
     
-    def test_conf_lim_rate_crude_0_ev_denom():
-        data = pd.read_csv('tests/test_data/testdata_funnel_rate_input_funnels.csv')
-        results = pd.read_csv('tests/test_data/testdata_funnel_rate_outputs_3.csv')
+    def test_conf_lim_rate_crude_0_ev_denom(self):
+        data = pd.read_excel(self.path, sheet_name = 'rate_inputs')
+        results = pd.read_excel(self.path, sheet_name = 'rate_outputs_3')
         
         data = data[['ev', 'rate']]
         data['pop'] = 100000 * data['ev'] / data['rate']
@@ -84,19 +89,20 @@ class TestFunnelLimits:
 
 class TestFunnelSignif:
     
-    rate_data = pd.read_csv('tests/test_data/testdata_funnel_rate_dsr_inputs.csv')
+    path = Path(__file__).parent / 'test_data/testdata_funnels.xlsx'
+    
+    rate_data = pd.read_csv(path, sheet_name = 'rate_dsr_inputs')
 
-    def test_signif_prop():
-        data = pd.read_csv('tests/test_data/testdata_funnel_prop_inputs.csv')
+    def test_signif_prop(self):
+        data = pd.read_excel(self.path, sheet_name = 'prop_inputs.csv')
         
         df = assign_funnel_significance(data.drop('significance', axis=1), 
                                         'numerator', 'denominator', statistic = 'proportion')
         
         assert_frame_equal(df, data)
     
-    
-    def test_signif_ratio():
-        data = pd.read_csv('tests/test_data/testdata_funnel_ratio_inputs.csv')
+    def test_signif_ratio(self):
+        data = pd.read_excel(self.path, 'ratio_inputs')
         
         df = assign_funnel_significance(data.drop('significance', axis=1), 
                                         'obs', 'expected', statistic = 'ratio')
@@ -122,7 +128,9 @@ class TestFunnelSignif:
     
 class TestFunnelPoints:
     
-    data = pd.read_csv('tests/test_data/testdata_funnel_rate_input_funnels.csv')
+    path = Path(__file__).parent / 'test_data/testdata_funnels.xlsx'
+    
+    data = pd.read_excel(path, sheet_name = 'rate_inputs')
     
     def test_points_dsr_less_5(self):
         

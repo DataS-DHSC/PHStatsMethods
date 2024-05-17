@@ -7,16 +7,19 @@ Created on Mon May 13 17:00:48 2024
 
 import pytest
 import pandas as pd
+from pathlib import Path
 from pandas.testing import assert_frame_equal
 
 from ..DSR import ph_dsr
 
 class Test_DSR:
+    
+    path = Path(__file__).parent / 'test_data/testdata_DSR_ISR.xlsx'
 
-    data = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name='testdata_multiarea')
-    results = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name='testresults_DSR')\
+    data = pd.read_excel(path, sheet_name='testdata_multiarea')
+    results = pd.read_excel(path, sheet_name='testresults_DSR')\
         .drop('statistic', axis=1).astype({'Total Count':'float64'})  
-    ref_data = pd.read_excel('tests/test_data/testdata_DSR_ISR.xlsx', sheet_name='testdata_1976').astype({'count':'float64'})  
+    ref_data = pd.read_excel(path, sheet_name='testdata_1976').astype({'count':'float64'})  
     
     cols_95 = [0,1,2,3,4,5,8]
     
