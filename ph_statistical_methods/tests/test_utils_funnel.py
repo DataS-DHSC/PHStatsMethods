@@ -6,7 +6,7 @@ Created on Wed May  1 08:18:14 2024
 """
 
 import pytest
-from utils_funnel import poisson_funnel, funnel_ratio_significance, sigma_adjustment
+from ..utils_funnel import poisson_funnel, funnel_ratio_significance, sigma_adjustment
 
 @pytest.mark.parametrize('obs, p, side, result', [(200, 0.025, 'low', 173.24086241121654),
                                                   (500, 0.001, 'high', 573.0274767209943)])

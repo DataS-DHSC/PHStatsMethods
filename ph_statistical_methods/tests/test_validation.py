@@ -7,7 +7,7 @@ Created on Tue Apr 02 15:05:42 2024
 
 import pytest
 import pandas as pd
-from validation import metadata_cols, ci_col, check_cis, format_args, check_arguments, validate_data
+from ..validation import metadata_cols, ci_col, check_cis, format_args, check_arguments, validate_data
 
 class Test_metadata_cols:
 

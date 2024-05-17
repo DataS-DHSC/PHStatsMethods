@@ -7,10 +7,11 @@ Created on Fri Apr 19 10:49:43 2024
 
 import pandas as pd
 import numpy as np
-from confidence_intervals import byars_lower, byars_upper
-from validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
-def calculate_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
+from .confidence_intervals import byars_lower, byars_upper
+from .validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
+
+def ph_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
                      metadata = True, confidence = 0.95, multiplier = 100000, **kwargs):
     
     """Calculates indirectly standardized rates with confidence limits using Byar's or exact CI method.

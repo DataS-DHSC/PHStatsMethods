@@ -4,9 +4,9 @@ import pandas as pd
 import numpy as np
 from math import sqrt
 
-from utils import join_euro_standard_pops
-from confidence_intervals import dobson_lower, dobson_upper
-from validation import format_args, validate_data, check_kwargs, ci_col, metadata_cols
+from .utils import join_euro_standard_pops
+from .confidence_intervals import dobson_lower, dobson_upper
+from .validation import format_args, validate_data, check_kwargs, ci_col, metadata_cols
 
 
 def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = True, 

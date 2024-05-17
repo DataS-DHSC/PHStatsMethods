@@ -6,14 +6,18 @@ Created on Mon Mar 18 15:04:04 2024
 """
 
 import pytest
+from pathlib import Path
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from rates import ph_rate
+from ..rates import ph_rate
 
 class Test_rates:
-    data = pd.read_excel('tests/test_data/testdata_Rate.xlsx', sheet_name = 'testdata_Rate').drop('Multiplier', axis=1)
-    data_group = pd.read_excel('tests/test_data/testdata_Rate.xlsx', sheet_name = 'testdata_Rate_g').drop('Multiplier', axis=1)
+    
+    path = Path(__file__).parent / 'test_data/testdata_Rate.xlsx'
+    
+    data = pd.read_excel(path, sheet_name = 'testdata_Rate').drop('Multiplier', axis=1)
+    data_group = pd.read_excel(path, sheet_name = 'testdata_Rate_g').drop('Multiplier', axis=1)
     
     cols_95 = [0,1,2,3,4,5,8,9]
     

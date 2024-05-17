@@ -7,13 +7,15 @@ Created on Thu Mar 28 16:22:46 2024
 import pandas as pd
 
 from pandas.testing import assert_frame_equal
+from pathlib import Path
 
-from means import ph_mean
+from ..means import ph_mean
 
+path = Path(__file__).parent / 'test_data/testdata_Mean.xlsx'
 
-data = pd.read_excel('tests/test_data/testdata_Mean.xlsx', sheet_name = 'testdata_Mean')
-results = pd.read_excel('tests/test_data/testdata_Mean.xlsx', sheet_name = 'testdata_Mean_results')
-results_NA = pd.read_excel('tests/test_data/testdata_Mean.xlsx', sheet_name = 'testdata_Mean_results_NA', na_values = "NA")
+data = pd.read_excel(path, sheet_name = 'testdata_Mean')
+results = pd.read_excel(path, sheet_name = 'testdata_Mean_results')
+results_NA = pd.read_excel(path, sheet_name = 'testdata_Mean_results_NA', na_values = "NA")
 
 
 def test_default_group(data, results):

@@ -12,7 +12,7 @@ from .confidence_intervals import byars_lower, byars_upper
 from .validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
 
 
-def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
+def ph_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols, 
                       metadata = True, confidence = 0.95, refvalue = 1, **kwargs):
     
     """Calculates standard mortality ratios (or indirectly standardised ratios) with

@@ -9,7 +9,7 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from DSR import ph_dsr
+from ..DSR import ph_dsr
 
 # class Test_DSR:
 

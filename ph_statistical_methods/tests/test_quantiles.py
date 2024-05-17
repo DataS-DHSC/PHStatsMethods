@@ -6,6 +6,7 @@ Created on Fri Apr 26 16:52:40 2024
 """
 
 import pytest
+from pathlib import Path
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
@@ -14,11 +15,10 @@ from ..quantiles import ph_quantile
 # Functionality Testing ----------------------------------------------------------------------------
 class TestQuantiles:
     
-    ## Pytest skips classes with __init__ so simply declare class variables rather than create class attributes
-    ## more info: https://pynative.com/python-class-variables/
-    
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
-    data = pd.read_excel('tests/test_data/testdata_Quantiles.xlsx')
+    path = Path(__file__).parent / 'tests/test_data/testdata_Quantiles.xlsx'
+    
+    data = pd.read_excel(path)
 
     def test_default(self):
         df = self.data[(self.data['GroupSet'] == 'None')]

@@ -9,8 +9,8 @@ import pandas as pd
 import numpy as np
 from math import floor, ceil
 
-from validation import metadata_cols
-from utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisson_funnel, funnel_ratio_significance
+from .validation import metadata_cols
+from .utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisson_funnel, funnel_ratio_significance
 
 
 def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
