@@ -38,6 +38,10 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         DataFrame of calculated proportion statistics with confidence intervals.
         
     """
+
+    # Ensure original df remains unchanged 
+    df = df.copy()
+
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
     validate_data(df, num_col, group_cols, metadata, denom_col)
