@@ -11,7 +11,7 @@ import pandas as pd
 from .confidence_intervals import student_t_dist
 from .validation import metadata_cols, ci_col, validate_data, format_args
 
-def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
+def ph_mean(df, num_col, group_cols = None, metadata = True, confidence = 0.95):
     
     """Calculates means with confidence limits using Student-t distribution.
 
@@ -31,7 +31,7 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    validate_data(df, num_col, group_cols, metadata)
+    df = validate_data(df, num_col, group_cols, metadata)
     
     if group_cols is None:
         raise TypeError('group_cols cannot be None for a mean statistic')
@@ -52,5 +52,8 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
 
     if metadata:
         df = metadata_cols(df, 'Mean', confidence, "Student's t-distribution")
+        
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group') 
     
     return df

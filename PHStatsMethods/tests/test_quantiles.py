@@ -16,7 +16,7 @@ from ..quantiles import ph_quantile
 class TestQuantiles:
     
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
-    path = Path(__file__).parent / 'tests/test_data/testdata_Quantiles.xlsx'
+    path = Path(__file__).parent / 'test_data/testdata_Quantiles.xlsx'
     
     data = pd.read_excel(path)
 

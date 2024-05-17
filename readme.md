@@ -14,7 +14,9 @@ repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
 ## Installation
 This packaged should be installed using pip:
 
+
     pip install PH_statistical_methods
+
 
 Or it can be compiled from source (still requires pip):
 
@@ -26,6 +28,7 @@ conventions. It is suggested that if the whole package is to be imported
 then the following convention is used:
  
     import PH_statistical_methods as phm
+
 
 For more information on any function, you can use:
 

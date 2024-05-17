@@ -13,7 +13,7 @@ from ..ISRatio import ph_ISRatio
 
 class TestISRatio:
     
-    path = Path(__file__).parent / 'tests/test_data/testdata_DSR_ISR.xlsx'
+    path = Path(__file__).parent / 'test_data/testdata_DSR_ISR.xlsx'
     
     # Import data - remove last Multiplier column as not a function output - just used for Excel calculation
     data = pd.read_excel(path, sheet_name = 'testdata_multiarea_isr')

@@ -13,6 +13,7 @@ setup(
     install_requires=['numpy >= 1.25.0',
                       'pandas >= 2.0.0',
                       'pytest >= 8.0.0',
-                      'scipy >= 1.8.0']
+                      'scipy >= 1.8.0',
+                      'openpyxl >= 3.1.0']
 )
 
