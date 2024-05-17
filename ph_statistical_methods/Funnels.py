@@ -13,8 +13,26 @@ from validation import metadata_cols
 from utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisson_funnel, funnel_ratio_significance
 
 
-def calculate_funnel_limits(df, num_col, denom_col, statistic, multiplier, metadata = True, 
+def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
                             rate = None, ratio_type = None, rate_type = None, years_of_data = None):
+    
+    if statistic not in ['rate', 'proportion', 'ratio']:
+        raise ValueError("'statistic' must be either 'proportion', 'ratio' or 'rate")
+    
+    if statistic == 'rate':
+        if rate is None or rate_type is None or years_of_data is None or multiplier is None:
+            raise TypeError("'rate', 'rate_type', 'years_of_data' and 'multiplier' are required for rate statistics")
+        elif rate_type not in ['dsr', 'crude']:
+            raise ValueError("only 'dsr' and 'crude' are valid rate_types")
+    
+    elif statistic in ['proportion', 'ratio']:
+        if denom_col is None:
+            raise TypeError("'denom_col' must be given for 'proportion' and 'ratio' statistics")
+            
+    elif statistic == 'ratio':
+        if ratio_type is None or ratio_type not in ['isr', 'count']:
+            raise ValueError("'ratio_type' must be given for ratio statistics: 'isr' or 'count'")
+            
     
     if statistic == 'rate':
         if rate_type == 'dsr':
@@ -24,8 +42,8 @@ def calculate_funnel_limits(df, num_col, denom_col, statistic, multiplier, metad
             if denom_col is None:
                 df['denom_derived'] = multiplier * df[num_col] / df[rate]
             else:
-                df['denom_drived'] = np.where(df[num_col] == 0, df[denom_col],
-                                              multiplier * df[num_col] * df[rate])
+                df['denom_derived'] = np.where(df[num_col] == 0, df[denom_col],
+                                              multiplier * df[num_col] / df[rate])
     else:
         df['denom_derived'] = df[denom_col]
     
@@ -40,7 +58,7 @@ def calculate_funnel_limits(df, num_col, denom_col, statistic, multiplier, metad
     else:
         axis_min = signif_floor(min_denom / years_of_data) * years_of_data if statistic == 'rate' else signif_floor(min_denom)
         
-    axis_max = signif_ceiling(max_denom / years_of_data) if statistic == 'rate' else signif_ceiling(max_denom)
+    axis_max = signif_ceiling(max_denom / years_of_data) * years_of_data if statistic == 'rate' else signif_ceiling(max_denom)
     
     # useful column headers
     col_headers = {'proportion': 'Population', 'ratio': 'Observed_events', 'rate': 'Events'}
@@ -178,5 +196,7 @@ def calculate_funnel_points(df, num_col, rate, rate_type, denom_col = None,
         else:
             df['denom_derived'] = np.where(df[num_col] == 0, df[denom_col] / years_of_data,
                                            (multiplier * df[num_col] / df[rate]) / years_of_data)
+    
+    return df
             
     

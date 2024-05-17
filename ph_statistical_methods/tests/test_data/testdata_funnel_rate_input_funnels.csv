@@ -1,4 +1,4 @@
-ev,rate,pop,rate_chart,denominator_derived,rate_chart_crude,denominator_derived_crude,rate_chart_crude_with_denom,denominator_derived_crude_with_denom
+ev,rate,pop,rate_chart,denom_derived,rate_chart_crude,denom_derived_crude,rate_chart_crude_with_denom,denom_derived_crude_with_denom
 414,184,5705,184,75000,184,75000,184,45000
 462,102,3377,102,150980.3922,102,150980.3922,102,90588.23529
 178,83,5043,83,71485.94378,83,71485.94378,83,42891.56627
