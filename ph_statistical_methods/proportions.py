@@ -10,13 +10,6 @@ import pandas as pd
 from .confidence_intervals import wilson_lower, wilson_upper
 from .validation import metadata_cols, ci_col, format_args, validate_data
 
-#df = pd.read_excel('unit_tests/test_data/testdata_Proportion.xlsx')
-
-df = pd.DataFrame({'area': [1, 2]*6,
-                    'area2': ['Area7', 'Area2','Area1']*4,
-                   'num': [None, 82, 9, 48, 65, 8200, 10000, 10000, 8, 7, 750, 900],
-                   'den': [100, 10000, 10000, 10000] * 3})
-
 
 def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 1):
     """Calculates proportions with confidence limits using Wilson Score method.
@@ -44,7 +37,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
 
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    validate_data(df, num_col, group_cols, metadata, denom_col)
+    df = validate_data(df, num_col, group_cols, metadata, denom_col)
         
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
@@ -53,8 +46,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')   
     
     # Sum Numerator and Denominator columns, ensure NAs are included. 
-    if group_cols is not None:
-        df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
+    df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
 
     ### Calculate statistic
     df['Value'] = (df[num_col] / df[denom_col]) * multiplier
@@ -69,5 +61,8 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
     if metadata:
         statistic = 'Percentage' if multiplier == 100 else f'Proportion of {multiplier}'
         df = metadata_cols(df, statistic, confidence, 'Wilson')
+        
+    if group_cols == ['ph_pkg_group']:
+        df = df.drop(columns='ph_pkg_group') 
         
     return df
