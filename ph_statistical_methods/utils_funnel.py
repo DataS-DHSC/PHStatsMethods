@@ -5,7 +5,7 @@ Created on Wed Mar 20 17:34:08 2024
 @author: Annabel.Westermann
 """
 import scipy.stats as st
-import math
+from math import floor, ceil, sqrt
 
 def poisson_cis(z, x_a, x_b):
     """Calculates the cumulative dribution function of a Poisson distribution.
@@ -89,6 +89,70 @@ def poisson_funnel(obs, p, side):
     
     return p_funnel
 
+
+
+def funnel_ratio_significance(obs, expected, p, side):
+    """Calculate funnel ratio significance for given observations, expected value, probability, and side.
+
+    Args:
+        obs (int): Observations, an integer representing the number of observed events.
+        
+        expected (float): Expected value, a float representing the expected number of events under the null hypothesis.
+        
+        p (float): Probability, a float representing the probability threshold for significance.
+        
+        side (str): Side, a string that should be either 'high' or 'low', indicating the tail of the distribution to consider.
+
+    Returns:
+        float: Test statistic, a float representing the calculated test statistic for the funnel ratio significance.
+
+    The function handles special cases for small sample sizes (less than 10) and a special condition when the observation is zero and considering the lower side. For larger sample sizes (10 or more), it uses adjusted formulas to compute the test statistic.
+    """
+    # Calculate z once
+    z = st.norm.ppf(0.5 + p / 2)
+    
+    # Calculate obs_adjusted based on the side
+    obs_adjusted = obs if side == "low" else obs + 1
+    
+    # Check if obs_adjusted is zero to avoid division by zero error
+    if obs_adjusted == 0:
+        # Handle the division by zero error, set test_statistic to 0 or handle appropriately
+        test_statistic = 0
+    else:
+        x = 1 - 1 / (9 * obs_adjusted) 
+        y = (3 * sqrt(obs_adjusted))
+
+        # Special case handling when observation is 0 and considering the lower side
+        if obs == 0 and side == "low":
+            test_statistic = 0
+            
+        # For small sample sizes (less than 10)
+        elif obs < 10:
+            if side == "low":
+                degree_freedom = 2 * obs
+                lower_tail_setting = False
+            elif side == "high":
+                degree_freedom = 2 * obs + 2
+                lower_tail_setting = True
+                
+            # Chi-squared test statistic calculation
+            if lower_tail_setting:
+                test_statistic = st.chi2.ppf(0.5 + p / 2, df=degree_freedom) / 2
+            else:
+                test_statistic = st.chi2.ppf(1 - (0.5 + p / 2), df=degree_freedom) / 2
+
+        # For larger sample sizes (10 or more)
+        else:
+            if side == "low":
+                test_statistic = obs_adjusted * (x - z / y)**3
+            elif side == "high":
+                test_statistic = obs_adjusted * (x + z / y)**3
+
+    test_statistic = test_statistic / expected
+    return test_statistic
+
+
+
 def sigma_adjustment(p, population, average_proportion, side, multiplier):
     """
     Calculate the proportion funnel point value for a specific population based on a population average value
@@ -108,7 +172,7 @@ def sigma_adjustment(p, population, average_proportion, side, multiplier):
     
     first_part = average_proportion * (population / st.norm.ppf(p)**2 + 1)
     
-    adj = math.sqrt((-8 * average_proportion * (population / st.norm.ppf(p)**2 + 1))**2 - 64 *
+    adj = sqrt((-8 * average_proportion * (population / st.norm.ppf(p)**2 + 1))**2 - 64 *
                     (1 / st.norm.ppf(p)**2 + 1 / population) * average_proportion  *
                     (population * (average_proportion * (population / st.norm.ppf(p)**2 + 2) -1)
                     + st.norm.ppf(p)**2 * (average_proportion -1)))
@@ -123,5 +187,23 @@ def sigma_adjustment(p, population, average_proportion, side, multiplier):
     adj_return = (adj_return / population) * multiplier
     
     return(adj_return)
+
+
+def signif_floor(x, percentage_down=0.95):
+    n = len(str(floor(x * percentage_down))) - 1
+    y = floor(x * percentage_down / 10**n) * 10**n
+    y = 0 if x == 0 else y
+    return y
+
+
+def signif_ceiling(x, percentage_up=1.05):
+    n = len(str(ceil(x * percentage_up))) - 2
+    y = ceil(x * percentage_up / 10**n) * 10**n
+    y = 0 if x == 0 else y
+    return y
+
+
+
+
 
 

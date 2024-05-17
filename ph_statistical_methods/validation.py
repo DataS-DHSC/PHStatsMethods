@@ -16,8 +16,9 @@ def metadata_cols(df, statistic, confidence = None, method = None):
     
     if confidence is not None:
         df['Confidence'] = ', '.join([f'{int(c * 100)}%' if len(str(c)) < 5 else f'{c * 100}%' for c in confidence])
-        if method is not None:
-            df['Method'] = method
+    
+    if method is not None:
+        df['Method'] = method
         
     return df
     
