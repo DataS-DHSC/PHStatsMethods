@@ -27,15 +27,15 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
                 (the numerator of the population).
         denom_col (str): Name of column containing number of cases in sample 
                 (the denominator of the population).
-        group_cols: A string or list of column name(s) to group the data by. 
+        group_cols (str | list): A string or list of column name(s) to group the data by. 
                 Defaults to None.
         metadata (bool): Whether to include information on the statistic and confidence interval methods.
-        confidence: Confidence interval(s) to use, either as a float, list of float values or None.
+        confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
                 Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
         multiplier (int): multiplier used to express the final values (e.g. 100 = percentage)
 
     Returns:
-        DataFrame of calculated proportion statistics with confidence intervals.
+        DataFrame of calculated proportion statistics with confidence intervals (df).
         
     """
 

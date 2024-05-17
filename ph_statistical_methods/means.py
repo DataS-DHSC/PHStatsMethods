@@ -19,13 +19,13 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
             df: DataFrame containing the data to calculate proportions for.
             num_col (str): Name of column containing observed number of cases in the sample
                     (the numerator of the population).
-            group_cols: A string or list of column name(s) to group the data by. 
+            group_cols (str | list): A string or list of column name(s) to group the data by. 
             metadata (bool): Whether to include information on the statistic and confidence interval methods.
-            confidence: Confidence interval(s) to use, either as a float, list of float values or None.
+            confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
                     Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
 
         Returns:
-            DataFrame of calculated mean statistics with confidence intervals.
+            DataFrame of calculated mean statistics with confidence intervals (df).
             
         """
     

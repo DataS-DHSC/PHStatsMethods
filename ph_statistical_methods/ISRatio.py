@@ -47,6 +47,9 @@ def calculate_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_
         obs_df
         obs_join_left
         obs_join_right
+        
+    Returns:
+        df: Dataframe containing calculated IS Ratios.
 
     """
 
