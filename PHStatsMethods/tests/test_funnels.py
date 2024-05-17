@@ -95,7 +95,7 @@ class TestFunnelSignif:
         data = pd.read_excel(self.path, sheet_name = 'prop_inputs')
         
         df = assign_funnel_significance(data.drop('significance', axis=1), 
-                                        'numerator', 'denominator', statistic = 'proportion')
+                                        'numerator', denom_col='denominator', statistic = 'proportion')
         
         assert_frame_equal(df, data)
     
@@ -103,14 +103,14 @@ class TestFunnelSignif:
         data = pd.read_excel(self.path, 'ratio_inputs')
         
         df = assign_funnel_significance(data.drop('significance', axis=1), 
-                                        'obs', 'expected', statistic = 'ratio')
+                                        'obs', denom_col='expected', statistic = 'ratio')
         
         assert_frame_equal(df, data)
         
     def test_signif_rate_dsr_e5(self):
         result = self.rate_data[['count', 'rate_dsr', 'pop', 'dsr_per_100000_with_0']].rename(columns={'dsr_per_100000_with_0':'significance'})
         
-        df = assign_funnel_significance(self.rate_data.iloc[:, :3], 'count', 'pop', rate = 'rate_dsr', statistic = 'rate',
+        df = assign_funnel_significance(self.rate_data.iloc[:, :3], 'count', denom_col='pop', rate = 'rate_dsr', statistic = 'rate',
                                         rate_type='dsr', multiplier = 100000)
         
         assert_frame_equal(df, result)
@@ -118,7 +118,7 @@ class TestFunnelSignif:
     def test_signif_rate_crude_e2(self):
         result = self.rate_data[['count', 'pop', 'rate_crude_per_100', 'crude_per_100_with_0']].rename(columns={'crude_per_100_with_0':'significance'})
         
-        df = assign_funnel_significance(self.rate_data[['count', 'pop', 'rate_crude_per_100']], 'count', 'pop', rate = 'rate_crude_per_100', 
+        df = assign_funnel_significance(self.rate_data[['count', 'pop', 'rate_crude_per_100']], 'count', denom_col='pop', rate = 'rate_crude_per_100', 
                                         statistic = 'rate', rate_type='crude', multiplier = 100)
         
         assert_frame_equal(df, result)

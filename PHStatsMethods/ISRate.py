@@ -29,15 +29,18 @@ def ph_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = N
         
         
     **kwargs:
-        ref_df
-        ref_join_left
-        ref_join_right
-        obs_df
-        obs_join_left
-        obs_join_right
+        ref_df: DataFrame of reference data to join.
+        ref_join_left (str | list): A string or list of column name(s) in `df` to join on to.
+        ref_join_right (str | list): A string or list of column name(s) in `ref_df` to join on to.
+        obs_df: DataFrame of total observed events for each group.
+        obs_join_left (str | list): A string or list of column name(s) in `df` to join on to.
+        obs_join_right (str | list): A string or list of column name(s) in `obs_df` to join on to.
+        
+    Returns:
+        df: Dataframe containing calculated IS Rates.
+        
     """
     
-    df = df.copy()
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
     obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)

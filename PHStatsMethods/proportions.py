@@ -32,9 +32,6 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
         
     """
 
-    # Ensure original df remains unchanged 
-    df = df.copy()
-
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
     df = validate_data(df, num_col, group_cols, metadata, denom_col)

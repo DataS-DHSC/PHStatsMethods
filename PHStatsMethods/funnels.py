@@ -14,24 +14,25 @@ from .utils_funnel import signif_floor, signif_ceiling, sigma_adjustment, poisso
 
 
 def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None, metadata = True, 
-                            rate = None, ratio_type = None, rate_type = None, years_of_data = None):
+                            rate = None, rate_type = None, ratio_type = None, years_of_data = None):
     """Calculates control limits adopting a consistent method as per the Fingertips Technical Guidance
 
     Args:
         df: DataFrame containing the data to calculate control limits for.
         num_col (str): Name of column containing observed number of cases in the sample
                 (the numerator of the population).
+        statistic (str): type of statistic to inform funnel calculations: 'proportion', 'rate', or 'ratio'
+        multiplier (int): multiplier used to express the final values (e.g. 100 = percentage)
         denom_col (str): Name of column containing number of cases in sample 
                 (the denominator of the population).
-        group_cols (str | list): A string or list of column name(s) to group the data by. 
-                Defaults to None.
         metadata (bool): Whether to include information on the statistic and confidence interval methods.
-        confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
-                Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
-        multiplier (int): multiplier used to express the final values (e.g. 100 = percentage)
+        rate (str): column name containing the 'rate'.
+        rate_type (str): if statistic is 'rate', specify either 'dsr' or 'crude'.
+        ratio_type (str): if statistic is 'ratio', specify either 'count' or 'isr' (indirectly standardised ratio).
+        years_of_data (int): number of years the data represents; this is required if statistic is 'ratio'
 
     Returns:
-        DataFrame of calculated proportion statistics with confidence intervals (df).
+        DataFrame of calculated confidence limits.
         
     """
     
@@ -170,7 +171,26 @@ def calculate_funnel_limits(df, num_col, statistic, multiplier, denom_col = None
         
 
 
-def assign_funnel_significance(df, num_col, denom_col, statistic, rate = None, rate_type = None, multiplier = None):
+def assign_funnel_significance(df, num_col, statistic, denom_col = None, rate = None, rate_type = None, multiplier = None):
+    """Identifies whether each value in a dataset falls outside of 95 and/or 99.8 percent control limits based on the 
+    aggregated average value across the whole dataset as an indicator of statistically significant difference.
+
+    Args:
+        df: DataFrame containing the data to calculate control limits for.
+        num_col (str): Name of column containing observed number of cases in the sample
+                (the numerator of the population).
+        statistic (str): type of statistic to inform funnel calculations: 'proportion', 'rate', or 'ratio'
+        denom_col (str): Name of column containing number of cases in sample 
+                (the denominator of the population).
+        metadata (bool): Whether to include information on the statistic and confidence interval methods.
+        rate (str): column name containing the 'rate'.
+        rate_type (str): if statistic is 'rate', specify either 'dsr' or 'crude'.
+        multiplier (int): multiplier the rate is normalised with (i.e. per 100000) only required when statistic is 'rate'.
+
+    Returns:
+        DataFrame of calculated significance levels.
+        
+    """
     
     if statistic not in ['rate', 'proportion', 'ratio']:
         raise ValueError("'statistic' must be either 'proportion', 'ratio' or 'rate")
@@ -250,6 +270,25 @@ def assign_funnel_significance(df, num_col, denom_col, statistic, rate = None, r
 
 def calculate_funnel_points(df, num_col, rate, rate_type, denom_col = None,
                             multiplier = 100000, years_of_data = 1):
+    """For rate-based funnels: Derive rate and annual population values for charting based. Process removes rates where the 
+    rate type is dsr and the number of observed events are below 10.
+
+    Args:
+        df: DataFrame containing the data to calculate control limits for.
+        num_col (str): Name of column containing observed number of cases in the sample
+                (the numerator of the population).
+        statistic (str): type of statistic to inform funnel calculations: 'proportion', 'rate', or 'ratio'
+        denom_col (str): Name of column containing number of cases in sample 
+                (the denominator of the population).
+        metadata (bool): Whether to include information on the statistic and confidence interval methods.
+        years_of_data (int): number of years the data represents
+        multiplier (int): multiplier the rate is normalised with (i.e. per 100000).
+
+    Returns:
+        DataFrame of calculated funnel points. First will have the same name as the rate field,
+        with the suffix '_chart', the second will be called denominator_derived.
+        
+    """
     
     df = validate_data(df, num_col, denom_col = denom_col)
     
