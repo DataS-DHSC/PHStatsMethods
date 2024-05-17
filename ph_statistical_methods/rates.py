@@ -38,8 +38,7 @@ def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confiden
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
     
-    if group_cols is not None:
-        df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
+    df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     #calculate value column
     df['Value'] = df[num_col] / df[denom_col] * multiplier
