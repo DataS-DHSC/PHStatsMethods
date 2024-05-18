@@ -7,8 +7,8 @@ and Means including confidence intervals for these statistics,
 and a function for assigning data to quantiles.
 
 Any feedback would be appreciated and can be provided using the Issues
-section of the [PH_statistical_methods GitHub
-repository](https://github.com/DataS-DHSC/PH_statistical_methods/issues).
+section of the [PHStatsMethods GitHub
+repository](https://github.com/DataS-DHSC/PHStatsMethods/issues).
 
 
 ## Installation
