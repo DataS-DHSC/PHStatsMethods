@@ -3,7 +3,7 @@ This is a Python package to support analysts in the execution of statistical
 methods approved for use in the production of Public Health indicators such as
 those presented via [Fingertips](https://fingertips.phe.org.uk/). It
 provides functions for the generation of Proportions, Rates, DSRs, ISRs,
-and Means including confidence intervals for these statistics,
+Funnel plots and Means including confidence intervals for these statistics,
 and a function for assigning data to quantiles.
 
 Any feedback would be appreciated and can be provided using the Issues
