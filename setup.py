@@ -9,7 +9,7 @@ setup(
     version='0.1.5',
     packages=['PHStatsMethods'],
     url='https://github.com/DataS-DHSC/PHStatsMethods',
-    license='GPLv3',
+    license='GPL-3.0',
     author='Department of Health and Social Care',
     author_email='annabel.westermann@dhsc.gov.uk, phds@phe.gov.uk',
     description=long_description,
