@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import warnings
 
-from .validation import format_args, check_arguments
+from .validation import format_args, check_arguments, group_args
 
 def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, type = "full"):
     """Assigns data to quantiles based on numeric data rankings.
@@ -52,9 +52,8 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     if not isinstance(invert, bool):
         raise TypeError("Pass 'invert' as a boolean")
 
-    # Allows us to group data when group_cols is None in format args.
-    if group_cols == ['ph_pkg_group']:
-        df['ph_pkg_group'] = 'ph_pkg_group'
+    # Grouping by temporary column to reduce duplication in code
+    df, group_cols = group_args(df, group_cols, True)
     
     check_arguments(df, [values] if group_cols is None else [values] + group_cols)
     

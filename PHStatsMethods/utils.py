@@ -82,5 +82,3 @@ def join_euro_standard_pops(df, age_col, group_cols = None):
     
     return df
 
-
-  
