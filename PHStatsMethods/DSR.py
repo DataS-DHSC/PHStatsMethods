@@ -6,7 +6,7 @@ from math import sqrt
 
 from .utils import join_euro_standard_pops
 from .confidence_intervals import dobson_lower, dobson_upper
-from .validation import format_args, validate_data, check_kwargs, ci_col, metadata_cols
+from .validation import format_args, validate_data, check_kwargs, ci_col, metadata_cols, group_args
 
 
 def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = True, 
@@ -65,8 +65,11 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
         
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_denom_col)
-    df = validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
-        
+    validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
+
+    # Grouping by temporary column to reduce duplication in code
+    df, group_cols = group_args(df, group_cols)
+
     if ref_df is not None and euro_standard_pops == False:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)
         

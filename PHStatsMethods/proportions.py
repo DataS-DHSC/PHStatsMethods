@@ -8,7 +8,7 @@ Created on Thu Feb 22 16:52:40 2024
 import pandas as pd
 
 from .confidence_intervals import wilson_lower, wilson_upper
-from .validation import metadata_cols, ci_col, format_args, validate_data
+from .validation import metadata_cols, ci_col, format_args, validate_data, group_args
 
 
 def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 1):
@@ -34,7 +34,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
 
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    df = validate_data(df, num_col, group_cols, metadata, denom_col)
+    validate_data(df, num_col, group_cols, metadata, denom_col)
         
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
@@ -42,6 +42,9 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
     if (df[num_col] > df[denom_col]).any():
         raise ValueError('Numerators must be less than or equal to the denominator for a proportion statistic')   
     
+    # Grouping by temporary column to reduce duplication in code
+    df, group_cols = group_args(df, group_cols)
+
     # Sum Numerator and Denominator columns, ensure NAs are included. 
     df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
 

@@ -53,7 +53,8 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
         raise TypeError("Pass 'invert' as a boolean")
 
     # Allows us to group data when group_cols is None in format args.
-    if group_cols == ['ph_pkg_group']:
+    if group_cols == None:
+        group_cols = ['ph_pkg_group']
         df['ph_pkg_group'] = 'ph_pkg_group'
     
     check_arguments(df, [values] if group_cols is None else [values] + group_cols)

@@ -8,7 +8,7 @@ Created on Thu Feb 29 16:49:06 2024
 import pandas as pd
 import numpy as np
 from .confidence_intervals import byars_lower, byars_upper
-from .validation import metadata_cols, ci_col, validate_data, format_args
+from .validation import metadata_cols, ci_col, validate_data, format_args, group_args
 
 
 def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confidence = 0.95, multiplier = 100000):
@@ -33,11 +33,14 @@ def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confiden
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    df = validate_data(df, num_col, group_cols, metadata, denom_col)
+    validate_data(df, num_col, group_cols, metadata, denom_col)
     
     if not isinstance(multiplier, int) or multiplier <= 0:
         raise ValueError("'Multiplier' must be a positive integer")
     
+    # Grouping by temporary column to reduce duplication in code
+    df, group_cols = group_args(df, group_cols)
+
     df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         
     #calculate value column

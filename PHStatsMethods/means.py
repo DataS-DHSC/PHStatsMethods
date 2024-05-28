@@ -31,11 +31,11 @@ def ph_mean(df, num_col, group_cols = None, metadata = True, confidence = 0.95):
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    df = validate_data(df, num_col, group_cols, metadata)
+    validate_data(df, num_col, group_cols, metadata)
     
     if group_cols is None:
         raise TypeError('group_cols cannot be None for a mean statistic')
-        
+
     # get grouped statistics
     df = df.groupby(group_cols)[num_col].agg([lambda x: x.sum(skipna=False), 
                                               lambda x: x.count(), 

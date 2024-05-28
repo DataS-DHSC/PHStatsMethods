@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 from .confidence_intervals import byars_lower, byars_upper
-from .validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs
+from .validation import metadata_cols, ci_col, validate_data, format_args, check_kwargs, group_args
 
 
 def ph_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = None, 
@@ -57,8 +57,11 @@ def ph_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = 
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
     obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)
-    df = validate_data(df, denom_col, group_cols, metadata, ref_df = ref_df)
+    validate_data(df, denom_col, group_cols, metadata, ref_df = ref_df)
     
+    # Grouping by temporary column to reduce duplication in code
+    df, group_cols = group_args(df, group_cols)
+
     if ref_df is not None:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)
     
