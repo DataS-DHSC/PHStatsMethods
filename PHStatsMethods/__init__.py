@@ -33,7 +33,7 @@ Ungrouped
 >>> PHStatsMethods.ph_proportion(df, 'numerator', 'denominator')
 
 Grouped
->>> PHStatsMethods.ph_proportion(df, 'numerator', 'denominator', 'area')
+>>> PHStatsMethods.ph_proportion(df, 'numerator', 'denominator', 'area', multiplier = 100)
 
 For more information on any function, you can use:
 >>> help(PHStatsMethods.function)
