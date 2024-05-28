@@ -68,7 +68,7 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
     validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
 
     # Grouping by temporary column to reduce duplication in code
-    df, group_cols = group_args(df, group_cols)
+    df, group_cols = group_args(df, group_cols, True)
 
     if ref_df is not None and euro_standard_pops == False:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)

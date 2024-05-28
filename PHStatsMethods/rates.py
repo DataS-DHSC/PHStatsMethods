@@ -39,7 +39,7 @@ def ph_rate(df, num_col, denom_col, group_cols = None, metadata = True, confiden
         raise ValueError("'Multiplier' must be a positive integer")
     
     # Grouping by temporary column to reduce duplication in code
-    df, group_cols = group_args(df, group_cols)
+    df, group_cols = group_args(df, group_cols, False)
 
     df = df.groupby(group_cols)[[num_col, denom_col]].apply(lambda x: x.sum(skipna=False)).reset_index()
         

@@ -60,7 +60,7 @@ def ph_ISRatio(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = 
     validate_data(df, denom_col, group_cols, metadata, ref_df = ref_df)
     
     # Grouping by temporary column to reduce duplication in code
-    df, group_cols = group_args(df, group_cols)
+    df, group_cols = group_args(df, group_cols, True)
 
     if ref_df is not None:
         df = df.merge(ref_df, how = 'left', left_on = ref_join_left, right_on = ref_join_right).drop(ref_join_right, axis=1)

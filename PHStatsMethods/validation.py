@@ -63,12 +63,24 @@ def ci_col(confidence_interval, ci_type = None):
     
     return col_name
 
-def group_args(df, group_cols): 
-    """Allows us to group data when group_cols is None in format args.
+def group_args(df, group_cols, single_grp): 
+    """
+    Allows us to group data when group_cols is None in format args.
+
+    Args
+        df: Pandas dataframe
+        group_cols (str): List of strings
+        single_grp (bool): Determines if ungrouped data should be grouped into a single group (True),
+        i.e for quantiles, DSRs, etc. Or if ungrouped data should 'grouped' into multiple rows, i.e
+        rates and proportions. 
     """
     if group_cols is None: 
         group_cols = ['ph_pkg_group']
-        df['ph_pkg_group'] = range(1, len(df) + 1)
+
+        if single_grp is True:
+            df['ph_pkg_group'] = 'ph_pkg_group'
+        else:
+            df['ph_pkg_group'] = range(1, len(df) + 1)
 
     return df, group_cols
 
