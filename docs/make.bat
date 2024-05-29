@@ -4,10 +4,12 @@ pushd %~dp0
 
 REM Command file for Sphinx documentation
 
-set SPHINXBUILD="C:\Users\Hadley.Nanayakkara\AppData\Roaming\Python\Python39\Scripts\sphinx-build.exe"
-
-set SOURCEDIR=.
+if "%SPHINXBUILD%" == "" (
+	set SPHINXBUILD=sphinx-build
+)
+set SOURCEDIR=source
 set BUILDDIR=_build
+set SPHINXPROJ=PHStatsMethods
 
 %SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
