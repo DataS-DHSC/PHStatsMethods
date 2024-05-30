@@ -35,9 +35,7 @@ napoleon_use_param = False
 napoleon_use_ivar = True
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
-exclude_patterns = ['tests/', 'validation.py']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'tests/', 'validation.py']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
