@@ -31,7 +31,7 @@ def ph_mean(df, num_col, group_cols = None, metadata = True, confidence = 0.95):
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
-    validate_data(df, num_col, group_cols, metadata)
+    df = validate_data(df, num_col, group_cols, metadata)
     
     if group_cols is None:
         raise TypeError('group_cols cannot be None for a mean statistic')
