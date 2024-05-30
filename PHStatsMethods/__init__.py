@@ -58,6 +58,6 @@ __all__ = ["wilson_lower", "wilson_upper", "wilson",
            "exact_upper", "exact_lower", "exact",
            "byars_lower", "byars_upper", "byars", 
            "dobson_lower", "dobson_upper", "student_t_dist", 
-           "calculate_funnel_limits", "assign_funnel_significance", "calculate_funnel_points"
+           "calculate_funnel_limits", "assign_funnel_significance", "calculate_funnel_points",
            "ph_dsr", "ph_ISRate", "ph_ISRatio", "ph_mean", "ph_proportion",
            "ph_quantile", "ph_rate", "euro_standard_pop"]

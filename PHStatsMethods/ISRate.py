@@ -44,7 +44,7 @@ def ph_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = N
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_num_col, ref_denom_col)
     obs_df, obs_join_left, obs_join_right = check_kwargs(df, kwargs, 'obs', num_col)
-    validate_data(df, denom_col, group_cols, metadata, ref_df=ref_df)
+    df = validate_data(df, denom_col, group_cols, metadata, ref_df=ref_df)
     
     # Grouping by temporary column to reduce duplication in code
     df, group_cols = group_args(df, group_cols, True)

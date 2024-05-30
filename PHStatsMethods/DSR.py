@@ -65,7 +65,7 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
         
     confidence, group_cols = format_args(confidence, group_cols)
     ref_df, ref_join_left, ref_join_right = check_kwargs(df, kwargs, 'ref', ref_denom_col)
-    validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
+    df = validate_data(df, num_col, group_cols, metadata, denom_col, ref_df = ref_df)
 
     # Grouping by temporary column to reduce duplication in code
     df, group_cols = group_args(df, group_cols, True)
