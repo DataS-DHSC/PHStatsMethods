@@ -11,7 +11,7 @@ import pandas as pd
 from .confidence_intervals import student_t_dist
 from .validation import metadata_cols, ci_col, validate_data, format_args
 
-def ph_mean(df, num_col, group_cols = None, metadata = True, confidence = 0.95):
+def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     
     """Calculates means with confidence limits using Student-t distribution.
 
