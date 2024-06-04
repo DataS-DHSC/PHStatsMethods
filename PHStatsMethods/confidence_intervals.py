@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  7 11:19:00 2024
-
-@author: Annabel.Westermann
-"""
 
 import numpy as np
 import warnings
@@ -15,20 +10,29 @@ from .utils import get_calc_variables
 
 def wilson_lower(count, denominator, confidence=0.95):
 
-    """Calculates the lower CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
-     (default 0.95)
-    [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212.
-    [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
-     (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
+    """Calculates the lower CI using Wilson Score method (1, 2).
      
-    Args:
-        count (int | float): Numerator
-        denominator (int | float): Denominator
-        confidence (float): confidence - default 0.95 for 95% confidence interval
-    Returns: 
-        Lower confidence interval (float)
+    Parameters
+    ----------
+    count : int | float 
+        Numerator to calculate wilsons lower confidence interval.
+    denominator int | float
+        Denominator to calculate wilsons lower confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Float
+        Wilson's lower confidence interval.
         
+    References
+    ----------
+    (1) Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat 
+        Assoc; 1927; 22. Pg 209 to 212.
+    (2) Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). 
+        Statistics with confidence (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
+
     """
     norm_cum_dist, z = get_calc_variables(confidence)
     lower_ci = ((2 * count + norm_cum_dist ** 2 - norm_cum_dist * sqrt(norm_cum_dist ** 2 + 4 * count * (1 -
@@ -38,19 +42,28 @@ def wilson_lower(count, denominator, confidence=0.95):
 
 def wilson_upper(count, denominator, confidence=0.95):
 
-    """Calculates the upper CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
-     (default 0.95)
-    [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212.
-    [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
-     (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
-     
-    Args:
-        count (int | float): Numerator
-        denominator (int | float): Denominator
-        confidence (float): confidence - default 0.95 for 95% confidence interval
-    Returns: 
-        Upper confidence interval (float)
+    """Calculates the upper CI using Wilson Score method (1, 2).
+
+    Parameters
+    ----------
+    count : int | float 
+        Numerator to calculate wilsons upper confidence interval.
+    denominator int | float
+        Denominator to calculate wilsons upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Float
+        Wilson's upper confidence interval.
+        
+    References
+    ----------
+    (1) Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat 
+        Assoc; 1927; 22. Pg 209 to 212.
+    (2) Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). 
+        Statistics with confidence (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
         
     """
     norm_cum_dist, z = get_calc_variables(confidence)
@@ -61,19 +74,28 @@ def wilson_upper(count, denominator, confidence=0.95):
 
 def wilson(count, denominator, confidence=0.95):
 
-    """Calculates the CI using Wilson Score method [1, 2]. Takes in value, numerator, denominator, and confidence
-     (default 0.95)
-    [1] Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc; 1927; 22. Pg
-    209 to 212.
-    [2] Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). Statistics with confidence
-     (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
+    """Calculates the CI using Wilson Score method (1, 2).
      
-    Args:
-        count (int | float): Numerator
-        denominator (int | float): Denominator
-        confidence (float): confidence - default 0.95 for 95% confidence interval
-    Returns:
-        Lower and Upper confidence intervals(tuple)
+    Parameters
+    ----------
+    count : int | float 
+        Numerator to calculate wilsons confidence interval.
+    denominator int | float
+        Denominator to calculate wilsons confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Tuple
+        Wilson's lower and upper confidence intervals.
+        
+    References
+    ----------
+    (1) Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat 
+        Assoc; 1927; 22. Pg 209 to 212.
+    (2) Newcombe RG, Altman DG. Proportions and their differences. In Altman DG et al. (eds). 
+        Statistics with confidence (2nd edn). London: BMJ Books; 2000. Pg 46 to 48.
         
     """
     return wilson_lower(count, denominator, confidence), wilson_upper(count, denominator, confidence)
@@ -81,15 +103,24 @@ def wilson(count, denominator, confidence=0.95):
 
 def exact_upper(value, confidence=0.95):
     
-    """Calculates upper confidence interval using the exact method[1].
-    [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
+    """Calculates upper confidence interval using the exact method (1).
 
-    Args:
-        value (int | float): Value to calculate upper confidence interval
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-    Returns:
-        Upper confidence interval (float)
-        
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Float
+        Exact upper confidence interval.
+    
+    References
+    ----------
+    (1) Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
+
     """
     o = 2 * value + 2
     upper_ci = chi2.ppf(1 - ((1 - confidence) / 2), o) / 2
@@ -98,14 +129,23 @@ def exact_upper(value, confidence=0.95):
 
 def exact_lower(value, confidence=0.95):
     
-    """Calculates lower confidence interval using the exact method[1].
-    [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
+    """Calculates lower confidence interval using the exact method (1).
 
-    Args:
-        value (int | float): Value to calculate lower confidence interval
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-    Returns:
-        Lower confidence interval (float)
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Float
+        Exact lower confidence interval.
+    
+    References
+    ----------
+    (1) Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
         
     """
     o = 2 * value
@@ -115,14 +155,23 @@ def exact_lower(value, confidence=0.95):
 
 def exact(value, confidence=0.95):
 
-    """Calculates confidence intervals using the exact method[1].
-    [1] Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
+    """Calculates confidence intervals using the exact method (1).
 
-    Args:
-        value (int | float): Value to calculate confidence intervals
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-    Returns: 
-        Lower and Upper confidence intervals (tuple)
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Tuple
+        Exact lower and upper confidence intervals.
+    
+    References
+    ----------
+    (1) Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
         
     """
     return exact_lower(value, confidence=confidence), exact_upper(value, confidence=confidence)
@@ -131,16 +180,25 @@ def exact(value, confidence=0.95):
 
 def byars_lower(value, confidence=0.95):
     
-    """Calculates lower confidence interval using Byar's method[1].
-    [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
-    studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
+    """Calculates lower confidence interval using Byar's method (1).
 
-    Args:
-        value (int | float): Value to calculate lower confidence interval
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-    Returns: 
-        Lower confidence interval (float)
-        
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    ------- 
+    Float
+        Byar's lower confidence interval.
+
+    References
+    ----------
+    (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
+        studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
+
     """
     if value < 0:
         raise ValueError("'Value' must be a positive number")
@@ -155,15 +213,24 @@ def byars_lower(value, confidence=0.95):
 
 # calculates the upper CI using Byar's method without using denominator. Takes in count and alpha (default 0.05)
 def byars_upper(value, confidence=0.95):
-    """Calculates upper confidence interval using Byar's method[1].
-    [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
-    studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
+    """Calculates upper confidence interval using Byar's method (1).
 
-    Args:
-        value (int | float): Value to calculate upper confidence interval
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-    Returns: 
-        Upper confidence interval (float)
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate upper confidence interval.
+    confidence float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    ------- 
+    Float
+        Byar's upper confidence interval.
+
+    References
+    ----------
+    (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
+        studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
         
     """
     if value <= 0:
@@ -180,18 +247,30 @@ def byars_upper(value, confidence=0.95):
 # calculates the upper and lower CIs using Byar's method without denominator and returns in a tuple
 def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_low_numbers=True):
     
-    """Calculates confidence intervals using Byar's method[1].
-    [1] Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
-    studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
+    """Calculates confidence intervals using Byar's method (1).
 
-    Args:
-        value (int | float): Value to calculate confidence intervals, must be over 9 to calculate Byar's, else exact method is used
-        confidence (float): Confidence - default 0.95 for 95% confidence interval
-        denominator (int | float): (Optional) Denominator to calculate Byar's on a rate
-        rate (int | float): (Optional) Rate
-        exact_method_for_low_numbers (bool): Boolean instruction as to whether to use exact method for low numbers. Default
-                                         True
-    Returns: Either exact method or Byar's method confidence intervals in a tuple
+    Parameters
+    ----------
+    value : int | float
+        Value to calculate confidence intervals, must be over 9 to calculate Byar's, else exact method is used.
+    confidence : float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+    denominator : int | float, Optional 
+        Denominator to calculate Byar's on a rate.
+    rate : int | float, Optional 
+        Rate to calculate Byar's on.
+    exact_method_for_low_numbers : bool
+        Boolean instruction as to whether to use exact method for low numbers. Default True.
+
+    Returns
+    ------- 
+    Tuple
+        Either Exact method or Byar's method confidence intervals.
+
+    References
+    ----------
+    (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort
+        studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
     
     """
     if denominator and not rate or rate and not denominator:
@@ -217,19 +296,47 @@ def student_t_dist(value_count, st_dev, confidence=0.95):
 
     """Calculates the Student-t value to be used to create confidence intervals using the Student-t distribution.
     
-    Args:
-        value_count (int | float): The total value to calculate confidence intervals over.
-        st_dev (int | float): Takes the standard deviation
-        confidence (float): Takes a confidence interval (e.g. 0.95, 0.998)
-    Returns:
-        Student-t distribution value (float)
+    Parameters
+    ----------
+    value_count : int | float
+        The total value to calculate confidence intervals over.
+    st_dev : int | float
+        The standard deviation to be used in the calculation.
+    confidence : float
+        Confidence interval to use, default 0.95 for 95% confidence interval.
+
+    Returns
+    -------
+    Float
+        Student-t distribution value. 
         
     """
     return abs(stats.t.ppf((1-confidence)/2, value_count - 1)) * st_dev / value_count**.5
 
 
 def dobson_lower(value, total_count, var, confidence, multiplier):
-    
+    """Calculates lower confidence interval using Dobson's method
+
+    Parameters
+    ----------
+    value : int | float
+        The value to calculate confidence intervals over.
+    total_count : int | float
+        The total count to calculate dobsons confidence interval.
+    var : float
+        Variance to be used in the calculation.
+    confidence : float
+        Confidence interval to be used, default 0.95 for 95% confidence interval.
+    multiplier : int
+        Multiplier to be used in the calculation.
+
+    Returns
+    -------
+    Float
+        Dobson's lower confidence interval.
+
+    """
+
     if total_count < 10:
         x = np.nan
     else:
@@ -239,7 +346,28 @@ def dobson_lower(value, total_count, var, confidence, multiplier):
     
 
 def dobson_upper(value, total_count, var, confidence, multiplier):
-    
+    """Calculates upper confidence interval using Dobson's method
+
+    Parameters
+    ----------
+    value : int | float
+        The value to calculate confidence intervals over.
+    total_count : int | float
+        The total count to calculate dobsons confidence interval.
+    var : float
+        Variance to be used in the calculation.
+    confidence : float
+        Confidence interval to be used, default 0.95 for 95% confidence interval.
+    multiplier : int
+        Multiplier to be used in the calculation.
+
+    Returns
+    -------
+    Float
+        Dobson's upper confidence interval.
+
+    """
+
     if total_count < 10:
         x = np.nan
     else:

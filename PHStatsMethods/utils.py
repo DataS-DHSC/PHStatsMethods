@@ -10,10 +10,15 @@ from scipy.stats import chi2
 def get_calc_variables(a):
     """Creates the cumulative normal distribution and z score for a given alpha
     
-    Args:
-        a (float): alpha
-    Returns: 
-        (float): cumulative normal distribution, z score
+    Parameters
+    ----------
+    a : float
+        alpha
+
+    Returns
+    ------- 
+    Float
+        Cumulative normal distribution, z score
     """
     norm_cum_dist = ndtri((100 + (100 - (100 * (1-a)))) / 200)
     z = ndtri(1 - (1-a )/ 2)
@@ -22,7 +27,14 @@ def get_calc_variables(a):
 
 
 def euro_standard_pop():
+    """Generates a dataframe containing the European Standard Population.
     
+    Returns
+    ------- 
+    Pandas DataFrame
+        DataFrame containg the European Standard Population.
+    """
+        
     age_groups = ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34',
                   '35-39', '40-44', '45-49', '50-54', '55-59', '60-64',
                   '65-69', '70-74', '75-79', '80-84', '85-89', '90+']

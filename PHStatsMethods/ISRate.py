@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Apr 19 10:49:43 2024
-
-@author: T.Vikneswaran_DHSC
-"""
 
 import pandas as pd
 import numpy as np
@@ -15,30 +10,61 @@ def ph_ISRate(df, num_col, denom_col, ref_num_col, ref_denom_col, group_cols = N
                      metadata = True, confidence = 0.95, multiplier = 100000, **kwargs):
     
     """Calculates indirectly standardized rates with confidence limits using Byar's or exact CI method.
+
+    Parameters
+    ----------
+    df
+        DataFrame containing the data.
+    num_col : str
+        Field containing observed number of events.
+    denom_col : str
+        Field containing population at risk.
+    ref_num_col : str
+        Observed events in the reference population.
+    ref_denom_col : str
+        Population at risk in the reference population.
+    group_cols : str | list
+        Columns to group data by.
+    metadata : bool 
+        Include metadata columns.
+    confidence : float | list 
+        Confidence levels, default 0.95.
+    multiplier : int 
+        The multiplier for the rate calculation, default 100000.
+        
+        
+    Other Parameters
+    ----------------
+    ref_df: 
+        DataFrame of reference data to join.
+    ref_join_left : str | list 
+        A string or list of column name(s) in `df` to join on to.
+    ref_join_right : str | list 
+        A string or list of column name(s) in `ref_df` to join on to.
+    obs_df 
+        DataFrame of total observed events for each group.
+    obs_join_left : str | list 
+        A string or list of column name(s) in `df` to join on to.
+    obs_join_right : str | list 
+        A string or list of column name(s) in `obs_df` to join on to.
+        
+    Returns
+    -------
+    Pandas DataFrame
+        Dataframe containing calculated IS Rates.
     
-    Args:
-        df: DataFrame containing the data.
-        num_col (str): Field containing observed number of events.
-        denom_col (str): Field containing population at risk.
-        ref_num_col (str): Observed events in the reference population.
-        ref_denom_col (str): Population at risk in the reference population.
-        group_cols: Columns to group data by.
-        metadata (bool): Include metadata columns.
-        confidence (float or list): Confidence levels, default 0.95.
-        multiplier (int): The multiplier for the rate calculation, default 100000.
-        
-        
-    **kwargs:
-        ref_df: DataFrame of reference data to join.
-        ref_join_left (str | list): A string or list of column name(s) in `df` to join on to.
-        ref_join_right (str | list): A string or list of column name(s) in `ref_df` to join on to.
-        obs_df: DataFrame of total observed events for each group.
-        obs_join_left (str | list): A string or list of column name(s) in `df` to join on to.
-        obs_join_right (str | list): A string or list of column name(s) in `obs_df` to join on to.
-        
-    Returns:
-        df: Dataframe containing calculated IS Rates.
-        
+    Notes
+    -----
+    For numerators >= 10 Byar's method (1) is applied using the internal byars_lower and byars_upper functions. 
+    For small numerators Byar's method is less accurate and so an exact method (2) based on the 
+    Poisson distribution is used.
+
+    References
+    ----------
+    (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis
+        of cohort studies. Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
+    (2) Armitage P, Berry G. Statistical methods in medical research (4th edn). Oxford: Blackwell; 2002.
+
     """
     
     confidence, group_cols = format_args(confidence, group_cols)
