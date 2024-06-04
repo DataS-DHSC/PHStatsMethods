@@ -23,7 +23,7 @@ def wilson_lower(count, denominator, confidence=0.95):
 
     Returns
     -------
-    float
+    Float
         Wilson's lower confidence interval.
         
     References
@@ -55,7 +55,7 @@ def wilson_upper(count, denominator, confidence=0.95):
 
     Returns
     -------
-    float
+    Float
         Wilson's upper confidence interval.
         
     References
@@ -87,8 +87,8 @@ def wilson(count, denominator, confidence=0.95):
 
     Returns
     -------
-    tuple
-        Lower and Upper confidence intervals.
+    Tuple
+        Wilson's lower and upper confidence intervals.
         
     References
     ----------
@@ -114,7 +114,7 @@ def exact_upper(value, confidence=0.95):
 
     Returns
     -------
-    float
+    Float
         Exact upper confidence interval.
     
     References
@@ -140,8 +140,8 @@ def exact_lower(value, confidence=0.95):
 
     Returns
     -------
-    float
-        Exact Lower confidence interval.
+    Float
+        Exact lower confidence interval.
     
     References
     ----------
@@ -166,8 +166,8 @@ def exact(value, confidence=0.95):
 
     Returns
     -------
-    tuple
-        Lower and Upper confidence intervals.
+    Tuple
+        Exact lower and upper confidence intervals.
     
     References
     ----------
@@ -191,7 +191,7 @@ def byars_lower(value, confidence=0.95):
 
     Returns
     ------- 
-    float
+    Float
         Byar's lower confidence interval.
 
     References
@@ -224,7 +224,7 @@ def byars_upper(value, confidence=0.95):
 
     Returns
     ------- 
-    float
+    Float
         Byar's upper confidence interval.
 
     References
@@ -264,8 +264,8 @@ def byars(value, confidence=0.95, denominator=None, rate=None, exact_method_for_
 
     Returns
     ------- 
-    tuple
-        Either exact method or Byar's method confidence intervals.
+    Tuple
+        Either Exact method or Byar's method confidence intervals.
 
     References
     ----------
@@ -307,7 +307,7 @@ def student_t_dist(value_count, st_dev, confidence=0.95):
 
     Returns
     -------
-    float
+    Float
         Student-t distribution value. 
         
     """
@@ -332,7 +332,7 @@ def dobson_lower(value, total_count, var, confidence, multiplier):
 
     Returns
     -------
-    float
+    Float
         Dobson's lower confidence interval.
 
     """
@@ -363,7 +363,7 @@ def dobson_upper(value, total_count, var, confidence, multiplier):
 
     Returns
     -------
-    float
+    Float
         Dobson's upper confidence interval.
 
     """

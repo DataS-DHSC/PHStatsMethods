@@ -100,19 +100,8 @@ Functions
 .. automodule:: PHStatsMethods.confidence_intervals
    :members:
 .. automodule:: PHStatsMethods.utils
-   :members:
+   :members: euro_standard_pop
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
-
-   PHStatsMethods/README.md
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
