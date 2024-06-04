@@ -53,6 +53,7 @@ html_theme_options = {
     'style_external_links': False,
     'vcs_pageview_mode': '',
     'style_nav_header_background': 'white',
+    'show_authors': False,
     # Toc options
     'collapse_navigation': True,
     'sticky_navigation': True,

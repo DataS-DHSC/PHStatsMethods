@@ -15,19 +15,27 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     
     """Calculates means with confidence limits using Student-t distribution.
 
-       Args:
-            df: DataFrame containing the data to calculate proportions for.
-            num_col (str): Name of column containing observed number of cases in the sample
-                    (the numerator of the population).
-            group_cols (str | list): A string or list of column name(s) to group the data by. 
-            metadata (bool): Whether to include information on the statistic and confidence interval methods.
-            confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
-                    Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
+    Parameters
+    ----------
+    df
+        DataFrame containing the data to calculate proportions for.
+    num_col : str
+        Name of column containing observed number of cases in the sample
+        (the numerator of the population).
+    group_cols : str | list
+        A string or list of column name(s) to group the data by. 
+    metadata : bool
+        Whether to include information on the statistic and confidence interval methods.
+    confidence : float
+        Confidence interval(s) to use, either as a float, list of float values or None.
+        Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
 
-        Returns:
-            DataFrame of calculated mean statistics with confidence intervals (df).
+    Returns
+    -------
+    Pandas DataFrame
+        DataFrame of calculated mean statistics with confidence intervals (df).
             
-        """
+    """
     
     # Check data and arguments
     confidence, group_cols = format_args(confidence, group_cols)
