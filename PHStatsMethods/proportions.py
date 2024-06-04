@@ -48,10 +48,11 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
     --------
     Below is a example using the ph_proportion() function to demonstrate the purpose of 
     package. 
-
-    >>> df = pd.DataFrame({'area': ["Area1", "Area2", "Area3", "Area4"] * 3,
-                           'numerator': [None, 48, 10000, 7, 82, 6500, 10000, 750, 9, 8200, 8, 900],
-                           'denominator': [100, 10000, 10000, 10000] * 3})
+      >>> import pandas as pd
+      >>> from PHStatsMethods import *
+      >>> df = pd.DataFrame({'area': ["Area1", "Area2", "Area3", "Area4"] * 3,
+                             'numerator': [None, 48, 10000, 7, 82, 6500, 10000, 750, 9, 8200, 8, 900],
+                             'denominator': [100, 10000, 10000, 10000] * 3})
 
     Ungrouped 
 

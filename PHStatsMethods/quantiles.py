@@ -38,10 +38,11 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
 
     Notes
     -----
-    See OHID Technical Guide - Assigning Deprivation Categories for methodology. In particular, 
-    note that this function strictly applies the algorithm defined but some manual review, 
-    and potentially adjustment, is advised in some cases where multiple small areas with 
-    equal rank fall across a natural quantile boundary.
+    See `OHID Technical Guide - Assigning Deprivation Categories 
+    <https://fingertips.phe.org.uk/documents/OHID%20Guidance%20-%20Assigning%20Deprivation%20Categories.pdf>`_ 
+    for methodology. In particular, note that this function strictly applies the algorithm defined but
+    some manual review, and potentially adjustment, is advised in some cases where multiple small
+    areas with equal rank fall across a natural quantile boundary.
         
     """
     # Ensure original df remains unchanged 
