@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 29 11:38:17 2024
-
-@author: Annabel.Westermann
-"""
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype

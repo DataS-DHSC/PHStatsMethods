@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  7 11:19:00 2024
-
-@author: Annabel.Westermann
-"""
 
 import numpy as np
 import warnings

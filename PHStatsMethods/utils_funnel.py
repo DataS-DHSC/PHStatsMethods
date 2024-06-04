@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Mar 20 17:34:08 2024
 
-@author: Annabel.Westermann
-"""
 import scipy.stats as st
 from math import floor, ceil, sqrt
 
