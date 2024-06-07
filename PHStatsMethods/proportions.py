@@ -57,7 +57,7 @@ def ph_proportion(df, num_col, denom_col, group_cols = None, metadata = True, co
     Ungrouped 
 
       >>> ph_proportion(df, 'numerator', 'denominator')
-      >>> ph_proportion(df, 'numerator', 'denominator', confidence = 99.8)
+      >>> ph_proportion(df, 'numerator', 'denominator', confidence = 0.998)
       >>> ph_proportion(df, 'numerator', 'denominator', confidence = [0.95, 0.998])
 
     Grouped
