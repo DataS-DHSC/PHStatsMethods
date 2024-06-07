@@ -29,7 +29,24 @@ def ph_mean(df, num_col, group_cols, metadata = True, confidence = 0.95):
     -------
     Pandas DataFrame
         DataFrame of calculated mean statistics with confidence intervals (df).
-            
+        
+    Notes
+    -----
+    Student t-distribution is applied to calculate confidence intervals using the internal student_t() function.
+    
+    Examples
+    --------
+    Below is a example using the ph_mean() function to demonstrate the purpose of 
+    package. 
+      >>> import pandas as pd
+      >>> from PHStatsMethods import *
+      >>> df = pd.DataFrame({'area': ["Area1", "Area2", "Area3", "Area4"] * 3,
+                             'numerator': [None, 48, 10000, 7, 82, 6500, 10000, 750, 9, 8200, 8, 900]})
+      
+      >>> ph_mean(df, 'numerator', 'area')
+      >>> ph_mean(df, 'numerator', 'area', confidence = 0.998)
+      >>> ph_mean(df, 'numerator', 'area', confidence = [0.95, 0.998])
+      
     """
     
     # Check data and arguments
