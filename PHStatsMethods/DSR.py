@@ -15,43 +15,57 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
     """Calculates directly standardised rates with confidence limits using Byar's
     method (1) with Dobson method adjustment (2).
     
-    Args:
-        df: DataFrame containing the data to be standardised.
-        
-        num_col (str): column name from data containing the observed number of events for
+    Parameters
+    ----------
+    df: 
+        DataFrame containing the data to be standardised.
+    num_col : str 
+        Column name from data containing the observed number of events for
         each standardisation category (e.g. ageband) within each grouping set (e.g. area).
-        
-        denom_col (str): column name from data containing the population for each standardisation 
+    denom_col : str
+        Column name from data containing the population for each standardisation 
         category (e.g. age band).
-        
-        ref_denom_col (str): the standard populations for each standardisation category (e.g. age band).
+    ref_denom_col : str
+        The standard populations for each standardisation category (e.g. age band).
         This is either the column name in the main dataframe, the reference data if given, or the column
         name of the agebands to join to if `euro_standard_pops` is set to True. 
-        
-        group_cols: A string or list of column name(s) to group the data by. Default to None.
-
-        metadata (bool): Whether to include information on the statistic and confidence interval methods.
-        
-        euro_standard_pops (bool): Whether to use the european standard populations.
+    group_cols : str | list
+        A string or list of column name(s) to group the data by. Default to None.
+    metadata : bool 
+        Whether to include information on the statistic and confidence interval methods.
+    euro_standard_pops : bool 
+        Whether to use the european standard populations.
         You can see what these populations are with `euro_standard_pop()`.
-        
-        multiplier (int): the multiplier used to express the final values. Default 100,000.
-        
-        confidence (float): Confidence interval(s) to use, either as a float, list of float values or None.
+    multiplier : int
+        The multiplier used to express the final values. Default 100,000.
+    confidence : float 
+        Confidence interval(s) to use, either as a float, list of float values or None.
         Confidence intervals must be between 0.9 and 1. Defaults to 0.95 (2 std from mean).
         
-    **kwargs:
-        ref_df: DataFrame of reference data to join.
-        ref_join_left (str | list): A string or list of column name(s) in `df` to join on to.
-        ref_join_right (str | list): A string or list of column name(s) in `ref_df` to join on to.
+    Other Parameters
+    ----------------
+    ref_df
+        DataFrame of reference data to join.
+    ref_join_left : str | list
+        A string or list of column name(s) in `df` to join on to.
+    ref_join_right : str | list
+        A string or list of column name(s) in `ref_df` to join on to.
         
-    Returns:
-        DataFrame of calculated rates and confidence intervals
-        
-    References:
-        (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort studies. 
+    Returns
+    -------
+    Pandas DataFrame
+        DataFrame of calculated directly standardised rates and confidence intervals
+    
+    Notes
+    -----
+    For total counts >= 10 Byar's method (1) is applied using the internal byars_lower and byars_upper
+    functions. When the total count is < 10 DSRs are not reliable and will therefore not be calculated.
+
+    References
+    ----------
+    (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort studies. 
         Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
-        (2) Dobson A et al. Confidence intervals for weighted sums of Poisson parameters. Stat Med 1991;10:457-62.
+    (2) Dobson A et al. Confidence intervals for weighted sums of Poisson parameters. Stat Med 1991;10:457-62.
 
     """
     

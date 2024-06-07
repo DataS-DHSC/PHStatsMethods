@@ -6,18 +6,18 @@ Introduction
 ------------
 This is a Python package to support analysts in the execution of statistical
 methods approved for use in the production of Public Health indicators such as
-those presented via `Fingertips <https://fingertips.phe.org.uk/>`__. It
+those presented via `Fingertips <https://fingertips.phe.org.uk/>`_. It
 provides functions for the generation of Proportions, Rates, DSRs, ISRs,
 Funnel plots and Means including confidence intervals for these statistics,
 and a function for assigning data to quantiles.
 
 Any feedback would be appreciated and can be provided using the Issues
 section of the `PHStatsMethods GitHub
-repository <https://github.com/DataS-DHSC/PHStatsMethods/issue>`__.
+repository <https://github.com/DataS-DHSC/PHStatsMethods/issue>`_.
 
 Licence
 -------
-This project is released under the `GPL-3 <https://opensource.org/licenses/GPL-3.0>`__
+This project is released under the `GPL-3 <https://opensource.org/licenses/GPL-3.0>`_
 licence.
 
 Examples

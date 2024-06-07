@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Apr 26 16:52:40 2024
-
-@author: Hadley.Nanayakkara
-"""
 
 import pandas as pd
 import numpy as np
@@ -14,23 +9,40 @@ from .validation import format_args, check_arguments, group_args
 def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, type = "full"):
     """Assigns data to quantiles based on numeric data rankings.
 
-    Args:
-        df: a data frame containing the quantitative data to be assigned to quantiles. 
-            If group_cols is used, separate sets of quantiles will be assigned for each grouping set
-        values (str): field name from data containing the numeric values to rank data by and assign quantiles.
-        group_cols: A string or list of column name(s) to group the data by. 
-                Defaults to None.
-        nquantiles (int): the number of quantiles to separate each grouping set into.
-        invert (bool): whether the quantiles should be directly (False) or inversely (True) related
-                    to the numerical value order.
-        type (str): defines whether to include metadata columns in output to reference the arguments 
-                    passed; can be "standard" or "full".
+    Parameters
+    ----------
+    df
+        A data frame containing the quantitative data to be assigned to quantiles. 
+        If group_cols is used, separate sets of quantiles will be assigned for each grouping set
+    values : str  
+        Column name from data containing the numeric values to rank data by and assign quantiles.
+    group_cols: str | list
+        A string or list of column name(s) to group the data by. 
+        Defaults to None.
+    nquantiles : int
+        The number of quantiles to separate each grouping set into.
+    invert : bool
+        Whether the quantiles should be directly (False) or inversely (True) related
+        to the numerical value order.
+    type : str 
+        Defines whether to include metadata columns in output to reference the arguments 
+        passed; can be "standard" or "full".
 
-    Returns:
+    Returns
+    -------
+    Pandas DataFrame
         When type = "full", returns the original data.frame with quantile 
         (quantile value), nquantiles (number of quantiles requested), groupvars 
         (grouping sets quantiles assigned within) and invert (indicating direction 
         of quantile assignment) fields appended.
+
+    Notes
+    -----
+    See `OHID Technical Guide - Assigning Deprivation Categories 
+    <https://fingertips.phe.org.uk/documents/OHID%20Guidance%20-%20Assigning%20Deprivation%20Categories.pdf>`_ 
+    for methodology. In particular, note that this function strictly applies the algorithm defined but
+    some manual review, and potentially adjustment, is advised in some cases where multiple small
+    areas with equal rank fall across a natural quantile boundary.
         
     """
     # Ensure original df remains unchanged 

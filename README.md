@@ -27,12 +27,12 @@ PH_statistical_methods should be imported and used in line with standard python
 conventions. It is suggested that if the whole package is to be imported 
 then the following convention is used:
  
-    import PHStatsMethods as phm
+    import PHStatsMethods
 
 
 For more information on any function, you can use:
 
-    help(*phm.function*)
+    help(PHStatsMethods.function)
 
 ## Licence
 This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)

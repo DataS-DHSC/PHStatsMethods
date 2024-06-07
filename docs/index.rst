@@ -41,17 +41,15 @@ Usage
 *****
 PH_statistical_methods should be imported and used in line with standard python
 conventions. It is suggested that if the whole package is to be imported 
-then the following convention is used:
+then one of the two the following conventions are used:
 
-```
-import PHStatsMethods as phm
-```
+  >>> import PHStatsMethods
+
+  >>> from PHStatsMethods import *
 
 For more information on any function, you can use:
 
-```
-help(PHStatsMethods.function)
-```
+  >>> help(PHStatsMethods.function)
 
 Examples
 --------
@@ -102,19 +100,8 @@ Functions
 .. automodule:: PHStatsMethods.confidence_intervals
    :members:
 .. automodule:: PHStatsMethods.utils
-   :members:
+   :members: euro_standard_pop
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
-
-   PHStatsMethods/README.md
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
