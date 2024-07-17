@@ -66,6 +66,62 @@ def ph_dsr(df, num_col, denom_col, ref_denom_col, group_cols = None, metadata = 
     (1) Breslow NE, Day NE. Statistical methods in cancer research, volume II: The design and analysis of cohort studies. 
         Lyon: International Agency for Research on Cancer, World Health Organisation; 1987.
     (2) Dobson A et al. Confidence intervals for weighted sums of Poisson parameters. Stat Med 1991;10:457-62.
+    
+    Examples
+    --------
+    Below is a example using the ph_dsr() function to demonstrate the purpose of 
+    package. 
+    
+      >>> import pandas as pd
+      >>> import numpy as np
+      >>> from PHStatsMethods import ph_dsr
+      >>> import random
+
+      >>> random.seed(37)
+       
+      >>> areas = ["Area1", "Area2", "Area3", "Area4", "Area5"]
+      >>> age_bands = ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54",
+                        "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90+"]
+
+      The following variables are created to construct test dataframes.
+      
+      >>> numerator = [random.randint(11, 10000) for i in range(1, (len(areas) * len(age_bands)) + 1)]
+      >>> num_pop = [random.randint(110, 100000) for i in range(1, len(age_bands) + 1)]
+      >>> denominator = [random.randint(10000, 50000) for i in range(1, len(numerator) + 1)]  
+      >>> denom_pop = [random.randint(70000, 500000) for i in range(1, len(age_bands) + 1)]                                
+      >>> repeated_age_bands = np.tile(age_bands, len(areas))
+      >>> population = [random.randint(20000, 60000) for i in range(1, len(numerator) + 1)]
+      >>> ref_population = [random.randint(200000, 600000) for i in range(1, len(age_bands) + 1)]
+
+      >>> ungrouped_df = pd.DataFrame({'area': np.repeat(areas, len(age_bands)),
+                         'numerator': numerator,
+                         'denominator': denominator,
+                         'age_band': repeated_age_bands,
+                         'population': population})
+
+      >>> simple_df = pd.DataFrame({'age_band': age_bands,
+                                'population': ref_population,
+                                'numerator': num_pop,
+                                'denominator': denom_pop})
+            
+      >>> ref_df = pd.DataFrame({'age_band': age_bands,
+                             'population': ref_population})
+
+      Ungrouped:
+          
+      >>> ph_dsr(simple_df, 'numerator', 'denominator', ref_denom_col = 'population', euro_standard_pops = False)
+      >>> ph_dsr(simple_df, 'numerator', 'denominator', ref_denom_col = 'age_band', confidence = 0.998)
+      >>> ph_dsr(simple_df, 'numerator', 'denominator', ref_denom_col = 'age_band', confidence = [0.95, 0.998], multiplier = 100)
+
+      Grouped
+
+      >>> ph_dsr(ungrouped_df, 'numerator', 'denominator', ref_denom_col = 'population', group_cols = 'age_band', euro_standard_pops = False)
+      >>> ph_dsr(ungrouped_df, 'numerator', 'denominator', ref_denom_col ='age_band', group_cols = 'area', confidence = 0.998)
+
+      kwargs:
+
+      >>> ph_dsr(simple_df, 'numerator', 'denominator', ref_denom_col = 'population', euro_standard_pops=False, 
+                        ref_df=ref_df, ref_join_left='age_band', ref_join_right='age_band')
 
     """
     

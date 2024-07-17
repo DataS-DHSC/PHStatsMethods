@@ -43,6 +43,27 @@ def ph_quantile(df, values, group_cols = None, nquantiles = 10, invert = True, t
     for methodology. In particular, note that this function strictly applies the algorithm defined but
     some manual review, and potentially adjustment, is advised in some cases where multiple small
     areas with equal rank fall across a natural quantile boundary.
+    
+    Example
+    -------
+    
+    Below is an example use of the ph_quantile() function to demonstrate 
+    the purpose of the package.
+    
+    >>> import pandas as pd
+    >>> from PHStatsMethods import *
+    >>> df = pd.DataFrame({'area': ["Area1", "Area2", "Area3", "Area4"] * 3,
+                           'numerator': [None, 48, 10000, 7, 82, 6500, 10000, 750, 9, 8200, 8, 900]})
+    
+    Ungrouped
+    
+    >>> ph_quantile(df, 'numerator')
+    >>> ph_quantile(df, 'numerator', nquantiles = 4)
+    >>> ph_quantile(df, 'numerator', invert = False)
+    >>> ph_quantile(df, 'numerator', type = "standard")
+    
+    >>> ph_quantile(df, 'numerator', group_cols = 'area')
+    >>> ph_quantile(df, 'numerator', group_cols = 'area', nquantiles = 4, type = "standard")
         
     """
     # Ensure original df remains unchanged 
