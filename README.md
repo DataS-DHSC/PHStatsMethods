@@ -34,6 +34,10 @@ For more information on any function, you can use:
 
     help(PHStatsMethods.function)
 
+Full documentation can be found here: 
+https://phstatsmethods.readthedocs.io/en/latest/
+
 ## Licence
 This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
 licence.
+
