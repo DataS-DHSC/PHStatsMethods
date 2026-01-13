@@ -34,6 +34,10 @@ For more information on any function, you can use:
 
     help(PHStatsMethods.function)
 
+## QA and further development
+This package has been QA'd and further development is planned and documented in the issues.
+
 ## Licence
 This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
 licence.
+
