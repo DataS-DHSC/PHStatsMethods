@@ -6,9 +6,9 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='PHStatsMethods',
-    version='0.1.13',
+    version='0.1.14',
     packages=['PHStatsMethods'],
-    url='https://github.com/DataS-DHSC/PHStatsMethods',
+    url='https://github.com/dhsc-govuk/PHStatsMethods',
     license='GPL-3.0',
     author='Department of Health and Social Care',
     author_email='annabel.westermann@dhsc.gov.uk, hadley.nanayakkara@dhsc.gov.uk, cameron.stewart@dhsc.gov.uk, jack.burden@dhsc.gov.uk, thilaksan.vikneswaran@dhsc.gov.uk, paul.fryers@dhsc.gov.uk, karandeep.kaur@dhsc.gov.uk, phds@phe.gov.uk',
