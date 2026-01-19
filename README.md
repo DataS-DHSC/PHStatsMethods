@@ -6,6 +6,8 @@ provides functions for the generation of Proportions, Rates, DSRs, ISRs,
 Funnel plots and Means including confidence intervals for these statistics,
 and a function for assigning data to quantiles.
 
+Full documenation on the package can be found on [readthedocs](https://phstatsmethods.readthedocs.io/en/latest/).
+
 Any feedback would be appreciated and can be provided using the Issues
 section of the [PHStatsMethods GitHub
 repository](https://github.com/DataS-DHSC/PHStatsMethods/issues).
@@ -40,5 +42,6 @@ This package has been QA'd and further development is planned and documented in 
 ## Licence
 This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
 licence.
+
 
 
