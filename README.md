@@ -20,7 +20,7 @@ This packaged should be installed using pip:
 
 Or it can be compiled from source (still requires pip):
 
-    pip install git+https://github.com/DataS-DHSC/PHStatsMethods.git
+    pip install git+https://github.com/dhsc-govuk/PHStatsMethods.git
 
 ## Usage
 PH_statistical_methods should be imported and used in line with standard python
@@ -40,4 +40,5 @@ This package has been QA'd and further development is planned and documented in 
 ## Licence
 This project is released under the [GPL-3](https://opensource.org/licenses/GPL-3.0)
 licence.
+
 
