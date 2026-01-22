@@ -19,7 +19,7 @@ and a function for assigning data to quantiles.
 
 Any feedback would be appreciated and can be provided using the Issues
 section of the [PHStatsMethods GitHub
-repository](https://github.com/DataS-DHSC/PHStatsMethods/issues).
+repository](https://github.com/dhsc-govuk/PHStatsMethods/issues).
 
 
 Installation
@@ -34,7 +34,7 @@ pip install PHStatsMethods
 Or it can be compiled from source (still requires pip):
 
 ```
-pip install git+https://github.com/DataS-DHSC/PHStatsMethods.git
+pip install git+https://github.com/dhsc-govuk/PHStatsMethods.git
 ```
 
 Usage
