@@ -13,7 +13,7 @@ and a function for assigning data to quantiles.
 
 Any feedback would be appreciated and can be provided using the Issues
 section of the `PHStatsMethods GitHub
-repository <https://github.com/DataS-DHSC/PHStatsMethods/issue>`_.
+repository <https://github.com/dhsc-govuk/PHStatsMethods/issue>`_.
 
 Licence
 -------
