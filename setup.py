@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='PHStatsMethods',
-    version='0.1.15',
+    version='0.1.16',
     packages=['PHStatsMethods'],
     url='https://github.com/dhsc-govuk/PHStatsMethods',
     license='GPL-3.0',
